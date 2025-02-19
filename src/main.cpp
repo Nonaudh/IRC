@@ -46,7 +46,7 @@ int	main(void)
 
 	std::cout << "Client connected" << std::endl;
 
-	ssize_t bytes_read = read(client_fd, buffer, sizeof(buffer) - 1);
+	ssize_t bytes_read = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
 	if (bytes_read == -1)
 	{
 		perror("read");
