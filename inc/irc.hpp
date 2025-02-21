@@ -10,5 +10,13 @@
 # include <stdio.h>
 # include <netinet/in.h>
 # include <string.h>
+# include <vector>
+# include <poll.h>
+# include <fcntl.h>
+# include <csignal>
+# include <arpa/inet.h>
+# include <exception>
+
+# include "Server.hpp"
 
 #endif
