@@ -9,7 +9,7 @@ class	Server
 		int	port;
 		std::string password;
 		int	serSocketFd;
-		static bool Signal;
+		bool Signal;
 		std::vector<struct pollfd> pollfds;
 
 	public :
@@ -18,6 +18,9 @@ class	Server
 
 		void	irc(void);
 		void	createServer(void);
+		void	runServer(void);
+		void	NewClient(void);
+		void	handleData(int& fd);
 };
 
 #endif
