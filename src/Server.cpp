@@ -9,29 +9,28 @@ Server::Server(void)
 Server::~Server(void)
 {}
 
-void	Server::handleData(int& fd)
+void	Server::handleData(int socketFd)
 {
 	char	buff[1024];
 	bzero(buff, sizeof(buff));
 
-	ssize_t bytes = recv(fd, buff, sizeof(buff) - 1, 0);
+	ssize_t bytes = recv(socketFd, buff, sizeof(buff) - 1, 0);
 	if (bytes <= 0)
 	{
-		std::cout << "Client disconected\n";
-		close(fd);
-		fd = -1;
+		std::cout << "Client " << socketFd << " disconnected\n";
+		close(socketFd);
+		erasePoll(socketFd);
 	}
 	else
 	{
 		buff[bytes] = 0;
-		std::cout << "Data : " << buff;
+		std::cout << socketFd << " : " << buff;
 	}
 }
 
 void	Server::NewClient(void)
 {
-	struct sockaddr_in	cliadd;
-	struct pollfd		newPoll;
+	sockaddr_in	cliadd;
 	socklen_t	len = sizeof(cliadd);
 
 	int	socketFd = accept(serSocketFd, (sockaddr *)&(cliadd), &len);
@@ -45,13 +44,7 @@ void	Server::NewClient(void)
 		std::cerr << "Error : fcntl()" << std::endl;
 		return ;
 	}
-
-	newPoll.fd = socketFd;
-	newPoll.events = POLLIN;
-	newPoll.revents = 0;
-
-	pollfds.push_back(newPoll);
-
+	addToPoll(socketFd);
 	std::cout << "New client connected\n";
 }
 
@@ -78,8 +71,7 @@ void	Server::runServer(void)
 void	Server::createServer(void)
 {
 	int	en = 1;
-	struct sockaddr_in	add;
-	struct pollfd	NewPoll;
+	sockaddr_in	add;
 
 	add.sin_family = AF_INET;
 	add.sin_addr.s_addr = INADDR_ANY;
@@ -95,16 +87,12 @@ void	Server::createServer(void)
 	if (fcntl(this->serSocketFd, F_SETFL, O_NONBLOCK) == -1)
 		throw(std::runtime_error("Error : fcntl()"));
 
-	if (bind(this->serSocketFd, (struct sockaddr *)&add, sizeof(add)) == -1)
+	if (bind(this->serSocketFd, (sockaddr *)&add, sizeof(add)) == -1)
 		throw(std::runtime_error("Error : bind()"));
 
 	if (listen(this->serSocketFd, SOMAXCONN) == -1)
 		throw(std::runtime_error("Error : listen()"));
-
-	NewPoll.fd = serSocketFd;
-	NewPoll.events = POLLIN;
-	NewPoll.revents = 0;
-	this->pollfds.push_back(NewPoll);
+	addToPoll(serSocketFd);
 }
 
 void	Server::irc(void)

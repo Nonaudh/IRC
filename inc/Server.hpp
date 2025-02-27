@@ -20,7 +20,9 @@ class	Server
 		void	createServer(void);
 		void	runServer(void);
 		void	NewClient(void);
-		void	handleData(int& fd);
+		void	handleData(int socketFd);
+		void	addToPoll(int socketFd);
+		void	erasePoll(int socketFd);
 };
 
 #endif
