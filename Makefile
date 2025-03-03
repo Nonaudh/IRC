@@ -1,32 +1,45 @@
-CC = c++
+NAME    := ircserv
 
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -g
+SRCS_D  := ./src
+OBJS_D  := ./build
 
-INCLUDE = -Iinc
+CC      := clang++
+CFLAGS  := -Wall -Wextra -Werror -std=c++98 -g
 
-SRC = src/main.cpp src/Server.cpp src/utils.cpp
+HEADERS := -I ./inc
 
-DBUILD = build/
+SRCS    := main.cpp Server.cpp utils.cpp
 
-OBJ = $(addprefix $(DBUILD), $(SRC:%.cpp=%.o))
+OBJS    := $(addprefix $(OBJS_D)/, $(SRCS:.cpp=.o))
 
-NAME = ircserv
+GREEN   := \033[1;32m
 
-$(DBUILD)%.o: %.cpp
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+ARGS	:= 6667 pass
 
-$(NAME) : $(OBJ)
-	@$(CC) $(CFLAGS) $(INCLUDE) $(OBJ) -o $(NAME)
+all: $(NAME)
 
-all : $(NAME)
+$(OBJS_D)/%.o: $(SRCS_D)/%.cpp
+		@test -d $(OBJS_D) || mkdir $(OBJS_D)
+		@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "$(GREEN)✔️ $(notdir $<) compiled\n"
 
-clean :
-	rm -rf $(DBUILD)
+$(NAME): $(OBJS)
+		@$(CC) $(OBJS) $(HEADERS) -o $(NAME)
 
-fclean : clean
-	rm -f $(NAME)
+gdb: all
+		@gdb -tui $(NAME) -ex 'start 6667 pass'
 
-re: fclean all
+valgrind: all
+		@valgrind --show-leak-kinds=all --trace-children=yes --track-fds=yes --leak-check=full --track-origins=yes --show-reachable=yes ./$(NAME) $(ARGS)
 
-.PHONY : all clean fclean re
+run: all
+		@./$(NAME) $(ARGS)
+
+clean:
+		@rm -rf $(OBJS_D)
+
+fclean: clean
+		@rm -rf $(NAME)
+
+re: clean all
+
+.PHONY: all, clean, fclean, re, gdb, valgrind, run

@@ -9,10 +9,35 @@ Server::Server(void)
 Server::~Server(void)
 {}
 
+typedef struct s_command
+{
+	int socketFd;
+	std::string command;
+	std::vector<std::string> params;
+} t_command;
+
+std::vector<std::string> split(char * str, char sep) {
+	std::vector<std::string> ret;
+
+	(void) sep;
+
+	char e[2] = " ";
+	char *token = strtok(str, e);
+
+	while (token)
+	{
+		std::cout << token << std::endl;
+		token = strtok(str, e);
+	}
+
+	return ret;
+}
+
 void	Server::handleData(int socketFd)
 {
 	char	buff[1024];
 	bzero(buff, sizeof(buff));
+	t_command command = {};
 
 	ssize_t bytes = recv(socketFd, buff, sizeof(buff) - 1, 0);
 	if (bytes <= 0)
@@ -24,6 +49,8 @@ void	Server::handleData(int socketFd)
 	else
 	{
 		buff[bytes] = 0;
+		command.socketFd = socketFd;
+//		/*std::vector<std::string> params = */split(buff, ' ');
 		std::cout << socketFd << " : " << buff;
 	}
 }
