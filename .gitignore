@@ -1,0 +1,12 @@
+.idea/
+.vscode/
+*.o
+*.swp
+*.swo
+*.out
+*.a
+build/
+ircserv
+cmake-build-debug
+README.md
+CMakeLists.txt
