@@ -28,6 +28,44 @@ void	Server::handleData(int socketFd)
 	}
 }
 
+int	Server::enterPassword(int socketFd) // dont work because blocking the serv
+{
+	if (send(socketFd, "Enter password : ", 18, 0) == -1)
+	{
+		std::cerr << "Error : send()" << std::endl;
+	}
+
+	std::vector<pollfd>::iterator	it;
+
+	for (it = pollfds.begin(); it < pollfds.end() && it->fd != socketFd; ++it)
+		;
+	poll(&*it, 1, -1);
+
+	char	buff[1024];
+	bzero(buff, sizeof(buff));
+
+	ssize_t bytes = recv(socketFd, buff, sizeof(buff) - 1, 0);
+	if (bytes <= 0)
+	{
+		std::cout << "Client " << socketFd << " disconnected\n";
+		close(socketFd);
+		erasePoll(socketFd);
+		return (1);
+	}
+	else
+	{
+		buff[bytes - 1] = 0;
+		if (buff != password)
+		{
+			send(socketFd, "Wong password sorry\n", 21, 0);
+			close(socketFd);
+			erasePoll(socketFd);
+			return (1);
+		}
+	}
+	return (0);
+}
+
 void	Server::NewClient(void)
 {
 	sockaddr_in	cliadd;
@@ -45,6 +83,8 @@ void	Server::NewClient(void)
 		return ;
 	}
 	addToPoll(socketFd);
+	// if (enterPassword(socketFd))
+	// 	return ;
 	std::cout << "New client connected\n";
 }
 
@@ -95,10 +135,13 @@ void	Server::createServer(void)
 	addToPoll(serSocketFd);
 }
 
-void	Server::irc(void)
+void	Server::irc(char **argv)
 {
-	this->port = 6667;
-
+	if (setPortPassword(argv))
+	{
+		std::cout << "Error arguments" << std::endl;
+		return ;
+	}
 	createServer();
 	runServer();
 

@@ -20,3 +20,12 @@ void	Server::erasePoll(int socketFd)
 	if (it != pollfds.end())
 		pollfds.erase(it);
 }
+
+int	Server::setPortPassword(char **argv)
+{
+	port = atoi(argv[1]);
+	//check port range
+	password = argv[2];
+
+	return (0);
+}

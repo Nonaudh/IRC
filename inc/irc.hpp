@@ -16,6 +16,7 @@
 # include <csignal>
 # include <arpa/inet.h>
 # include <exception>
+# include <cstdlib>
 
 # include "Server.hpp"
 

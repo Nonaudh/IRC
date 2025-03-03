@@ -1,13 +1,18 @@
 #include "irc.hpp"
 
-int	main(__attribute__((unused)) int argc, char **argv)
+int	main(int argc, char **argv)
 {
+	if ((argc != 3))
+	{
+		std::cout << "Usage ./ircserv <port> <password>" << std::endl;
+		return (0);
+	}
+
 	Server S;
 
-	(void)argv;
 	try
 	{
-		S.irc();
+		S.irc(argv);
 	}
 	catch (std::exception& e)
 	{
