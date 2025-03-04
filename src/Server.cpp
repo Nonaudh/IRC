@@ -9,61 +9,36 @@ Server::Server(void)
 Server::~Server(void)
 {}
 
-void	Server::handleData(int socketFd)
+void	Server::handleBuffer(Client& cli, char *buff)
+{
+	std::cout << buff;
+
+	if (!cli.getAuthen())
+	{
+		if (enterPassword(cli.getFd(), buff))
+			cli.Authen();
+		return ;
+	}
+}
+
+void	Server::handleData(Client& cli)
 {
 	char	buff[1024];
 	bzero(buff, sizeof(buff));
 
-	ssize_t bytes = recv(socketFd, buff, sizeof(buff) - 1, 0);
+	ssize_t bytes = recv(cli.getFd(), buff, sizeof(buff) - 1, 0);
 	if (bytes <= 0)
 	{
-		std::cout << "Client " << socketFd << " disconnected\n";
-		close(socketFd);
-		erasePoll(socketFd);
+		std::cout << "Client " << cli.getFd() << " disconnected\n";
+		close(cli.getFd());
+		erasePoll(cli.getFd());
+		eraseClient(cli.getFd());
 	}
 	else
 	{
 		buff[bytes] = 0;
-		std::cout << socketFd << " : " << buff;
+		handleBuffer(cli, buff);
 	}
-}
-
-int	Server::enterPassword(int socketFd) // dont work because blocking the serv
-{
-	if (send(socketFd, "Enter password : ", 18, 0) == -1)
-	{
-		std::cerr << "Error : send()" << std::endl;
-	}
-
-	std::vector<pollfd>::iterator	it;
-
-	for (it = pollfds.begin(); it < pollfds.end() && it->fd != socketFd; ++it)
-		;
-	poll(&*it, 1, -1);
-
-	char	buff[1024];
-	bzero(buff, sizeof(buff));
-
-	ssize_t bytes = recv(socketFd, buff, sizeof(buff) - 1, 0);
-	if (bytes <= 0)
-	{
-		std::cout << "Client " << socketFd << " disconnected\n";
-		close(socketFd);
-		erasePoll(socketFd);
-		return (1);
-	}
-	else
-	{
-		buff[bytes - 1] = 0;
-		if (buff != password)
-		{
-			send(socketFd, "Wong password sorry\n", 21, 0);
-			close(socketFd);
-			erasePoll(socketFd);
-			return (1);
-		}
-	}
-	return (0);
 }
 
 void	Server::NewClient(void)
@@ -83,16 +58,15 @@ void	Server::NewClient(void)
 		return ;
 	}
 	addToPoll(socketFd);
-	// if (enterPassword(socketFd))
-	// 	return ;
-	std::cout << "New client connected\n";
+	addToClient(socketFd);
+	send (socketFd, "Please enter the password to connect to the server\n", 52, 0);
 }
 
 void	Server::runServer(void)
 {
 	while (this->Signal == false)
 	{
-		if ((poll(&pollfds[0], pollfds.size(), -1) == -1))
+		if ((poll(&pollfds[0], pollfds.size(), -1) == -1) && Signal == false)
 			throw(std::runtime_error("Error poll()"));
 
 		for (size_t i = 0; i < pollfds.size(); ++i)
@@ -102,7 +76,7 @@ void	Server::runServer(void)
 				if (pollfds[i].fd == serSocketFd)
 					NewClient();
 				else
-					handleData(pollfds[i].fd);
+					handleData(findClient(pollfds[i].fd));
 			}
 		}
 	}

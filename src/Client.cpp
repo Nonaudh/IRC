@@ -9,7 +9,22 @@ Client::Client(void)
 Client::~Client(void)
 {}
 
-void	Client::authenticate(void)
+void	Client::setFd(int fd)
 {
-	
+	this->SocketFd = fd;
+}
+
+int	Client::getFd(void) const
+{
+	return (this->SocketFd);
+}
+
+void	Client::Authen(void)
+{
+	this->authentication = true;
+}
+
+int		Client::getAuthen(void) const
+{
+	return (this->authentication);
 }

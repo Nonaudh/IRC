@@ -3,7 +3,6 @@
 
 #include <string>
 
-
 class	Client
 {
 	private :
@@ -15,8 +14,10 @@ class	Client
 	public :
 		Client(void);
 		~Client(void);
-		void	authenticate(void);
-
+		void	setFd(int fd);
+		int		getFd(void) const;
+		void	Authen(void);
+		int		getAuthen(void) const;
 };
 
 # endif

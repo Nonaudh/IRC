@@ -19,5 +19,6 @@
 # include <cstdlib>
 
 # include "Server.hpp"
+# include "Client.hpp"
 
 #endif
