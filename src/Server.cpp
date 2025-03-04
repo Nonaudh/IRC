@@ -15,13 +15,13 @@ void	Server::handleBuffer(Client& cli, char *buff)
 
 	if (!cli.getAuthen())
 	{
-		if (enterPassword(cli.getFd(), buff))
+		if (enterPassword(cli.getFd(), buff)) // to change
 			cli.Authen();
 		return ;
 	}
 }
 
-void	Server::handleData(Client& cli)
+void	Server::readData(Client& cli)
 {
 	char	buff[1024];
 	bzero(buff, sizeof(buff));
@@ -76,7 +76,7 @@ void	Server::runServer(void)
 				if (pollfds[i].fd == serSocketFd)
 					NewClient();
 				else
-					handleData(findClient(pollfds[i].fd));
+					readData(findClient(pollfds[i].fd));
 			}
 		}
 	}

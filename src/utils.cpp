@@ -59,12 +59,16 @@ Client&	Server::findClient(int socketFd)
 
 int	Server::enterPassword(int socketFd, char *buff)
 {
-	if (buff != password + "\n")
+	if (buff != password)
 	{
-		send(socketFd, "Wrong password, try again\n", 26, 0);
+		send(socketFd, "Wrong password, try again\n", 27, 0);
 		return (0);
 	}
 	else
+	{
 		send(socketFd, "You're now connected\n", 22, 0);
+		std::cout << socketFd << " is now connected to the server" << std::endl; 
+	}
+		
 	return (1);
 }

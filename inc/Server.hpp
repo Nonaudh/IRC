@@ -25,7 +25,7 @@ class	Server
 		void	createServer(void);
 		void	runServer(void);
 		void	NewClient(void);
-		void	handleData(Client& cli);
+		void	readData(Client& cli);
 		void	addToPoll(int socketFd);
 		void	erasePoll(int socketFd);
 		Client&	findClient(int socketFd);
