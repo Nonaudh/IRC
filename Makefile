@@ -3,7 +3,7 @@ NAME    := ircserv
 SRCS_D  := ./src
 OBJS_D  := ./build
 
-CC      := clang++
+CC      := c++
 CFLAGS  := -Wall -Wextra -Werror -std=c++98 -g
 
 HEADERS := -I ./inc
@@ -14,19 +14,13 @@ SRCS    := main.cpp commands/Command.cpp commands/QuitCommand.cpp \
 
 OBJS    := $(addprefix $(OBJS_D)/, $(SRCS:.cpp=.o))
 
-GREEN   := \033[1;32m
-RESET   := \033[0m
-
 ARGS	:= 6667 pass
 
 all: $(NAME)
 
 $(OBJS_D)/%.o: $(SRCS_D)/%.cpp
-		@test -d $(OBJS_D) || mkdir $(OBJS_D)
-		@test -d $(OBJS_D)/commands || mkdir $(OBJS_D)/commands
-		@test -d $(OBJS_D)/server || mkdir $(OBJS_D)/server
-		@test -d $(OBJS_D)/client || mkdir $(OBJS_D)/client
-		@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "$(GREEN)✔️ $(notdir $<) compiled\n$(RESET)"
+		@mkdir -p $(dir $@)
+		$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
 
 $(NAME): $(OBJS)
 		@$(CC) $(OBJS) $(HEADERS) -o $(NAME)
@@ -41,11 +35,11 @@ run: all
 		@./$(NAME) $(ARGS)
 
 clean:
-		@rm -rf $(OBJS_D)
+		rm -rf $(OBJS_D)
 
 fclean: clean
-		@rm -rf $(NAME)
+		rm -rf $(NAME)
 
-re: clean all
+re: fclean all
 
 .PHONY: all, clean, fclean, re, gdb, valgrind, run
