@@ -41,11 +41,17 @@ void	Server::handleBuffer(Client& cli, char *buff)
         
         Channel* chan = findChannel(channelName);
         if (!chan)
-            createChannel(channelName, cli.getFd());
-        else
-            joinChannel(channelName, cli.getFd());
-        
-        // Envoyer un message au client pour confirmer
+		{
+			std::cout <<"Je passe par create channel FD=" << cli.getFd()<< "\n" << std::endl;
+			createChannel(channelName, cli.getFd());
+		}
+		else
+		{
+			// std::cout << "CHANNELName=" <<channelName << std::endl;
+			std::cout <<"Je passe par Join channel FD= " << cli.getFd() << "\n" << std::endl;
+			joinChannel(channelName, cli.getFd());
+		}
+			// Envoyer un message au client pour confirmer
         std::stringstream ss;
         ss << ":" << cli.getFd() << " JOIN " << channelName << "\r\n";
         std::string message = ss.str();
@@ -167,9 +173,11 @@ void	Server::irc(char **argv)
 //Modifier pour la class channel
 void Server::createChannel(std::string const& name, int fd)
 {
-	Channel newChanne;
-	newChanne.joinChannel(0, fd);
-	channels[name]= newChanne;	
+	std::cout << "CLASS SERVER CREATECHANNE;" << std::endl;
+	Channel name(fd, name);
+	//C'est ici qu'il faut agir
+	name.createChannel(0, fd);
+	channels[name]= newChanne;
 }
 
 Channel* Server::findChannel(std::string const& findChannel)
@@ -181,6 +189,7 @@ Channel* Server::findChannel(std::string const& findChannel)
 }
 void 	Server::joinChannel(std::string const & nameChannel, int fd)
 {
+	std::cout <<"WW"<< std::endl;
 	Channel *chan = findChannel(nameChannel);
 	if(chan)
 	{

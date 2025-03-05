@@ -12,12 +12,12 @@ class Channel
         std::vector <int>socketAdmin;
         std::string password;
         int nbr_limit_people;
-        bool mdfTopic;
+        bool topic_editable;
         //On peux ou non modifier 
         std::string name;
     public:
         //MIse en place des constructeur de la class
-        Channel();//Default
+        Channel(int fd, std::string nameChannel);//Default
         virtual ~Channel();//Destructeur    
         //Modifier le bool
         void setMdfTopic();

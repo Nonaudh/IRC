@@ -4,9 +4,12 @@
 Channel::~Channel(){
     std::cout << "Destruct Channel ok " << std::endl;
 }
-Channel::Channel():nbr_limit_people(2), mdfTopic(true), name("Je ne sais pas avoir"){
-    std::cout << "camarche" << std::endl;
+Channel::Channel(int fd, std::string nameChannel):nbr_limit_people(3), mdfTopic(true), name(nameChannel){
+    std::cout << "Nbr limit de personne 3" << std::endl;
+    socketAdmin.push_back(fd);
+    socketFdClient.push_back(fd);
     //Determiner 
+
 }
 
 //Mise en place des methodes demande 
@@ -75,6 +78,7 @@ bool Channel::getMdfTopic()const
 //Mise en place du join Channel
 void Channel::joinChannel(int privilege, int fd)
 {
+    std::cout <<"Je passe class class channe JoinChannel" << std::endl;
     size_t i =this->nbrPeople();
     if((int)i > nbr_limit_people)   
         return;
@@ -92,7 +96,5 @@ void Channel::joinChannel(int privilege, int fd)
 size_t Channel::nbrPeople()
 {
     size_t nombreElements = socketFdClient.size();
-    nombreElements += socketAdmin.size();
-    nombreElements += socketInvite.size();
     return(nombreElements);
 }
