@@ -3,6 +3,8 @@
 
 # include <vector>
 # include "Client.hpp"
+#include "Channel.hpp"
+#include <map>
 
 class	Server
 {
@@ -13,7 +15,7 @@ class	Server
 		bool Signal;
 		std::vector<pollfd> pollfds;
 		std::vector<Client>	clients;
-		// std::map<std::string name, Channel chan> channels;
+		std::map<std::string, Channel > channels;
 
 	public :
 		Server(void);
@@ -32,6 +34,10 @@ class	Server
 		void	addToClient(int socketFd);
 		void	eraseClient(int socketFd);
 		void	handleBuffer(Client& cli, char *buff);
-};
+		//Modifier pour la class channel
+		void createChannel(std::string const& name, int fd);
+		Channel* findChannel(std::string const& findChannel);
+		void 	joinChannel(std::string const & nameChannel, int fd);
+	};
 
 #endif

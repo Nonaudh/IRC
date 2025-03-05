@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror -std=c++98 -g
 
 INCLUDE = -Iinc
 
-SRC = src/main.cpp src/Server.cpp src/utils.cpp src/Client.cpp
+SRC = src/main.cpp src/Server.cpp src/utils.cpp src/Client.cpp src/Channel.cpp
 
 DBUILD = build/
 

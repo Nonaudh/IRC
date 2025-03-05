@@ -1,5 +1,15 @@
 #include "irc.hpp"
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include <cstring>
+#include <iostream>
+#include <iterator>
+#include <algorithm>
+#include "Channel.hpp"
+#include <map>
+#include <sstream>
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Server::Server(void)
 {
 	this->serSocketFd = -1;
@@ -11,14 +21,48 @@ Server::~Server(void)
 
 void	Server::handleBuffer(Client& cli, char *buff)
 {
-	std::cout << buff;
+	std::cout << buff << "s";
+	std::string input(buff);
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Exemple simple pour la commande JOIN
+    if (input.substr(0, 5) == "JOIN ")
+    {
+        std::string channelName = input.substr(5);
+        
+        // Supprimer les espaces et le \n
+        std::string::iterator it = channelName.begin();
+        while (it != channelName.end())
+        {
+            if (*it == '\n' || *it == '\r')
+                it = channelName.erase(it);
+            else
+                ++it;
+        }
+        
+        Channel* chan = findChannel(channelName);
+        if (!chan)
+            createChannel(channelName, cli.getFd());
+        else
+            joinChannel(channelName, cli.getFd());
+        
+        // Envoyer un message au client pour confirmer
+        std::stringstream ss;
+        ss << ":" << cli.getFd() << " JOIN " << channelName << "\r\n";
+        std::string message = ss.str();
+        send(cli.getFd(), message.c_str(), message.length(), 0);
+    }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if (!cli.getAuthen())
 	{
 		if (enterPassword(cli.getFd(), buff))
+		{
+			std::cout << "Je sios ;a " << std::endl;
 			cli.Authen();
+		}
 		return ;
 	}
+	std::cout << "C est ici" << std::endl; 
 }
 
 void	Server::handleData(Client& cli)
@@ -118,5 +162,29 @@ void	Server::irc(char **argv)
 	}
 	createServer();
 	runServer();
+}
 
+//Modifier pour la class channel
+void Server::createChannel(std::string const& name, int fd)
+{
+	Channel newChanne;
+	newChanne.joinChannel(0, fd);
+	channels[name]= newChanne;	
+}
+
+Channel* Server::findChannel(std::string const& findChannel)
+{
+	std::map<std::string, Channel>:: iterator it = channels.find(findChannel);
+    if (it != channels.end())
+        return &(it->second);
+    return NULL;
+}
+void 	Server::joinChannel(std::string const & nameChannel, int fd)
+{
+	Channel *chan = findChannel(nameChannel);
+	if(chan)
+	{
+		chan->joinChannel(1,fd);
+	}
+	//Verifier si il faut le creer ici 
 }
