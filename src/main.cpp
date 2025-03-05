@@ -18,5 +18,6 @@ int	main(int argc, char **argv)
 	{
 		std::cout << e.what() << std::endl;
 	}
+	std::cout << "Je suis la " << std::endl;
 	return (0);
 }

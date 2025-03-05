@@ -1,5 +1,15 @@
 #include "irc.hpp"
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include <cstring>
+#include <iostream>
+#include <iterator>
+#include <algorithm>
+#include "Channel.hpp"
+#include <map>
+#include <sstream>
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Server::Server(void)
 {
 	this->serSocketFd = -1;
@@ -20,6 +30,7 @@ void	Server::handleBuffer(Client& cli, char *buff)
 		// 	cli.Authen();
 		return ;
 	}
+	std::cout << "C est ici" << std::endl; 
 }
 
 void	Server::readData(Client& cli)
@@ -122,5 +133,31 @@ void	Server::irc(char **argv)
 	}
 	createServer();
 	runServer();
+}
 
+//Modifier pour la class channel
+void Server::createChannel(std::string const& name, int fd)
+{
+	std::cout << "CLASS SERVER CREATECHANNE;" << std::endl;
+	Channel newChanne(fd, name);
+	//C'est ici qu'il faut agir
+	channels[name]= newChanne;	
+}
+
+Channel* Server::findChannel(std::string const& findChannel)
+{
+	std::map<std::string, Channel>:: iterator it = channels.find(findChannel);
+    if (it != channels.end())
+        return &(it->second);
+    return NULL;
+}
+void 	Server::joinChannel(std::string const & nameChannel, int fd)
+{
+	std::cout <<"WW"<< std::endl;
+	Channel *chan = findChannel(nameChannel);
+	if(chan)
+	{
+		chan->joinChannel(1,fd);
+	}
+	//Verifier si il faut le creer ici 
 }
