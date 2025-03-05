@@ -3,6 +3,7 @@
 
 # include <vector>
 # include "Client.hpp"
+#include "Command.hpp"
 
 class	Server
 {
@@ -31,6 +32,7 @@ class	Server
 		void	addToClient(int socketFd);
 		void	eraseClient(int socketFd);
 		void	handleBuffer(Client& cli, char *buff);
+		Command parseCommand(int socketFd, char *buff);
 };
 
 #endif

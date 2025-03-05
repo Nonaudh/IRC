@@ -38,7 +38,10 @@ void	Server::readData(Client& cli)
 	else
 	{
 		buff[bytes] = 0;
-		handleBuffer(cli, buff);
+
+		std::cout << "Client " << cli.getFd() << " send : " << buff << std::endl;
+		Command command = parseCommand(cli.getFd(), buff);
+		command.execute();
 	}
 }
 
