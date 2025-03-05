@@ -2,6 +2,7 @@
 # define SERVER_HPP
 
 # include <vector>
+#include "Command.hpp"
 
 class	Server
 {
@@ -25,6 +26,7 @@ class	Server
 		void	handleData(int socketFd);
 		void	addToPoll(int socketFd);
 		void	erasePoll(int socketFd);
+		Command parseCommand(int socketFd, char *buff);
 };
 
 #endif

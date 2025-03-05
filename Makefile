@@ -8,11 +8,13 @@ CFLAGS  := -Wall -Wextra -Werror -std=c++98 -g
 
 HEADERS := -I ./inc
 
-SRCS    := main.cpp Server.cpp utils.cpp
+SRCS    := main.cpp Server.cpp utils.cpp \
+			commands/Command.cpp commands/QuitCommand.cpp
 
 OBJS    := $(addprefix $(OBJS_D)/, $(SRCS:.cpp=.o))
 
 GREEN   := \033[1;32m
+RESET   := \033[0m
 
 ARGS	:= 6667 pass
 
@@ -20,7 +22,8 @@ all: $(NAME)
 
 $(OBJS_D)/%.o: $(SRCS_D)/%.cpp
 		@test -d $(OBJS_D) || mkdir $(OBJS_D)
-		@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "$(GREEN)✔️ $(notdir $<) compiled\n"
+		@test -d $(OBJS_D)/commands || mkdir $(OBJS_D)/commands
+		@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "$(GREEN)✔️ $(notdir $<) compiled\n$(RESET)"
 
 $(NAME): $(OBJS)
 		@$(CC) $(OBJS) $(HEADERS) -o $(NAME)
