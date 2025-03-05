@@ -21,7 +21,6 @@ class	Server
 
 		void	irc(char **argv);
 		int		setPortPassword(char **argv);
-		int		enterPassword(int socketFd, char *buff);
 		void	createServer(void);
 		void	runServer(void);
 		void	NewClient(void);

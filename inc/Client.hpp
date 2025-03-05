@@ -12,7 +12,7 @@ class	Client
 		int			SocketFd;
 
 	public :
-		Client(void);
+		Client(int socketFd);
 		~Client(void);
 		void	setFd(int fd);
 		int		getFd(void) const;

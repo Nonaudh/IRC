@@ -11,12 +11,13 @@ Server::~Server(void)
 
 void	Server::handleBuffer(Client& cli, char *buff)
 {
-	std::cout << buff;
+	std::string	str = buff;
+	std::cout << str;
 
 	if (!cli.getAuthen())
 	{
-		if (enterPassword(cli.getFd(), buff)) // to change
-			cli.Authen();
+		// if (enterPassword(cli.getFd(), buff)) // to change
+		// 	cli.Authen();
 		return ;
 	}
 }
@@ -59,7 +60,6 @@ void	Server::NewClient(void)
 	}
 	addToPoll(socketFd);
 	addToClient(socketFd);
-	send (socketFd, "Please enter the password to connect to the server\n", 52, 0);
 }
 
 void	Server::runServer(void)
@@ -106,6 +106,7 @@ void	Server::createServer(void)
 
 	if (listen(this->serSocketFd, SOMAXCONN) == -1)
 		throw(std::runtime_error("Error : listen()"));
+
 	addToPoll(serSocketFd);
 }
 
