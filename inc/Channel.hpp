@@ -16,6 +16,7 @@ class Channel
         //On peux ou non modifier 
         std::string name;
     public:
+         Channel();
         //MIse en place des constructeur de la class
         Channel(int fd, std::string nameChannel);//Default
         virtual ~Channel();//Destructeur    

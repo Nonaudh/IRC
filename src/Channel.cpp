@@ -1,10 +1,10 @@
 #include "Channel.hpp"
-
+Channel::Channel(){}
 //MIse en place du constructeur par default
 Channel::~Channel(){
     std::cout << "Destruct Channel ok " << std::endl;
 }
-Channel::Channel(int fd, std::string nameChannel):nbr_limit_people(3), mdfTopic(true), name(nameChannel){
+Channel::Channel(int fd, std::string nameChannel):nbr_limit_people(3), topic_editable(true), name(nameChannel){
     std::cout << "Nbr limit de personne 3" << std::endl;
     socketAdmin.push_back(fd);
     socketFdClient.push_back(fd);
@@ -15,17 +15,17 @@ Channel::Channel(int fd, std::string nameChannel):nbr_limit_people(3), mdfTopic(
 //Mise en place des methodes demande 
 
 //Modifier le bool
-void Channel::setMdfTopic()
-{
-    if(this-> mdfTopic== false)
-        this->mdfTopic =true;
-    else 
-        this->mdfTopic= false;
-}
-bool Channel::getMdfTopic()const
-{  
-    return(this->mdfTopic);
-}
+// void Channel::setMdfTopic()
+// {
+//     if(this-> mdfTopic== false)
+//         this->mdfTopic =true;
+//     else 
+//         this->mdfTopic= false;
+// }
+// bool Channel::getMdfTopic()const
+// {  
+//     return(this->mdfTopic);
+// }
 
 // void Channel::setTopic(std::string const& newTopic)//Determiner le topic(si bool mdfTopic
 // {

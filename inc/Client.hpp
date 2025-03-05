@@ -10,7 +10,6 @@ class	Client
 		std::string	username;
 		std::string	nickname;
 		int			SocketFd;
-		std::string nameCh
 
 	public :
 		Client(void);

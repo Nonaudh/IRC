@@ -23,42 +23,6 @@ void	Server::handleBuffer(Client& cli, char *buff)
 {
 	std::cout << buff << "s";
 	std::string input(buff);
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Exemple simple pour la commande JOIN
-    if (input.substr(0, 5) == "JOIN ")
-    {
-        std::string channelName = input.substr(5);
-        
-        // Supprimer les espaces et le \n
-        std::string::iterator it = channelName.begin();
-        while (it != channelName.end())
-        {
-            if (*it == '\n' || *it == '\r')
-                it = channelName.erase(it);
-            else
-                ++it;
-        }
-        
-        Channel* chan = findChannel(channelName);
-        if (!chan)
-		{
-			std::cout <<"Je passe par create channel FD=" << cli.getFd()<< "\n" << std::endl;
-			createChannel(channelName, cli.getFd());
-		}
-		else
-		{
-			// std::cout << "CHANNELName=" <<channelName << std::endl;
-			std::cout <<"Je passe par Join channel FD= " << cli.getFd() << "\n" << std::endl;
-			joinChannel(channelName, cli.getFd());
-		}
-			// Envoyer un message au client pour confirmer
-        std::stringstream ss;
-        ss << ":" << cli.getFd() << " JOIN " << channelName << "\r\n";
-        std::string message = ss.str();
-        send(cli.getFd(), message.c_str(), message.length(), 0);
-    }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if (!cli.getAuthen())
 	{
 		if (enterPassword(cli.getFd(), buff))
@@ -174,10 +138,9 @@ void	Server::irc(char **argv)
 void Server::createChannel(std::string const& name, int fd)
 {
 	std::cout << "CLASS SERVER CREATECHANNE;" << std::endl;
-	Channel name(fd, name);
+	Channel newChanne(fd, name);
 	//C'est ici qu'il faut agir
-	name.createChannel(0, fd);
-	channels[name]= newChanne;
+	channels[name]= newChanne;	
 }
 
 Channel* Server::findChannel(std::string const& findChannel)
