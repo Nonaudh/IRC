@@ -1,22 +1,24 @@
 #include "Command.hpp"
 #include "QuitCommand.hpp"
 
-Command::Command() {}
-
-Command::Command(int socketFd, std::string command, std::vector <std::string> params)
-	:socketFd(socketFd), command(command), params(params) {
-
+Command::Command() : client(Client(0)) {
 }
 
-Command::Command(const Command &copy) {
+Command::Command(Server server, Client client, std::string command, std::vector <std::string> params)
+	: server(server), client(client), command(command), params(params) {
+}
+
+Command::Command(const Command &copy) : client(Client(0)) {
 	*this = copy;
 }
 
 Command &Command::operator=(const Command &copy) {
-	this->socketFd = copy.socketFd;
-	this->command = copy.command;
-	this->params = copy.params;
-
+	if (this != &copy) {
+		server = copy.server;
+		client = copy.client;
+		command = copy.command;
+		params = copy.params;
+	}
 	return *this;
 }
 
@@ -24,8 +26,12 @@ Command::~Command() {
 
 }
 
-int Command::getSocket() {
-	return this->socketFd;
+Server Command::getServer() {
+	return server;
+}
+
+Client Command::getClient() {
+	return client;
 }
 
 std::string Command::getName() {
@@ -38,5 +44,6 @@ std::vector <std::string> Command::getParams() {
 
 void Command::execute() {
 	if (this->command == "QUIT" || this->command == "quit")
-		QuitCommand(socketFd, command, params).action();
+		QuitCommand(server, client, command, params).action();
 }
+

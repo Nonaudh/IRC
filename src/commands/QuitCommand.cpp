@@ -4,8 +4,8 @@ QuitCommand::QuitCommand() : Command(){
 
 }
 
-QuitCommand::QuitCommand(int socketFd, std::string command, std::vector<std::string> params)
-	: Command(socketFd, command, params) {
+QuitCommand::QuitCommand(Server server, Client client, std::string command, std::vector<std::string> params)
+	: Command(server, client, command, params) {
 
 }
 
@@ -15,7 +15,8 @@ QuitCommand::QuitCommand(const QuitCommand &copy) : Command(copy) {
 
 
 QuitCommand &QuitCommand::operator=(const QuitCommand &copy) {
-	(void)copy;
+	if (this != &copy)
+		*this = copy;
 	return *this;
 }
 
@@ -26,7 +27,7 @@ QuitCommand::~QuitCommand() {
 void QuitCommand::action() {
 	std::cout << "QuitCommand" << std::endl;
 
-	std::cout << "SocketFd: " << getSocket() << std::endl;
+	std::cout << "SocketFd: " << getClient().getFd() << std::endl;
 	std::cout << "Command: " << getName() << std::endl;
 	std::cout << "Args: ";
 	for (unsigned long i = 0; i < getParams().size(); ++i) {

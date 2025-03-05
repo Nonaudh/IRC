@@ -13,7 +13,10 @@ class	Client
 
 	public :
 		Client(int socketFd);
-		~Client(void);
+
+	Client();
+
+	~Client(void);
 		void	setFd(int fd);
 		int		getFd(void) const;
 		void	Authen(void);

@@ -6,7 +6,7 @@
 class QuitCommand : public Command {
 public:
 	QuitCommand();
-	QuitCommand(int socketFd, std::string command, std::vector<std::string> params);
+	QuitCommand(Server server, Client client, std::string command, std::vector<std::string> params);
 	QuitCommand(const QuitCommand &copy);
 	QuitCommand &operator=(const QuitCommand &copy);
 	~QuitCommand();
