@@ -41,3 +41,13 @@ int		Client::getAuthen(void) const
 {
 	return (this->authentication);
 }
+
+std::string	Client::getNick(void) const
+{
+	return (this->nickname);
+}
+
+void		Client::setNick(std::string str)
+{
+	this->nickname = str;
+}

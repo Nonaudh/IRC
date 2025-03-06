@@ -41,7 +41,7 @@ std::vector <std::string> Command::getParams() {
 	return this->params;
 }
 
-void Command::join()
+void Command::joinCommand()
 {
 	// Récupérer une référence à la map des canaux
 	std::map<std::string, Channel>& channels = this->getServer().getChannels();
@@ -72,10 +72,31 @@ void Command::join()
 }
 
 void Command::execute() {
-	if (this->command == "QUIT" || this->command == "quit")
-		this->quitCommand();
-	if (this->command == "JOIN")
-		this->join();
+
+	for (std::string::iterator it = command.begin(); it != command.end(); ++it)
+		*it = toupper(*it);
+
+	std::string	cmd_available[] = {"QUIT", "JOIN", "NICK"};
+
+	int	i;
+	for (i = 0; !cmd_available[i].empty() && command != cmd_available[i]; ++i)
+		;
+		
+	switch (i)
+	{
+		case (QUIT):
+			quitCommand();
+			break ;
+		case (JOIN):
+			joinCommand();
+			break ;
+		case (NICK) :
+			nickCommand();
+			break ;
+		default:
+			std::cout << "Unknow cmd : " << command << std::endl;
+			break ;
+	}
 }
 
 void Command::quitCommand() {

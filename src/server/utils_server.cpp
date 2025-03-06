@@ -59,3 +59,8 @@ std::map<std::string, Channel>&	Server::getChannels(void)
 {
 	return (this->channels);
 }
+
+std::vector<Client>&	Server::getClient(void)
+{
+	return (this->clients);
+}

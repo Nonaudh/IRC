@@ -101,6 +101,7 @@ void	Server::readData(Client& cli)
 	else
 	{
 		buff[bytes] = 0;
+		std::cout << cli.getNick() << " : " << buff;
 		execCmd(*this, cli, buff);
 	}
 }

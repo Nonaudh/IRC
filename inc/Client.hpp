@@ -21,6 +21,8 @@ class	Client
 		int		getFd(void) const;
 		void	Authen(void);
 		int		getAuthen(void) const;
+		std::string	getNick(void) const;
+		void		setNick(std::string str);
 };
 
 # endif
