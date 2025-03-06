@@ -1,16 +1,12 @@
 #include "irc.hpp"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <cstring>
 #include <iostream>
 #include <iterator>
-#include <algorithm>
-#include "Channel.hpp"
 #include <map>
-#include <sstream>
 #include "Command.hpp"
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Server::Server(void)
 {
 	this->serSocketFd = -1;
@@ -74,20 +70,19 @@ std::vector<std::string> split(char *str, const char *sep) {
 	return ret;
 }
 
-Command parseCommand(Server server, Client client, char *buff) {
-	Command command;
+void execCmd(Server server, Client client, char *buff) {
 	std::vector<std::string> splitted;
 	std::string command_name;
 
 	splitted = split(buff, " ");
 
 	if (splitted.empty())
-		return command;
+		return;
 
 	command_name = splitted[0];
 	splitted.erase(splitted.begin());
 
-	return Command(server, client, command_name, splitted);
+	Command(server, client, command_name, splitted).execute();
 }
 
 void	Server::readData(Client& cli)
@@ -106,18 +101,7 @@ void	Server::readData(Client& cli)
 	else
 	{
 		buff[bytes] = 0;
-
-//		std::cout << "Client " << cli.getFd() << " send : " << buff << std::endl;
-		Command command = parseCommand(*this, cli, buff);
-
-/*		if (!cli.getAuthen())
-		{
-			if (command.getName() != "PASS")
-				return;
-
-		}*/
-
-		command.execute();
+		execCmd(*this, cli, buff);
 	}
 }
 

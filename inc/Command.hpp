@@ -26,6 +26,8 @@ private:
 	Client client;
 	std::string command;
 	std::vector<std::string> params;
+
+	void quitCommand();
 };
 
 #endif

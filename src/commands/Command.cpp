@@ -1,5 +1,4 @@
 #include "Command.hpp"
-#include "QuitCommand.hpp"
 
 Command::Command() : client(Client(0)) {
 }
@@ -44,6 +43,18 @@ std::vector <std::string> Command::getParams() {
 
 void Command::execute() {
 	if (this->command == "QUIT" || this->command == "quit")
-		QuitCommand(server, client, command, params).action();
+		this->quitCommand();
 }
 
+void Command::quitCommand() {
+	std::cout << "QuitCommand" << std::endl;
+
+	std::cout << "SocketFd: " << getClient().getFd() << std::endl;
+	std::cout << "Command: " << getName() << std::endl;
+	std::cout << "Args: ";
+	for (unsigned long i = 0; i < getParams().size(); ++i) {
+		std::cout << getParams()[i];
+	}
+
+	std::cout << std::endl;
+}

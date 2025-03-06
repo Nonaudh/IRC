@@ -9,7 +9,7 @@ CFLAGS  := -Wall -Wextra -Werror -std=c++98 -g
 HEADERS := -I ./inc
 
 SRCS    := main.cpp Channel.cpp \
-			commands/Command.cpp commands/QuitCommand.cpp commands/PassCommand.cpp \
+			commands/Command.cpp \
 			server/Server.cpp server/utils_server.cpp \
 			client/Client.cpp
 
@@ -23,10 +23,7 @@ ARGS	:= 6667 pass
 all: $(NAME)
 
 $(OBJS_D)/%.o: $(SRCS_D)/%.cpp
-		@test -d $(OBJS_D) || mkdir $(OBJS_D)
-		@test -d $(OBJS_D)/commands || mkdir $(OBJS_D)/commands
-		@test -d $(OBJS_D)/server || mkdir $(OBJS_D)/server
-		@test -d $(OBJS_D)/client || mkdir $(OBJS_D)/client
+		@mkdir -p $(dir $@)
 		@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "$(GREEN)✔️ $(notdir $<) compiled\n$(RESET)"
 
 $(NAME): $(OBJS)
@@ -47,6 +44,6 @@ clean:
 fclean: clean
 		@rm -rf $(NAME)
 
-re: clean all
+re: fclean all
 
 .PHONY: all, clean, fclean, re, gdb, valgrind, run
