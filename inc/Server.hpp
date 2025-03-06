@@ -5,7 +5,7 @@
 # include "Client.hpp"
 #include "Channel.hpp"
 #include <map>
-#include "Command.hpp"
+#include <sys/poll.h>
 
 class	Server
 {
@@ -24,6 +24,7 @@ class	Server
 
 		void	irc(char **argv);
 		int		setPortPassword(char **argv);
+		int		enterPassword(int socketFd, char *buff);
 		void	createServer(void);
 		void	runServer(void);
 		void	NewClient(void);
@@ -34,11 +35,11 @@ class	Server
 		void	addToClient(int socketFd);
 		void	eraseClient(int socketFd);
 		void	handleBuffer(Client& cli, char *buff);
-		Command parseCommand(int socketFd, char *buff);
 		//Modifier pour la class channel
 		void createChannel(std::string const& name, int fd);
 		Channel* findChannel(std::string const& findChannel);
 		void 	joinChannel(std::string const & nameChannel, int fd);
+		std::map<std::string, Channel>&	getChannels(void);
 	};
 
 #endif

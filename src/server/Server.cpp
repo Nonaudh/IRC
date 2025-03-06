@@ -1,15 +1,12 @@
 #include "irc.hpp"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <cstring>
 #include <iostream>
 #include <iterator>
-#include <algorithm>
-#include "Channel.hpp"
 #include <map>
-#include <sstream>
+#include "Command.hpp"
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Server::Server(void)
 {
 	this->serSocketFd = -1;
@@ -33,6 +30,61 @@ void	Server::handleBuffer(Client& cli, char *buff)
 	std::cout << "C est ici" << std::endl; 
 }
 
+int	Server::enterPassword(int socketFd, char *buff)
+{
+	if (buff != password + "\n")
+	{
+		if (buff != password)
+		{
+			send(socketFd, "Wrong password, try again\n", 26, 0);
+			send(socketFd, "Wrong password, try again\n", 27, 0);
+			return (0);
+		}
+		else
+		{
+			send(socketFd, "You're now connected\n", 22, 0);
+			std::cout << socketFd << " is now connected to the server" << std::endl;
+		}
+	}
+
+	return (1);
+}
+
+std::vector<std::string> split(char *str, const char *sep) {
+	std::vector<std::string> ret;
+
+	if (!str || !sep) return ret;
+
+	char *token = strtok(str, sep);
+
+	size_t len = strlen(str);
+	if (len > 0 && str[len - 1] == '\n') {
+		str[len - 1] = '\0';
+	}
+
+	while (token != NULL) {
+		ret.push_back(std::string(token));
+		token = strtok(NULL, sep);
+	}
+
+	return ret;
+}
+
+void execCmd(Server& server, Client& client, char *buff) {
+	std::vector<std::string> splitted;
+	std::string command_name;
+
+	splitted = split(buff, " ");
+
+	if (splitted.empty())
+		return;
+
+	command_name = splitted[0];
+	splitted.erase(splitted.begin());
+
+	Command(server, client, command_name, splitted).execute();
+}
+
 void	Server::readData(Client& cli)
 {
 	char	buff[1024];
@@ -49,10 +101,7 @@ void	Server::readData(Client& cli)
 	else
 	{
 		buff[bytes] = 0;
-
-		std::cout << "Client " << cli.getFd() << " send : " << buff << std::endl;
-		Command command = parseCommand(cli.getFd(), buff);
-		command.execute();
+		execCmd(*this, cli, buff);
 	}
 }
 

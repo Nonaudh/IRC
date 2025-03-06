@@ -8,9 +8,10 @@ CFLAGS  := -Wall -Wextra -Werror -std=c++98 -g
 
 HEADERS := -I ./inc
 
-SRCS    := main.cpp commands/Command.cpp commands/QuitCommand.cpp \
-			 server/Server.cpp server/utils_server.cpp client/Client.cpp \
-			 Channel.cpp
+SRCS    := main.cpp Channel.cpp \
+			commands/Command.cpp \
+			server/Server.cpp server/utils_server.cpp \
+			client/Client.cpp
 
 OBJS    := $(addprefix $(OBJS_D)/, $(SRCS:.cpp=.o))
 
