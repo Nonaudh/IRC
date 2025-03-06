@@ -54,6 +54,7 @@ Client&	Server::findClient(int socketFd)
 		;
 	return (*it);
 }
+
 std::vector<std::string> split(char *str, const char *sep) {
 	std::vector<std::string> ret;
 
