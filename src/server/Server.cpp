@@ -70,7 +70,7 @@ std::vector<std::string> split(char *str, const char *sep) {
 	return ret;
 }
 
-void execCmd(Server server, Client client, char *buff) {
+void execCmd(Server& server, Client& client, char *buff) {
 	std::vector<std::string> splitted;
 	std::string command_name;
 

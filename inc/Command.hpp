@@ -9,21 +9,21 @@
 
 class Command {
 public:
-	Command();
-	Command(Server server, Client client, std::string command, std::vector<std::string> params);
-	Command(const Command &copy);
-	Command &operator=(const Command &copy);
+	// Command();
+	Command(Server& server, Client &client, std::string command, std::vector<std::string> params);
+	//Command(const Command &copy);
+	//Command &operator=(const Command &copy);
 	virtual ~Command();
 
-	Server getServer();
+	Server& getServer();
 	Client getClient();
 	std::string getName();
 	std::vector<std::string> getParams();
 
 	void execute();
 private:
-	Server server;
-	Client client;
+	Server& server;
+	Client& client;
 	std::string command;
 	std::vector<std::string> params;
 
