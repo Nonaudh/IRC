@@ -54,3 +54,8 @@ Client&	Server::findClient(int socketFd)
 		;
 	return (*it);
 }
+
+std::map<std::string, Channel>&	Server::getChannels(void)
+{
+	return (this->channels);
+}

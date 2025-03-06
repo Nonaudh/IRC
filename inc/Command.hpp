@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Client.hpp"
 #include "Server.hpp"
+# include <map>
 
 class Command {
 public:
@@ -27,7 +28,8 @@ private:
 	std::string command;
 	std::vector<std::string> params;
 
-	void quitCommand();
+	void	quitCommand();
+	void	join();
 };
 
 #endif
