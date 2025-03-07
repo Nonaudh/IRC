@@ -86,6 +86,18 @@ void execCmd(Server& server, Client& client, char *buff) {
 	Command(server, client, command_name, splitted).execute();
 }
 
+std::vector<std::string> split_back_s_n(char *buff)
+{
+	std::vector<std::string>	v;
+	
+	v = split(buff, "\n");
+
+	for (size_t i = 0; i != v.size() ; ++i)
+		std::cout << "line " << i + 1 << v[i];
+
+	return (v);
+}
+
 void	Server::readData(Client& cli)
 {
 	char	buff[1024];
@@ -102,8 +114,9 @@ void	Server::readData(Client& cli)
 	else
 	{
 		buff[bytes] = 0;
-		std::cout << cli.getNick() << " : " << buff;
-		execCmd(*this, cli, buff);
+		// std::cout << cli.getNick() << " : " << buff;
+		std::vector<std::string> v = split_back_s_n(buff);
+		// execCmd(*this, cli, buff);
 	}
 }
 
