@@ -45,4 +45,6 @@ class	Server
 		std::vector<Client>&	getClient(void);
 	};
 
+std::vector<std::string> ft_split_irc(std::string buff, int (*skip)(char), int (*unskip)(char));
+
 #endif

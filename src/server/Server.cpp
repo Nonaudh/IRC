@@ -5,6 +5,7 @@
 #include <iterator>
 #include <map>
 #include "Command.hpp"
+#include <algorithm>
 
 
 bool Server::Signal = false;
@@ -86,24 +87,86 @@ void execCmd(Server& server, Client& client, char *buff) {
 	Command(server, client, command_name, splitted).execute();
 }
 
-std::vector<std::string> split_back_s_n(char *buff)
+int	skipped_b_s(char c)
+{
+	return (c == '\n' || c == '\r');
+}
+
+int	unskipped_b_s(char c)
+{
+	return (!(c == '\n' || c == '\r'));
+}
+
+int	skipped_space(char c)
+{
+	return (c == ' ' || c == '	');
+}
+
+int	unskipped_space(char c)
+{
+	return (!(c == ' ' || c == '	'));
+}
+
+void	new_execCmd(Server& server, Client& cli, std::vector<std::string> v)
+{
+	std::vector<std::string> splitted;
+	std::string command_name;
+
+	for (std::vector<std::string>::iterator it = v.begin(); it != v.end(); ++it)
+	{
+		splitted = ft_split_irc(*it, skipped_space, unskipped_space);
+		command_name = *splitted.begin();
+		splitted.erase(splitted.begin());
+		Command(server, cli, command_name, splitted).execute();
+		splitted.clear();
+		command_name.clear();
+	}
+}
+
+std::vector<std::string> ft_split_irc(std::string buff, int (*skip)(char), int (*unskip)(char))
 {
 	std::vector<std::string>	v;
 	
-	v = split(buff, "\n");
+	std::string::iterator first = buff.begin();
+	std::string::iterator last;
 
-	for (size_t i = 0; i != v.size() ; ++i)
-		std::cout << "line " << i + 1 << v[i];
+	while (first != buff.end())
+	{
+		first = std::find_if(first, buff.end(), unskip);
+		last = std::find_if(first, buff.end(), skip);
 
+		std::string tmp(first, last);
+
+		if (first != last)
+			v.push_back(tmp);
+		tmp.erase();
+		first = last;
+	}
 	return (v);
+}
+
+void	print_vector(std::vector<std::string>& v)
+{
+	for (std::vector<std::string>::iterator it = v.begin(); it != v.end(); ++it)
+		std::cout << *it << " | " << std::endl;
+}
+
+bool	no_endl(std::string	buff)
+{
+	
+	if (std::find(buff.begin(), buff.end(), '\n') == buff.end())
+		return (1);
+	return (0);
 }
 
 void	Server::readData(Client& cli)
 {
-	char	buff[1024];
-	bzero(buff, sizeof(buff));
+	char	bufftmp[1024];
+	std::string	buff;
+	static std::map<int, std::string> save;
+	bzero(bufftmp, sizeof(bufftmp));
 
-	ssize_t bytes = recv(cli.getFd(), buff, sizeof(buff) - 1, 0);
+	ssize_t bytes = recv(cli.getFd(), bufftmp, sizeof(bufftmp) - 1, 0);
 	if (bytes <= 0)
 	{
 		std::cout << "Client " << cli.getFd() << " disconnected\n";
@@ -113,10 +176,24 @@ void	Server::readData(Client& cli)
 	}
 	else
 	{
-		buff[bytes] = 0;
-		// std::cout << cli.getNick() << " : " << buff;
-		std::vector<std::string> v = split_back_s_n(buff);
+		bufftmp[bytes] = 0;
+		buff = bufftmp;
+		std::map<int, std::string>::iterator it;
+		it = save.find(cli.getFd());
+		if (it != save.end())
+		{
+			buff = save.find(cli.getFd())->second + buff;
+			save.erase(it);
+		}
+		if (no_endl(buff))
+		{
+			save.insert(std::pair<int,std::string>(cli.getFd(), buff));
+			return ;
+		}
+		std::vector<std::string> v = ft_split_irc(buff, skipped_b_s, unskipped_b_s);
+		print_vector(v);
 		// execCmd(*this, cli, buff);
+		new_execCmd(*this, cli, v);
 	}
 }
 
