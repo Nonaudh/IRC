@@ -64,3 +64,17 @@ std::vector<Client>&	Server::getClient(void)
 {
 	return (this->clients);
 }
+
+void	Server::closeAllFd(void)
+{
+	for (std::vector<Client>::iterator it = this->clients.begin(); it != this->clients.begin(); ++it)
+		close (it->getFd());
+}
+
+void	Server::signalHandler(int sig)
+{
+	(void)sig;
+
+	std::cout << std::endl;
+	Server::Signal = true;
+}

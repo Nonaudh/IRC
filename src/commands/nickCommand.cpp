@@ -14,7 +14,8 @@ bool	nickname_not_free(std::string& cmd, std::vector<Client>& clients)
 
 void	Command::nickCommand(void)
 {
-	if (nickname_not_free(this->command, this->server.getClient()))
+	if (nickname_not_free(this->command, this->server.getClient())
+		|| this->params.empty())
 		return ;
 	
 	this->client.setNick(this->params[0]);

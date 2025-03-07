@@ -7,10 +7,11 @@
 #include "Command.hpp"
 
 
+bool Server::Signal = false;
+
 Server::Server(void)
 {
 	this->serSocketFd = -1;
-	this->Signal = false;
 }
 
 Server::~Server(void)
@@ -128,7 +129,7 @@ void	Server::NewClient(void)
 
 void	Server::runServer(void)
 {
-	while (this->Signal == false)
+	while (Server::Signal == false)
 	{
 		if ((poll(&pollfds[0], pollfds.size(), -1) == -1) && Signal == false)
 			throw(std::runtime_error("Error poll()"));

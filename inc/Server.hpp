@@ -13,7 +13,7 @@ class	Server
 		int	port;
 		std::string password;
 		int	serSocketFd;
-		bool Signal;
+		static bool Signal;
 		std::vector<pollfd> pollfds;
 		std::vector<Client>	clients;
 		std::map<std::string, Channel > channels;
@@ -23,6 +23,8 @@ class	Server
 		~Server(void);
 
 		void	irc(char **argv);
+		static void	signalHandler(int sig);
+		void	closeAllFd(void);
 		int		setPortPassword(char **argv);
 		int		enterPassword(int socketFd, char *buff);
 		void	createServer(void);

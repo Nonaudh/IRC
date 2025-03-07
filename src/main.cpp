@@ -1,4 +1,7 @@
-#include "irc.hpp"
+#include "Server.hpp"
+#include <iostream>
+#include <exception>
+#include <csignal>
 
 int	main(int argc, char **argv)
 {
@@ -12,12 +15,14 @@ int	main(int argc, char **argv)
 
 	try
 	{
+		signal(SIGINT, Server::signalHandler);
+		signal(SIGQUIT, Server::signalHandler);
 		S.irc(argv);
 	}
 	catch (std::exception& e)
 	{
 		std::cout << e.what() << std::endl;
 	}
-	std::cout << "Je suis la " << std::endl;
+	S.closeAllFd();
 	return (0);
 }
