@@ -3,7 +3,7 @@ NAME    := ircserv
 SRCS_D  := ./src
 OBJS_D  := ./build
 
-CC      := clang++
+CC      := c++
 CFLAGS  := -Wall -Wextra -Werror -std=c++98 -g
 
 HEADERS := -I ./inc
@@ -11,12 +11,9 @@ HEADERS := -I ./inc
 SRCS    := main.cpp Channel.cpp \
 			commands/Command.cpp \
 			server/Server.cpp server/utils_server.cpp \
-			client/Client.cpp
+			client/Client.cpp commands/nickCommand.cpp
 
 OBJS    := $(addprefix $(OBJS_D)/, $(SRCS:.cpp=.o))
-
-GREEN   := \033[1;32m
-RESET   := \033[0m
 
 ARGS	:= 6667 pass
 
@@ -24,7 +21,7 @@ all: $(NAME)
 
 $(OBJS_D)/%.o: $(SRCS_D)/%.cpp
 		@mkdir -p $(dir $@)
-		@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "$(GREEN)✔️ $(notdir $<) compiled\n$(RESET)"
+		$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
 
 $(NAME): $(OBJS)
 		@$(CC) $(OBJS) $(HEADERS) -o $(NAME)
@@ -39,10 +36,10 @@ run: all
 		@./$(NAME) $(ARGS)
 
 clean:
-		@rm -rf $(OBJS_D)
+		rm -rf $(OBJS_D)
 
 fclean: clean
-		@rm -rf $(NAME)
+		rm -rf $(NAME)
 
 re: fclean all
 

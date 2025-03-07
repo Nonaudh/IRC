@@ -41,6 +41,8 @@ class	Server
 		void createChannel(std::string const& name, int fd);
 		Channel* findChannel(std::string const& findChannel);
 		void 	joinChannel(std::string const & nameChannel, int fd);
+		std::map<std::string, Channel>&	getChannels(void);
+		std::vector<Client>&	getClient(void);
 	};
 
 #endif

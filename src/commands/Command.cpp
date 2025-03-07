@@ -1,25 +1,16 @@
-#include <sys/socket.h>
 #include "Command.hpp"
 
-Command::Command(Server server, Client &client, std::string command, std::vector <std::string> params)
-	: server(server), client(client), command(command), params(params) {
-}
+#include <sys/socket.h>
 
-Command &Command::operator=(const Command &copy) {
-	if (this != &copy) {
-		server = copy.server;
-		client = copy.client;
-		command = copy.command;
-		params = copy.params;
-	}
-	return *this;
+Command::Command(Server &server, Client &client, std::string command, std::vector <std::string> params)
+	: server(server), client(client), command(command), params(params) {
 }
 
 Command::~Command() {
 
 }
 
-Server Command::getServer() {
+Server& Command::getServer() {
 	return server;
 }
 
@@ -35,6 +26,36 @@ std::vector <std::string> Command::getParams() {
 	return this->params;
 }
 
+void Command::joinCommand()
+{
+	// Récupérer une référence à la map des canaux
+	std::map<std::string, Channel>& channels = this->getServer().getChannels();
+	std::cout << "Avant ajout : " << channels.size() << " canaux" << std::endl;
+
+	// Chercher si le canal existe déjà
+	std::map<std::string, Channel>::iterator it = channels.find("command");
+
+	if (it == channels.end()) {
+		// Le canal n'existe pas, créez-le
+		std::cout << "Canal créé : " << "command" << std::endl;
+		channels.insert(std::pair<std::string, Channel>("command", Channel(client.getFd(), "command")));
+		std::cout << "Apres insert : " << channels.size() << " canaux" << std::endl;
+	} else {
+		std::cout << "Canal existant : " << "command" << std::endl;
+		// Le canal existe, vous pouvez le rejoindre
+		it->second.joinChannel(1, client.getFd());
+	}
+
+	// Affichage des informations
+	std::cout << "SocketFd: " << getClient().getFd() << std::endl;
+	std::cout << "Command: " << getName() << std::endl;
+	std::cout << "Args: ";
+	for (unsigned long i = 0; i < getParams().size(); ++i) {
+		std::cout << getParams()[i];
+	}
+	std::cout << std::endl;
+}
+
 void Command::execute() {
 	if (!client.getAuthen()) {
 		if (this->command == "PASS")
@@ -42,8 +63,27 @@ void Command::execute() {
 		return;
 	}
 
-	if (this->command == "JOIN")
-		this->quitCommand();
+	std::string	cmd_available[] = {"QUIT", "JOIN", "NICK"};
+
+	int	i;
+	for (i = 0; !cmd_available[i].empty() && command != cmd_available[i]; ++i)
+		;
+
+	switch (i)
+	{
+		case (QUIT):
+			quitCommand();
+			break ;
+		case (JOIN):
+			joinCommand();
+			break ;
+		case (NICK) :
+			nickCommand();
+			break ;
+		default:
+			std::cout << "Unknow cmd : " << command << std::endl;
+			break ;
+	}
 }
 
 void Command::quitCommand() {
