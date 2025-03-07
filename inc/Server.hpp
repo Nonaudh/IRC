@@ -23,6 +23,8 @@ class	Server
 		~Server(void);
 
 		void	irc(char **argv);
+
+		bool	checkPassword(std::string const& password);
 		int		setPortPassword(char **argv);
 		int		enterPassword(int socketFd, char *buff);
 		void	createServer(void);

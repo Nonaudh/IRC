@@ -4,7 +4,9 @@
 #include <iostream>
 #include <iterator>
 #include <map>
+#include <algorithm>
 #include "Command.hpp"
+#include "Server.hpp"
 
 
 Server::Server(void)
@@ -30,37 +32,12 @@ void	Server::handleBuffer(Client& cli, char *buff)
 	std::cout << "C est ici" << std::endl; 
 }
 
-int	Server::enterPassword(int socketFd, char *buff)
-{
-	if (buff != password + "\n")
-	{
-		if (buff != password)
-		{
-			send(socketFd, "Wrong password, try again\n", 26, 0);
-			send(socketFd, "Wrong password, try again\n", 27, 0);
-			return (0);
-		}
-		else
-		{
-			send(socketFd, "You're now connected\n", 22, 0);
-			std::cout << socketFd << " is now connected to the server" << std::endl;
-		}
-	}
-
-	return (1);
-}
-
 std::vector<std::string> split(char *str, const char *sep) {
 	std::vector<std::string> ret;
 
 	if (!str || !sep) return ret;
 
 	char *token = strtok(str, sep);
-
-	size_t len = strlen(str);
-	if (len > 0 && str[len - 1] == '\n') {
-		str[len - 1] = '\0';
-	}
 
 	while (token != NULL) {
 		ret.push_back(std::string(token));
@@ -70,7 +47,7 @@ std::vector<std::string> split(char *str, const char *sep) {
 	return ret;
 }
 
-void execCmd(Server server, Client client, char *buff) {
+void execCmd(Server server, Client& client, char *buff) {
 	std::vector<std::string> splitted;
 	std::string command_name;
 
@@ -79,6 +56,13 @@ void execCmd(Server server, Client client, char *buff) {
 	if (splitted.empty())
 		return;
 
+	std::string &last = splitted.back();
+
+	if (!last.empty() && (last[last.size() - 1] == '\n' || last[last.size() - 1] == '\r')) {
+		last.erase(last.size() - 1);
+	}
+
+	std::transform(splitted[0].begin(), splitted[0].end(), splitted[0].begin(), ::toupper);
 	command_name = splitted[0];
 	splitted.erase(splitted.begin());
 
@@ -209,4 +193,17 @@ void 	Server::joinChannel(std::string const & nameChannel, int fd)
 		chan->joinChannel(1,fd);
 	}
 	//Verifier si il faut le creer ici 
+}
+
+bool Server::checkPassword(const std::string &password) {
+	std::cout << "Checking password: " << password << " size: " << password.size() << std::endl;
+	std::cout << "Server password: " << this->password << " size: " << this->password.size() << std::endl;
+
+	for (size_t i = 0; i < password.size(); i++) {
+		std::cout << (int)password[i] << " ";
+	}
+
+	std::cout << std::endl;
+
+	return password == this->password;
 }
