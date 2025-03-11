@@ -23,6 +23,8 @@ class	Server
 		~Server(void);
 
 		void	irc(char **argv);
+
+		bool	checkPassword(std::string const& password);
 		static void	signalHandler(int sig);
 		void	closeAllFd(void);
 		int		setPortPassword(char **argv);
@@ -45,6 +47,6 @@ class	Server
 		std::vector<Client>&	getClient(void);
 	};
 
-std::vector<std::string> ft_split_irc(std::string buff, int (*skip)(char), int (*unskip)(char));
+std::vector<std::string> split(std::string buff, int (*skip)(char), int (*unskip)(char));
 
 #endif

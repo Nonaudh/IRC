@@ -17,14 +17,11 @@ enum	e_cmd
 
 class Command {
 public:
-	// Command();
 	Command(Server& server, Client &client, std::string command, std::vector<std::string> params);
-	//Command(const Command &copy);
-	//Command &operator=(const Command &copy);
 	virtual ~Command();
 
 	Server& getServer();
-	Client getClient();
+	Client& getClient();
 	std::string getName();
 	std::vector<std::string> getParams();
 
@@ -35,10 +32,10 @@ private:
 	std::string command;
 	std::vector<std::string> params;
 
+	void	passCommand();
 	void	quitCommand(void);
 	void	joinCommand(void);
 	void	nickCommand(void);
-	
 };
 
 #endif
