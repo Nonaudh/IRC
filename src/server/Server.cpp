@@ -38,6 +38,31 @@ int	unskipped_space(char c)
 	return (!(c == ' ' || c == '	'));
 }
 
+std::vector<std::string> split_exec(std::string buff, int (*skip)(char), int (*unskip)(char))
+{
+	std::vector<std::string>	v;
+
+	std::string::iterator first = buff.begin();
+	std::string::iterator last;
+
+	while (first != buff.end())
+	{
+		first = std::find_if(first, buff.end(), unskip);
+		if (*first == ':')
+			last = buff.end();
+		else
+			last = std::find_if(first, buff.end(), skip);
+
+		std::string tmp(first, last);
+
+		if (first != last)
+			v.push_back(tmp);
+		tmp.erase();
+		first = last;
+	}
+	return (v);
+}
+
 void	new_execCmd(Server& server, Client& cli, std::vector<std::string> v)
 {
 	std::vector<std::string> splitted;
@@ -45,7 +70,7 @@ void	new_execCmd(Server& server, Client& cli, std::vector<std::string> v)
 
 	for (std::vector<std::string>::iterator it = v.begin(); it != v.end(); ++it)
 	{
-		splitted = split(*it, skipped_space, unskipped_space);
+		splitted = split_exec(*it, skipped_space, unskipped_space);
 		command_name = *splitted.begin();
 		splitted.erase(splitted.begin());
 		Command(server, cli, command_name, splitted).execute();
