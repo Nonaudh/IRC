@@ -6,13 +6,13 @@
 #include <map>
 #include <algorithm>
 #include "Command.hpp"
-#include "Server.hpp"
 
+
+bool Server::Signal = false;
 
 Server::Server(void)
 {
 	this->serSocketFd = -1;
-	this->Signal = false;
 }
 
 Server::~Server(void)
@@ -29,7 +29,7 @@ void	Server::handleBuffer(Client& cli, char *buff)
 		// 	cli.Authen();
 		return ;
 	}
-	std::cout << "C est ici" << std::endl; 
+	std::cout << "C est ici" << std::endl;
 }
 
 std::vector<std::string> split(char *str, const char *sep) {
@@ -38,6 +38,11 @@ std::vector<std::string> split(char *str, const char *sep) {
 	if (!str || !sep) return ret;
 
 	char *token = strtok(str, sep);
+
+	size_t len = strlen(str);
+	if (len > 0 && str[len - 1] == '\n') {
+		str[len - 1] = '\0';
+	}
 
 	while (token != NULL) {
 		ret.push_back(std::string(token));
@@ -56,25 +61,92 @@ void execCmd(Server& server, Client& client, char *buff) {
 	if (splitted.empty())
 		return;
 
-	std::string &last = splitted.back();
-
-	if (!last.empty() && (last[last.size() - 1] == '\n' || last[last.size() - 1] == '\r')) {
-		last.erase(last.size() - 1);
-	}
-
-	std::transform(splitted[0].begin(), splitted[0].end(), splitted[0].begin(), ::toupper);
 	command_name = splitted[0];
 	splitted.erase(splitted.begin());
 
 	Command(server, client, command_name, splitted).execute();
 }
 
+int	skipped_b_s(char c)
+{
+	return (c == '\n' || c == '\r');
+}
+
+int	unskipped_b_s(char c)
+{
+	return (!(c == '\n' || c == '\r'));
+}
+
+int	skipped_space(char c)
+{
+	return (c == ' ' || c == '	');
+}
+
+int	unskipped_space(char c)
+{
+	return (!(c == ' ' || c == '	'));
+}
+
+void	new_execCmd(Server& server, Client& cli, std::vector<std::string> v)
+{
+	std::vector<std::string> splitted;
+	std::string command_name;
+
+	for (std::vector<std::string>::iterator it = v.begin(); it != v.end(); ++it)
+	{
+		splitted = ft_split_irc(*it, skipped_space, unskipped_space);
+		command_name = *splitted.begin();
+		splitted.erase(splitted.begin());
+		Command(server, cli, command_name, splitted).execute();
+		splitted.clear();
+		command_name.clear();
+	}
+}
+
+std::vector<std::string> ft_split_irc(std::string buff, int (*skip)(char), int (*unskip)(char))
+{
+	std::vector<std::string>	v;
+
+	std::string::iterator first = buff.begin();
+	std::string::iterator last;
+
+	while (first != buff.end())
+	{
+		first = std::find_if(first, buff.end(), unskip);
+		last = std::find_if(first, buff.end(), skip);
+
+		std::string tmp(first, last);
+
+		if (first != last)
+			v.push_back(tmp);
+		tmp.erase();
+		first = last;
+	}
+	return (v);
+}
+
+void	print_vector(std::vector<std::string>& v)
+{
+	for (std::vector<std::string>::iterator it = v.begin(); it != v.end(); ++it)
+		std::cout << *it << " | " << std::endl;
+}
+
+bool	no_endl(std::string	buff)
+{
+
+	if (std::find(buff.begin(), buff.end(), '\n') == buff.end())
+		return (1);
+	return (0);
+}
+
 void	Server::readData(Client& cli)
 {
-	char	buff[1024];
-	bzero(buff, sizeof(buff));
+	char	bufftmp[1024];
+	std::string	buff;
+	static std::map<int, std::string> save;
+	bzero(bufftmp, sizeof(bufftmp));
 
-	ssize_t bytes = recv(cli.getFd(), buff, sizeof(buff) - 1, 0);
+	ssize_t bytes = recv(cli.getFd(), bufftmp, sizeof(bufftmp) - 1, 0);
 	if (bytes <= 0)
 	{
 		std::cout << "Client " << cli.getFd() << " disconnected\n";
@@ -84,9 +156,24 @@ void	Server::readData(Client& cli)
 	}
 	else
 	{
-		buff[bytes] = 0;
-		std::cout << cli.getNick() << " : " << buff;
-		execCmd(*this, cli, buff);
+		bufftmp[bytes] = 0;
+		buff = bufftmp;
+		std::map<int, std::string>::iterator it;
+		it = save.find(cli.getFd());
+		if (it != save.end())
+		{
+			buff = save.find(cli.getFd())->second + buff;
+			save.erase(it);
+		}
+		if (no_endl(buff))
+		{
+			save.insert(std::pair<int,std::string>(cli.getFd(), buff));
+			return ;
+		}
+		std::vector<std::string> v = ft_split_irc(buff, skipped_b_s, unskipped_b_s);
+		print_vector(v);
+		// execCmd(*this, cli, buff);
+		new_execCmd(*this, cli, v);
 	}
 }
 
@@ -112,7 +199,7 @@ void	Server::NewClient(void)
 
 void	Server::runServer(void)
 {
-	while (this->Signal == false)
+	while (!Server::Signal)
 	{
 		if ((poll(&pollfds[0], pollfds.size(), -1) == -1) && Signal == false)
 			throw(std::runtime_error("Error poll()"));
@@ -175,7 +262,7 @@ void Server::createChannel(std::string const& name, int fd)
 	std::cout << "CLASS SERVER CREATECHANNE;" << std::endl;
 	Channel newChanne(fd, name);
 	//C'est ici qu'il faut agir
-	channels[name]= newChanne;	
+	channels[name]= newChanne;
 }
 
 Channel* Server::findChannel(std::string const& findChannel)
@@ -193,7 +280,7 @@ void 	Server::joinChannel(std::string const & nameChannel, int fd)
 	{
 		chan->joinChannel(1,fd);
 	}
-	//Verifier si il faut le creer ici 
+	//Verifier si il faut le creer ici
 }
 
 bool Server::checkPassword(const std::string &password) {

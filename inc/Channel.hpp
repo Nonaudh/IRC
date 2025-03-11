@@ -8,8 +8,8 @@ class Channel
     private:
         //Mise en place de tous les arguments demander dans le sujet
         std::vector <int> socketFdClient; //client
-        std::vector <int>socketInvite;//invite
-        std::vector <int>socketAdmin;
+        std::vector <int> socketInvite;//invite
+        std::vector <int> socketAdmin;
         std::string password;
         int nbr_limit_people;
         bool topic_editable;
