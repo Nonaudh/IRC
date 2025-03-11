@@ -1,5 +1,4 @@
 #include "Command.hpp"
-
 #include <sys/socket.h>
 
 Command::Command(Server &server, Client &client, std::string command, std::vector <std::string> params)
@@ -68,7 +67,7 @@ void Command::execute() {
 		return;
 	}
 
-	std::string	cmd_available[] = {"QUIT", "JOIN", "NICK", "PRIVMSG"};
+	std::string	cmd_available[] = {"QUIT", "JOIN", "NICK", "PRIVMSG", "PART", "TOPIC", "KICK", "MODE"};
 
 	int	i;
 	for (i = 0; !cmd_available[i].empty() && command != cmd_available[i]; ++i)
@@ -87,10 +86,29 @@ void Command::execute() {
 			break ;
 		case (PRIVMSG):
 		{
-			std::cout << ("XXX") << std::endl;
 			privmsgCommand();
-		}
 			break ;
+		}
+		case(PART):
+		{
+			firstParamChannelCommand(0);
+			break;
+		}
+		case(TOPIC):
+		{
+			firstParamChannelCommand(1);
+			break;
+		}
+		case(KICK):
+		{
+			firstParamChannelCommand(2);
+			break;
+		}
+		case(MODE):
+		{
+			firstParamChannelCommand(3);
+			break;
+		}
 
 		default:
 			std::cout << "Unknow cmd : " << command << std::endl;
