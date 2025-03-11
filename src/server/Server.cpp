@@ -294,6 +294,7 @@ Channel* Server::findChannel(std::string const& findChannel)
 }
 void 	Server::joinChannel(std::string const & nameChannel, int fd)
 {
+	std::cout <<"ServerJoinChannel"<< std::endl;
 	std::cout <<"WW"<< std::endl;
 	Channel *chan = findChannel(nameChannel);
 	if(chan)
