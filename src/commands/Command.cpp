@@ -45,20 +45,26 @@ void Command::join()
 {
 	// Récupérer une référence à la map des canaux
 	std::map<std::string, Channel>& channels = this->getServer().getChannels();
+	std::cout << "SocketFd: " << getClient().getFd() << std::endl;
+	std::cout << "Command: " << getName() << std::endl;
+	std::cout << "Args: ";
+	for (unsigned long i = 0; i < getParams().size(); ++i) {
+		std::cout << getParams()[i];
+	}
 	std::cout << "Avant ajout : " << channels.size() << " canaux" << std::endl;
 
 	// Chercher si le canal existe déjà
-	std::map<std::string, Channel>::iterator it = channels.find("command");
+	std::map<std::string, Channel>::iterator it = channels.find(getParams()[0]);
 
 	if (it == channels.end()) {
 		// Le canal n'existe pas, créez-le
 		std::cout << "Canal créé : " << "command" << std::endl;
-		channels.insert(std::pair<std::string, Channel>("command", Channel(client.getFd(), "command")));
+		channels.insert(std::pair<std::string, Channel>(getParams()[0], Channel(client.getFd(), getParams()[0])));
 		std::cout << "Apres insert : " << channels.size() << " canaux" << std::endl;
 	} else {
 		std::cout << "Canal existant : " << "command" << std::endl;
 		// Le canal existe, vous pouvez le rejoindre
-		it->second.joinChannel(1, client.getFd());
+		it->second.joinChannel(1, client.getFd());// A verifier
 	}
 
 	// Affichage des informations

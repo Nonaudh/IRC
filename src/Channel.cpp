@@ -80,12 +80,15 @@ void Channel::joinChannel(int privilege, int fd)
 {
     std::cout <<"Je passe class class channe JoinChannel" << std::endl;
     size_t i =this->nbrPeople();
+    std::cout << "Je suis le nombre de personne dans le channel" << i << std::endl;
     if((int)i > nbr_limit_people)   
         return;
     if(privilege == 0)
         this->socketAdmin.push_back(fd);
     if(privilege == 1)
+    {
         this->socketFdClient.push_back(fd);
+    }
     if(privilege == 2)
         this->socketInvite.push_back(fd);
     else
