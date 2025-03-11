@@ -15,7 +15,8 @@ Client::Client(int socketFd)
 	std::string	id = int_to_string(socketFd);
 	username = "Client" + id;
 	nickname = username + "_";
-	authentication = false;
+	// authentication = false;
+	authentication = true;
 	SocketFd = socketFd;
 }
 

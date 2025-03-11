@@ -28,7 +28,6 @@ std::vector <std::string> Command::getParams() {
 
 void Command::joinCommand()
 {
-	// Récupérer une référence à la map des canaux
 	std::map<std::string, Channel>& channels = this->getServer().getChannels();
 	std::cout << "SocketFd: " << getClient().getFd() << std::endl;
 	std::cout << "Command: " << getName() << std::endl;
@@ -69,7 +68,7 @@ void Command::execute() {
 		return;
 	}
 
-	std::string	cmd_available[] = {"QUIT", "JOIN", "NICK"};
+	std::string	cmd_available[] = {"QUIT", "JOIN", "NICK", "PRIVMSG"};
 
 	int	i;
 	for (i = 0; !cmd_available[i].empty() && command != cmd_available[i]; ++i)
@@ -86,11 +85,18 @@ void Command::execute() {
 		case (NICK) :
 			nickCommand();
 			break ;
+		case (PRIVMSG):
+		{
+			std::cout << ("XXX") << std::endl;
+			privmsgCommand();
+		}
+			break ;
+
 		default:
 			std::cout << "Unknow cmd : " << command << std::endl;
 			break ;
 	}
-}
+}//PRIVMSG #channelname :Hello, everyone! 
 
 void Command::quitCommand() {
 	std::cout << "QuitCommand" << std::endl;

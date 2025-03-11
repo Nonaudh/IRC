@@ -37,6 +37,7 @@ class Channel
         // int setLimitPeople(void)const;
         // //Retirer les droits admin
         // void changePrivil(int id)const;
+        std::map <int , e_privilege>& getClients(void);
 
         size_t nbrPeople();
         void joinChannel(int socketFd, e_privilege privilege);

@@ -13,6 +13,7 @@ enum	e_cmd
 	QUIT,
 	JOIN,
 	NICK,
+	PRIVMSG,
 };
 
 class Command {
@@ -36,6 +37,8 @@ private:
 	void	quitCommand(void);
 	void	joinCommand(void);
 	void	nickCommand(void);
+	void   privmsgCommand(void);
+
 };
 
 #endif
