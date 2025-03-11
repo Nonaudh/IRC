@@ -18,55 +18,6 @@ Server::Server(void)
 Server::~Server(void)
 {}
 
-void	Server::handleBuffer(Client& cli, char *buff)
-{
-	std::string	str = buff;
-	std::cout << str;
-
-	if (!cli.getAuthen())
-	{
-		// if (enterPassword(cli.getFd(), buff)) // to change
-		// 	cli.Authen();
-		return ;
-	}
-	std::cout << "C est ici" << std::endl;
-}
-
-std::vector<std::string> split(char *str, const char *sep) {
-	std::vector<std::string> ret;
-
-	if (!str || !sep) return ret;
-
-	char *token = strtok(str, sep);
-
-	size_t len = strlen(str);
-	if (len > 0 && str[len - 1] == '\n') {
-		str[len - 1] = '\0';
-	}
-
-	while (token != NULL) {
-		ret.push_back(std::string(token));
-		token = strtok(NULL, sep);
-	}
-
-	return ret;
-}
-
-void execCmd(Server& server, Client& client, char *buff) {
-	std::vector<std::string> splitted;
-	std::string command_name;
-
-	splitted = split(buff, " ");
-
-	if (splitted.empty())
-		return;
-
-	command_name = splitted[0];
-	splitted.erase(splitted.begin());
-
-	Command(server, client, command_name, splitted).execute();
-}
-
 int	skipped_b_s(char c)
 {
 	return (c == '\n' || c == '\r');
@@ -94,7 +45,7 @@ void	new_execCmd(Server& server, Client& cli, std::vector<std::string> v)
 
 	for (std::vector<std::string>::iterator it = v.begin(); it != v.end(); ++it)
 	{
-		splitted = ft_split_irc(*it, skipped_space, unskipped_space);
+		splitted = split(*it, skipped_space, unskipped_space);
 		command_name = *splitted.begin();
 		splitted.erase(splitted.begin());
 		Command(server, cli, command_name, splitted).execute();
@@ -103,7 +54,7 @@ void	new_execCmd(Server& server, Client& cli, std::vector<std::string> v)
 	}
 }
 
-std::vector<std::string> ft_split_irc(std::string buff, int (*skip)(char), int (*unskip)(char))
+std::vector<std::string> split(std::string buff, int (*skip)(char), int (*unskip)(char))
 {
 	std::vector<std::string>	v;
 
@@ -170,7 +121,7 @@ void	Server::readData(Client& cli)
 			save.insert(std::pair<int,std::string>(cli.getFd(), buff));
 			return ;
 		}
-		std::vector<std::string> v = ft_split_irc(buff, skipped_b_s, unskipped_b_s);
+		std::vector<std::string> v = split(buff, skipped_b_s, unskipped_b_s);
 		print_vector(v);
 		// execCmd(*this, cli, buff);
 		new_execCmd(*this, cli, v);
@@ -256,13 +207,10 @@ void	Server::irc(char **argv)
 	runServer();
 }
 
-//Modifier pour la class channel
 void Server::createChannel(std::string const& name, int fd)
 {
-	std::cout << "CLASS SERVER CREATECHANNE;" << std::endl;
-	Channel newChanne(fd, name);
-	//C'est ici qu'il faut agir
-	channels[name]= newChanne;
+	Channel chan(fd, name);
+	channels[name]= chan;
 }
 
 Channel* Server::findChannel(std::string const& findChannel)
@@ -277,9 +225,7 @@ void 	Server::joinChannel(std::string const & nameChannel, int fd)
 	std::cout <<"WW"<< std::endl;
 	Channel *chan = findChannel(nameChannel);
 	if(chan)
-	{
-		chan->joinChannel(1,fd);
-	}
+		chan->joinChannel(fd, USER);
 	//Verifier si il faut le creer ici
 }
 

@@ -43,7 +43,7 @@ void Command::joinCommand()
 	} else {
 		std::cout << "Canal existant : " << "command" << std::endl;
 		// Le canal existe, vous pouvez le rejoindre
-		it->second.joinChannel(1, client.getFd());
+		it->second.joinChannel(client.getFd(), USER);
 	}
 
 	// Affichage des informations
