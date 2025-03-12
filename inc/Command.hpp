@@ -43,6 +43,8 @@ private:
 	void	nickCommand(void);
 	void   privmsgCommand(void);
 	void   firstParamChannelCommand(int i);
+	void   executePartCommand();
+
 
 };
 
