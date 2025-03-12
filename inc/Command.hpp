@@ -7,9 +7,15 @@
 #include "Client.hpp"
 #include "Server.hpp"
 # include <map>
+# include "error.hpp"
+# include <sys/types.h>
+# include <sys/socket.h>
+# include <cstring>
+# include <unistd.h>
 
 enum	e_cmd
 {
+	KILL,
 	QUIT,
 	JOIN,
 	NICK,
@@ -33,7 +39,8 @@ private:
 	std::string command;
 	std::vector<std::string> params;
 
-	void	passCommand();
+	void	killCommand(void);
+	void	passCommand(void);
 	void	quitCommand(void);
 	void	joinCommand(void);
 	void	nickCommand(void);

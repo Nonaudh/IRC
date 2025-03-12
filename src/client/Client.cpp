@@ -16,7 +16,7 @@ Client::Client(int socketFd)
 	username = "Client" + id;
 	nickname = username + "_";
 	// authentication = false;
-	authentication = true;
+	authentication = true; // to switch to false
 	SocketFd = socketFd;
 }
 

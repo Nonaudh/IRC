@@ -11,7 +11,9 @@ HEADERS := -I ./inc
 SRCS    := main.cpp Channel.cpp \
 			commands/Command.cpp \
 			server/Server.cpp server/utils_server.cpp \
-			client/Client.cpp commands/nickCommand.cpp commands/privmsgCommand.cpp
+			client/Client.cpp commands/nickCommand.cpp \
+			commands/privmsgCommand.cpp \
+			commands/killCommand.cpp
 
 OBJS    := $(addprefix $(OBJS_D)/, $(SRCS:.cpp=.o))
 

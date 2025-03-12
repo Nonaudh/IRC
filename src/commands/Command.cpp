@@ -68,7 +68,7 @@ void Command::execute() {
 		return;
 	}
 
-	std::string	cmd_available[] = {"QUIT", "JOIN", "NICK", "PRIVMSG"};
+	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG"};
 
 	int	i;
 	for (i = 0; !cmd_available[i].empty() && command != cmd_available[i]; ++i)
@@ -76,6 +76,9 @@ void Command::execute() {
 
 	switch (i)
 	{
+		case (KILL):
+			killCommand();
+			break ;
 		case (QUIT):
 			quitCommand();
 			break ;
