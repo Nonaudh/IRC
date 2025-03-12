@@ -12,7 +12,7 @@ bool	nickname_not_free(std::string& nick, std::vector<Client>& clients)
 	return (false);
 }
 
-void	error_irc(const char *str, int fd)
+void	send_message(const char *str, int fd)
 {
 	send(fd, str, strlen(str), 0);
 }
@@ -21,14 +21,18 @@ void	Command::nickCommand(void)
 {
 	if (this->params.empty())
 	{
-		error_irc(ERR_NONICKNAMEGIVEN, this->client.getFd());
+		send_message(ERR_NONICKNAMEGIVEN, this->client.getFd());
 		return ;
 	}
 
 	if (nickname_not_free(this->params[0], this->server.getClient()))
 	{
-		error_irc(ERR_NICKNAMEINUSE(this->params[0].c_str()), this->client.getFd());
+		send_message(ERR_NICKNAMEINUSE(this->params[0].c_str()), this->client.getFd());
 		return ;
 	}
+	
 	this->client.setNick(this->params[0]);
+
+	std::string	msg = "Nickname sucessfully change to : " + this->params[0] + "\r\n";
+	send_message(msg.c_str(), this->getClient().getFd());
 }

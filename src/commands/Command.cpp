@@ -1,4 +1,5 @@
 #include "Command.hpp"
+# include "Server.hpp"
 
 #include <sys/socket.h>
 
@@ -59,6 +60,23 @@ void Command::joinCommand()
 		std::cout << getParams()[i];
 	}
 	std::cout << std::endl;
+}
+
+void	Command::killCommand(void)
+{
+	switch (this->params.size())
+	{
+		case 0:
+			send_message("Error killCommand\r\n", this->client.getFd());
+			break;
+		
+		case 1:
+			this->server.killFromServer(params[0], "");
+			break;
+		
+		default:
+			this->server.killFromServer(params[0], params[1]);
+	}
 }
 
 void Command::execute() {
@@ -137,7 +155,7 @@ void Command::passCommand() {
 		return;
 	}
 
-	client.Authen();
+	client.Authen(CONNECT);
 
 	send(socketFd, "You're now connected\n", 22, 0);
 	std::cout << socketFd << " is now connected to the server" << std::endl;

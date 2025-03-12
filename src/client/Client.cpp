@@ -16,7 +16,7 @@ Client::Client(int socketFd)
 	username = "Client" + id;
 	nickname = username + "_";
 	// authentication = false;
-	authentication = true; // to switch to false
+	authentication = CONNECT; // to switch to false
 	SocketFd = socketFd;
 }
 
@@ -33,12 +33,12 @@ int	Client::getFd(void) const
 	return (this->SocketFd);
 }
 
-void	Client::Authen(void)
+void	Client::Authen(e_level level)
 {
-	this->authentication = true;
+	this->authentication = level;
 }
 
-int		Client::getAuthen(void) const
+e_level		Client::getAuthen(void) const
 {
 	return (this->authentication);
 }
