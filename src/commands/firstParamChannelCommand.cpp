@@ -1,9 +1,10 @@
 #include "Command.hpp"
 
+//Personnalisation pour ce genre de commande MODE #channel +o <nickname> 
+
 std::map<std::string, Channel>::iterator  verifChanneExisted(std::map<std::string, Channel>& channels, std::vector<std::string> params)
 {
     params[0].erase (params[0].begin());
-    std ::cout << "0 = "<< params[0] << std::endl;
     std::map <std::string, Channel> :: iterator it = channels.find(params[0]);
     return(it);
 }
@@ -13,7 +14,7 @@ bool verifClientConnectServer(std::map<std::string, Channel>& channels, std::vec
     (void)params;
     (void)channels;
     std::map<int, e_privilege>::iterator    it = channel.find(clientFd);
-    if (it != channel.end())
+    if (it == channel.end())
     {
         if(i == 0)
             std::cout << "Sur la Commande PART le clients n'est pas connecter au channel " << std::endl;
@@ -23,9 +24,9 @@ bool verifClientConnectServer(std::map<std::string, Channel>& channels, std::vec
             std::cout << "Sur la Commande KICK le clients n'est pas connecter au channel " << std::endl;
         if(i == 3)
             std::cout << "Sur la Commande Mode le clients n'est pas connecter au channel " << std::endl;
-        return (1);
+        return (0);
     }
-    if (it->second != INVITE)//Faire des droits personnaliser pour chaque commande
+    if (it->second == INVITE)//Faire des droits personnaliser pour chaque commande
     {
         if(i == 0)
             std::cout << "Sur la Commande PART le clients n'a pas les droits " << std::endl;
@@ -35,9 +36,9 @@ bool verifClientConnectServer(std::map<std::string, Channel>& channels, std::vec
             std::cout << "Sur la Commande KICK le clients n'a pas les droits " << std::endl;
         if(i == 3)
             std::cout << "Sur la Commande Mode le clients n'a pas les droits " << std::endl;
-        return (1);
+        return (0);
     }
-    return (0);
+    return (1);
 }
 
 void Command::firstParamChannelCommand(int i)
@@ -52,25 +53,55 @@ void Command::firstParamChannelCommand(int i)
            if(verifClientConnectServer(this->server.getChannels(), this->getParams(), this->client.getFd(),
            verifChanneExisted(this->server.getChannels(), this->getParams())->second.getClients(), i))
            {
+                //Verifier si il manque des arguments
+                if(getParams()[1].empty())
+                {
+                    if(i == 0)
+                        std::cout << "Pour Execute PartCommand il manque arguments" << std ::endl;
+                    if(i == 1)
+                        std::cout << "Pour Execute TopicCommand il manque arguments" << std::endl;
+                    if(i == 2)
+                        std::cout << "Pour Execute KickCommand il manque arguments" << std::endl;
+                    if(i == 3)
+                        std::cout << "Pour Execute MODECommand il manque arguments" << std::endl;
+                    return;    
+                }
+                //Mise en place de la recherche d'options
+                if((getParams()[1][0]== '-' ||getParams()[1][0]== '-' ) && i == 3)
+                {
+                    //Il n'y des options que pour mode
+                    std::cout << "Mise en place des options pour Mode"<< std::endl;    
+                }
+                if(getParams()[1][0]== '-' ||getParams()[1][0]== '-' )
+                {
+                    //Not with others commande'
+                    if(i == 0)
+                    std::cout << "Sur la Commande PART Cette commande ne prends pas d'options" << std::endl;
+                    if(i == 1)
+                    std::cout << "Sur la Commande TOPIC Cette commande ne prends pas d'options" << std::endl;
+                    if(i == 2)
+                    std::cout << "Sur la Commande KICK Cette commande ne prends pas d'options" << std::endl;
+                }
+                
                 if(i == 0)
-                    std::cout << "Execute PartCommand" << std ::endl;
+                std::cout << "Execute PartCommand" << std ::endl;
                 if(i == 1)
-                    std::cout << "Execute TopicCommand" << std::endl;
+                std::cout << "Execute TopicCommand" << std::endl;
                 if(i == 2)
-                    std::cout << "Execute KickCommand" << std::endl;
+                std::cout << "Execute KickCommand" << std::endl;
                 if(i == 3)
-                    std::cout << "Execute MODECommand" << std::endl;
+                std::cout << "Execute Avoir car Mode sans options peux donner des erreurs MODECommand" << std::endl;
             }
             return;
         }
         if(i == 0)
-            std::cout << "Sur la Commande PART le channel n'existe pas" << std::endl;
+        std::cout << "Sur la Commande PART le channel n'existe pas" << std::endl;
         if(i == 1)
-            std::cout << "Sur la Commande TOPIC le channel n'existe pas" << std::endl;
+        std::cout << "Sur la Commande TOPIC le channel n'existe pas" << std::endl;
         if(i == 2)
-            std::cout << "Sur la Commande KICK le channel n'existe pas" << std::endl;
+        std::cout << "Sur la Commande KICK le channel n'existe pas" << std::endl;
         if(i == 3)
-            std::cout << "Sur la Commande Mode le channel n'existe pas" << std::endl;
+        std::cout << "Sur la Commande Mode le channel n'existe pas" << std::endl;
         std::cout << "Le channel n'existe pas" << std::endl;
         return;
     }
@@ -78,11 +109,13 @@ void Command::firstParamChannelCommand(int i)
     if(i == 0)
     std::cout << "Sur la Commande PART il manque le #" << std::endl;
     if(i == 1)
-        std::cout << "Sur la Commande TOPIC il manque le #" << std::endl;
+    std::cout << "Sur la Commande TOPIC il manque le #" << std::endl;
     if(i == 2)
-        std::cout << "Sur la Commande KICK il manque le #" << std::endl;
+    std::cout << "Sur la Commande KICK il manque le #" << std::endl;
     if(i == 3)
-        std::cout << "Sur la Commande Mode il manque le #" << std::endl;
+    std::cout << "Sur la Commande Mode il manque le #" << std::endl;
     
-std::cout << "Le channel n'existe pas" << std::endl;
+    std::cout << "Le channel n'existe pas" << std::endl;
 }
+// std ::cout << "\n0 = "<< params[0] << std::endl;
+// std ::cout << "\n1 = "<< params[1] << std::endl;
