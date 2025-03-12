@@ -44,7 +44,8 @@ private:
 	void	quitCommand(void);
 	void	joinCommand(void);
 	void	nickCommand(void);
-	void   privmsgCommand(void);
+	void	privmsgCommand(void);
+	int		find_clientFd_nickname(void);
 
 };
 

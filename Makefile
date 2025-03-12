@@ -8,7 +8,7 @@ CFLAGS  := -Wall -Wextra -Werror -std=c++98 -g
 
 HEADERS := -I ./inc
 
-SRCS    := main.cpp Channel.cpp \
+SRCS    :=	main.cpp Channel.cpp \
 			commands/Command.cpp \
 			server/Server.cpp server/utils_server.cpp \
 			client/Client.cpp commands/nickCommand.cpp \

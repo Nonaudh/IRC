@@ -5,9 +5,7 @@ bool	nickname_not_free(std::string& nick, std::vector<Client>& clients)
 	std::vector<Client>::iterator it ;
 
 	for (it = clients.begin(); it != clients.end() && it->getNick() != nick; ++it)
-	{
-		std::cout << it->getNick() << " to " << nick << std::endl;
-	}
+		;
 
 	if (it != clients.end())
 		return (true);
@@ -32,6 +30,5 @@ void	Command::nickCommand(void)
 		error_irc(ERR_NICKNAMEINUSE(this->params[0].c_str()), this->client.getFd());
 		return ;
 	}
-	
 	this->client.setNick(this->params[0]);
 }
