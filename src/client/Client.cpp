@@ -15,8 +15,7 @@ Client::Client(int socketFd)
 	std::string	id = int_to_string(socketFd);
 	username = "Client" + id;
 	nickname = username + "_";
-	// authentication = false;
-	authentication = CONNECT; // to switch to false
+	level = CONNECT; // to switch to AUTHEN
 	SocketFd = socketFd;
 }
 
@@ -35,12 +34,12 @@ int	Client::getFd(void) const
 
 void	Client::Authen(e_level level)
 {
-	this->authentication = level;
+	this->level = level;
 }
 
 e_level		Client::getAuthen(void) const
 {
-	return (this->authentication);
+	return (this->level);
 }
 
 std::string	Client::getNick(void) const
@@ -48,7 +47,7 @@ std::string	Client::getNick(void) const
 	return (this->nickname);
 }
 
-void		Client::setNick(std::string str)
+void	Client::setNick(std::string str)
 {
 	this->nickname = str;
 }

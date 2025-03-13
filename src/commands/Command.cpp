@@ -64,6 +64,11 @@ void Command::joinCommand()
 
 void	Command::killCommand(void)
 {
+	if (this->client.getAuthen() != OP)
+	{
+		send_message(ERR_NOPRIVILEGES, this->client.getFd());
+		return ;
+	}
 	switch (this->params.size())
 	{
 		case 0:
@@ -71,11 +76,11 @@ void	Command::killCommand(void)
 			break;
 		
 		case 1:
-			this->server.killFromServer(params[0], "");
+			this->server.killFromServer(params[0], "", this->client.getFd());
 			break;
 		
 		default:
-			this->server.killFromServer(params[0], params[1]);
+			this->server.killFromServer(params[0], params[1], this->client.getFd());
 	}
 }
 
@@ -86,7 +91,7 @@ void Command::execute() {
 		return;
 	}
 
-	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG"};
+	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG", "MODE"};
 
 	int	i;
 	for (i = 0; !cmd_available[i].empty() && command != cmd_available[i]; ++i)
@@ -107,10 +112,10 @@ void Command::execute() {
 			nickCommand();
 			break ;
 		case (PRIVMSG):
-		{
-			std::cout << ("XXX") << std::endl;
 			privmsgCommand();
-		}
+			break ;
+		case (MODE) :
+			modeCommand();
 			break ;
 
 		default:

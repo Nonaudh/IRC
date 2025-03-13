@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "error.hpp"
 
 int	find_clientFd_nickname(std::vector<Client>& clis, std::string nickname)
 {
@@ -11,17 +12,21 @@ int	find_clientFd_nickname(std::vector<Client>& clis, std::string nickname)
 	return (-1);
 }
 
-void	Server::killFromServer(std::string nickname, std::string reason) // i think this is wrong :/
+void	Server::killFromServer(std::string nickname, std::string reason, int caller) // i think this is wrong :/
 {
-	//this->client should be op to perform killCommand
 	int	fd = find_clientFd_nickname(this->getClient(), nickname);
 	if (fd == -1)
 	{
-		std::cout << "Invalid KillCommand used for nickname : " << nickname << std::endl;
+		send_message(ERR_NOSUCHNICK(nickname), caller);
 		return ;
 	}
-
-	send(fd, reason.c_str(), reason.length(), 0);
+	send_message("You have been kicked from the server", fd);
+	if (!reason.empty())
+	{
+		send_message(" because ", fd);
+		send(fd, reason.c_str(), reason.length(), 0);
+	}
+	send_message("\r\n", fd);
 	close(fd);
 	this->eraseClient(fd);
 	this->erasePoll(fd);

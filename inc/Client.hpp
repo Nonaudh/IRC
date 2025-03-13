@@ -13,7 +13,7 @@ enum	e_level
 class	Client
 {
 	private :
-		e_level		authentication;
+		e_level		level;
 		std::string	username;
 		std::string	nickname;
 		int			SocketFd;

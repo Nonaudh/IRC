@@ -20,6 +20,7 @@ enum	e_cmd
 	JOIN,
 	NICK,
 	PRIVMSG,
+	MODE,
 };
 
 class Command {
@@ -33,6 +34,7 @@ public:
 	std::vector<std::string> getParams();
 
 	void execute();
+
 private:
 	Server& server;
 	Client& client;
@@ -45,7 +47,7 @@ private:
 	void	nickCommand(void);
 	void	privmsgCommand(void);
 	void	killCommand(void);
-
+	void	modeCommand(void);
 };
 
 void	send_message(const char *str, int fd);

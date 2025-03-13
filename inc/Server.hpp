@@ -48,7 +48,7 @@ class	Server
 		void 	joinChannel(std::string const & nameChannel, int fd);
 		std::map<std::string, Channel>&	getChannels(void);
 		std::vector<Client>&	getClient(void);
-		void	killFromServer(std::string nickname, std::string reason);
+		void	killFromServer(std::string nickname, std::string reason, int caller);
 };
 
 void	send_message(const char *str, int fd);

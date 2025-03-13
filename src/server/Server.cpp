@@ -148,7 +148,6 @@ void	Server::readData(Client& cli)
 		}
 		std::vector<std::string> v = split(buff, skipped_b_s, unskipped_b_s);
 		print_vector(v);
-		// execCmd(*this, cli, buff);
 		new_execCmd(*this, cli, v);
 	}
 }
