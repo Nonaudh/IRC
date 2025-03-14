@@ -166,6 +166,7 @@ void	Server::NewClient(void)
 	if (fcntl(socketFd, F_SETFL, O_NONBLOCK == -1))
 	{
 		std::cerr << "Error : fcntl()" << std::endl;
+		close (socketFd);
 		return ;
 	}
 	addToPoll(socketFd);

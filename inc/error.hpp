@@ -2,16 +2,17 @@
 # define ERROR_HPP
 
 #define ERR_NONICKNAMEGIVEN ":No nickname given\r\n"
+
 #define ERR_NICKNAMEINUSE(nick) (std::string(nick) + " :Nickname is already in use\r\n").c_str()
 
 #define ERR_NOPRIVILEGES ":Permission Denied- You're not an IRC operator\r\n"
 
-#define ERR_NOCHANNELOP ":Permission Denied- You're not a channel operator\r\n"
-
-#define ERR_NOSUCHCHANNEL(channel) (std::string(channel) + " :No such channel").c_str()
+#define ERR_NOSUCHCHANNEL(channel) (std::string(channel) + " :No such channel\r\n").c_str()
                         
-#define ERR_CHANOPRIVSNEEDED(channel) (std::string(channel) + " :You're not channel operator").c_str()
+#define ERR_CHANOPRIVSNEEDED(channel) (std::string(channel) + " :You're not channel operator\r\n").c_str()
 
+#define ERR_NOTONCHANNEL(channel) (std::string(channel) + " :You're not on that channel\r\n").c_str()
+                       
 #define ERR_NOSUCHNICK(nick) (std::string(nick) + " :No such nick/channel\r\n").c_str()
 
 #define ERR_NEEDMOREPARAMS(cmd) (std::string(cmd) + " :Not enough parameters\r\n").c_str()
