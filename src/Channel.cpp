@@ -7,7 +7,7 @@ Channel::~Channel()
 {}
 
 Channel::Channel(int fd, std::string nameChannel)
-	: user_limit(3), topic_editable(true), name(nameChannel){
+	: user_limit(3), topic_editable(true), name(nameChannel) {
     std::cout << "user limit : " << user_limit << std::endl;
 	clients.insert(std::pair<int, e_privilege>(fd, ADMIN));
 }

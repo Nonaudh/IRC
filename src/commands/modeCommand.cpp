@@ -65,19 +65,25 @@ int	checkModeCommand(Server& server, Client& cli, std::vector<std::string>& para
 		send_message(ERR_CHANOPRIVSNEEDED(params[0]), cli.getFd());
 		return (1);
 	}
-
-	// if (unknowMode(params[1])) fuck les regexs
-	// {
-	// 	send_message("Error regex\r\n", cli.getFd());
-	// 	return (1);
-	// }
-
 	return (0);
+}
+
+void	handle_mode(std::string& s1, std::string& s2)
+{
+
 }
 
 void	Command::modeCommand(void)
 {
 	if (checkModeCommand(server, client, params))
 		return ;
-	std::string str;
+
+	Channel& chan = server.getChannels().find(params[0])->second;
+
+	std::vector<std::string>::iterator	it;
+	for (it = params.begin() + 1; it != params.end(); ++it)
+	{
+		handle_mode(*it, *(it + 1));
+	}
+	
 }

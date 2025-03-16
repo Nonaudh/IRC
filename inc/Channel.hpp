@@ -17,9 +17,10 @@ class Channel
     private:
         std::map<int, e_privilege> clients;
         std::string password;
-        size_t user_limit;
+        ssize_t user_limit;
         bool topic_editable;
         std::string name;
+		bool invite_only;
     public:
 		Channel();
         Channel(int fd, std::string nameChannel);
