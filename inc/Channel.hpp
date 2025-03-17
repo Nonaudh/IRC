@@ -20,10 +20,12 @@ class Channel
         size_t user_limit;
         bool topic_editable;
         std::string name;
-		bool invite_only;
+        std::string topic;  
+		    bool invite_only;
+        bool passwordActived;
     public:
 		Channel();
-        Channel(int fd, std::string nameChannel);
+        Channel(int fd, std::string nameChannel, std::string password, int i);
         virtual ~Channel();
         void setMdfTopic(bool mdf);
         bool getMdfTopic()const;
@@ -41,5 +43,5 @@ class Channel
         std::map <int , e_privilege>& getClients(void);
 
         size_t nbrPeople();
-        void joinChannel(int socketFd, e_privilege privilege);
+        void joinChannel(int socketFd, e_privilege privilege, std::string passwort, int i);
 };

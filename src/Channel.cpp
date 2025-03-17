@@ -6,10 +6,33 @@ Channel::Channel()
 Channel::~Channel()
 {}
 
-Channel::Channel(int fd, std::string nameChannel)
-	: user_limit(3), topic_editable(true), name(nameChannel) {
-    std::cout << "user limit : " << user_limit << std::endl;
-	clients.insert(std::pair<int, e_privilege>(fd, ADMIN));
+Channel::Channel(int fd, std::string nameChannel, std::string passwords, int i)
+    : user_limit(3), topic_editable(true), name(nameChannel) {
+    if(i == 0)
+    {
+        this->password = "default";
+        this->passwordActived = false;
+        std::cout << "Le password n'est pas activé" << std::endl;
+    }
+    else 
+    {
+        this->password = passwords;
+        this->passwordActived = true;
+        std::cout << "Le password est "<< this->password << std::endl;
+    }
+    this->invite_only = false;
+    this->topic = "";
+    
+    std::cout << "======== CHANNEL CRÉÉ ========" << std::endl;
+    std::cout << "Nom du channel : " << this->name << std::endl;
+    std::cout << "User limit : " << this->user_limit << std::endl;
+    std::cout << "Topic éditable : " << (this->topic_editable ? "Oui" : "Non") << std::endl;
+    std::cout << "Password activé : " << (this->passwordActived ? "Oui" : "Non") << std::endl;
+    std::cout << "Invite only : " << (this->invite_only ? "Oui" : "Non") << std::endl;
+    std::cout << "Premier client (admin) : " << fd << std::endl;
+    std::cout << "============================" << std::endl;
+    
+    clients.insert(std::pair<int, e_privilege>(fd, ADMIN));
 }
 
 std::map <int , e_privilege> & Channel::getClients(void)
@@ -17,11 +40,37 @@ std::map <int , e_privilege> & Channel::getClients(void)
     return(this->clients);
 }
 
-void Channel::joinChannel(int fd, e_privilege privilege)
+void Channel::joinChannel(int fd, e_privilege privilege, std::string passwords, int i)
 {
     if (clients.size() >= user_limit)
+	{
+		std::cout << "Le nombre de limits de personna a ete atteintes" << std::endl;
 		return;
+	}
+	if(i == 1)
+	{
+		if(this->passwordActived == true)
+		{
+			if(this->password != passwords)//Pour le mdp qui ne corresponds pas 
+				return;
+		}
+		else
+		{
+			std::cout << "Que doit ton faire channel mdp desactiver e essaye de mettre un mots de passe" << std::endl;
+		}
+	}
+	else
+		std::cout << "Channel sans mdp" << std::endl;
+	this->user_limit++;
 	clients.insert(std::pair<int, e_privilege>(fd, privilege));
+	std::cout << "======== CHANNEL existant ========" << std::endl;
+    std::cout << "Nom du channel : " << this->name << std::endl;
+    std::cout << "User limit : " << this->user_limit << std::endl;
+    std::cout << "Topic éditable : " << (this->topic_editable ? "Oui" : "Non") << std::endl;
+    std::cout << "Password activé : " << (this->passwordActived ? "Oui" : "Non") << std::endl;
+    std::cout << "Invite only : " << (this->invite_only ? "Oui" : "Non") << std::endl;
+    std::cout << "JoinChannel(admin) : " << fd << std::endl;
+    std::cout << "============================" << std::endl;
 }
 
 void Channel::setMdfTopic(bool mdf)
