@@ -16,17 +16,36 @@ class Channel
 {
     private:
         std::map<int, e_privilege> clients;
-        std::string password;
-        ssize_t user_limit;
+        size_t user_limit;
         bool topic_editable;
         std::string name;
+        std::string password;
+		std::string	topic;
 		bool invite_only;
     public:
 		Channel();
         Channel(int fd, std::string nameChannel);
         virtual ~Channel();
+
         void setMdfTopic(bool mdf);
-        bool getMdfTopic()const;
+        bool getMdfTopic(void)const;
+
+		void set_password(std::string pass);
+		std::string get_password(void)const;
+
+        void set_user_limit(size_t limit);
+        size_t get_user_limit(void)const;
+
+        void set_topic_editable(bool edit);
+        bool get_topic_editable(void)const;
+
+		void	set_topic(std::string topic);
+		std::string	get_topic(void)const;
+
+		void set_invite_only(bool invit);
+		bool get_invite_only(void)const;
+
+		void	info(void);
         // //Determiner le topic(si bool mdfTopic)
         // void setTopic(std::string const& newTopic)
         // std::string const& getTopic(void)const;

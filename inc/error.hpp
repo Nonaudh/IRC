@@ -17,7 +17,7 @@
 
 #define ERR_NEEDMOREPARAMS(cmd) (std::string(cmd) + " :Not enough parameters\r\n").c_str()
 
-#define ERR_UNKNOWNMODE(char) (std::string(char) + " :is unknown mode char to me\r\n").c_str()
+#define ERR_UNKNOWNMODE(char) (std::string(char) + " :is unknown mode to me\r\n").c_str()
 
                         
 // ERR_NONICKNAMEGIVEN

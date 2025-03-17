@@ -55,6 +55,17 @@ Client&	Server::findClient(int socketFd)
 	return (*it);
 }
 
+int		Server::findClientFd(std::string nickname)
+{
+	std::vector<Client>::iterator	it;
+
+	for (it = clients.begin(); it != clients.end() && nickname != it->getNick(); ++it)
+		;
+	if (it != clients.end())
+		return (it->getFd());
+	return (-1);
+}
+
 std::map<std::string, Channel>&	Server::getChannels(void)
 {
 	return (this->channels);
