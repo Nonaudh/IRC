@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Client.hpp"
 #include "Server.hpp"
+#include <algorithm>    // std::find
 # include <map>
 
 enum	e_cmd
@@ -43,8 +44,8 @@ private:
 	void	nickCommand(void);
 	void   privmsgCommand(void);
 	void   firstParamChannelCommand(int i);
-	void   executePartCommand();
-
+	void   executePartCommand(std::map<std::string, Channel>& channels, std::vector<std::string> params, int clientFd);
+	std::vector<std::string>  searchAllChannel(std::vector<std::string> arg, int index);
 
 };
 

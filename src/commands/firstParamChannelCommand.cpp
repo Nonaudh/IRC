@@ -1,5 +1,4 @@
 #include "Command.hpp"
-#include "executeCommand.cpp"
 
 ///a ENLEVERS
 //Personnalisation pour ce genre de commande MODE #channel +o <nickname> 
@@ -83,11 +82,9 @@ void Command::firstParamChannelCommand(int i)
                         std::cout << "Pour Execute TopicCommand il manque arguments" << std::endl;
                     if(i == 2)
                         std::cout << "Pour Execute KickCommand il manque arguments" << std::endl;
-                    if(i == 3)
-                        std::cout << "Pour Execute MODECommand il manque arguments" << std::endl;
                     return;    
                 }
-            //     //Mise en place de la recherche d'options
+                 //Mise en place de la recherche d'options
                     if (getParams().size() > 1 && !getParams()[1].empty() && (getParams()[1][0] == '-' || getParams()[1][0] == '+') && i == 3)
                     {
                     //Il n'y des options que pour mode
@@ -106,14 +103,11 @@ void Command::firstParamChannelCommand(int i)
                 if(i == 0)
                 {
                     std::cout << "Execute PartCommand" << std ::endl;
-                    executePartCommand();
                 }
                 if(i == 1)
                     std::cout << "Execute TopicCommand" << std::endl;
                 if(i == 2)
                     std::cout << "Execute KickCommand" << std::endl;
-                if(i == 3)
-                    std::cout << "Execute Avoir car Mode sans options peux donner des erreurs MODECommand" << std::endl;
             }
             return;
         }
@@ -123,8 +117,6 @@ void Command::firstParamChannelCommand(int i)
             std::cout << "Sur la Commande TOPIC le channel n'existe pas" << std::endl;
         if(i == 2)
             std::cout << "Sur la Commande KICK le channel n'existe pas" << std::endl;
-        if(i == 3)
-            std::cout << "Sur la Commande Mode le channel n'existe pas" << std::endl;
         std::cout << "Le channel n'existe pas" << std::endl;
         return;
     }
@@ -135,10 +127,7 @@ void Command::firstParamChannelCommand(int i)
         std::cout << "Sur la Commande TOPIC il manque le #" << std::endl;
     if(i == 2)
         std::cout << "Sur la Commande KICK il manque le #" << std::endl;
-    if(i == 3)
-        std::cout << "Sur la Commande Mode il manque le #" << std::endl;
-    
-    std::cout << "Le channel n'existe pas" << std::endl;
+    return;    
 }
 // std ::cout << "\n0 = "<< params[0] << std::endl;
 // std ::cout << "\n1 = "<< params[1] << std::endl;

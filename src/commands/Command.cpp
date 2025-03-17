@@ -25,41 +25,6 @@ std::vector <std::string> Command::getParams() {
 	return this->params;
 }
 
-void Command::joinCommand()
-{
-	std::map<std::string, Channel>& channels = this->getServer().getChannels();
-	std::cout << "SocketFd: " << getClient().getFd() << std::endl;
-	std::cout << "Command: " << getName() << std::endl;
-	std::cout << "Args: ";
-	for (unsigned long i = 0; i < getParams().size(); ++i) {
-		std::cout << getParams()[i];
-	}
-	std::cout << "Avant ajout : " << channels.size() << " canaux" << std::endl;
-
-	// Chercher si le canal existe déjà
-	std::map<std::string, Channel>::iterator it = channels.find(getParams()[0]);
-
-	if (it == channels.end()) {
-		// Le canal n'existe pas, créez-le
-		std::cout << "Canal créé : " << "command" << std::endl;
-		channels.insert(std::pair<std::string, Channel>(getParams()[0], Channel(client.getFd(), getParams()[0])));
-		std::cout << "Apres insert : " << channels.size() << " canaux" << std::endl;
-	} else {
-		std::cout << "Canal existant : " << "command" << std::endl;
-		// Le canal existe, vous pouvez le rejoindre
-		it->second.joinChannel(client.getFd(), USER);
-	}
-
-	// Affichage des informations
-	std::cout << "SocketFd: " << getClient().getFd() << std::endl;
-	std::cout << "Command: " << getName() << std::endl;
-	std::cout << "Args: ";
-	for (unsigned long i = 0; i < getParams().size(); ++i) {
-		std::cout << getParams()[i];
-	}
-	std::cout << std::endl;
-}
-
 void Command::execute() {
 	if (!client.getAuthen()) {
 		if (this->command == "PASS")
