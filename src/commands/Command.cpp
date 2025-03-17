@@ -1,4 +1,6 @@
 #include "Command.hpp"
+# include "Server.hpp"
+
 #include <sys/socket.h>
 
 Command::Command(Server &server, Client &client, std::string command, std::vector <std::string> params)
@@ -32,7 +34,7 @@ void Command::execute() {
 		return;
 	}
 
-	std::string	cmd_available[] = {"QUIT", "JOIN", "NICK", "PRIVMSG", "PART", "TOPIC", "KICK", "MODE"};
+	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG", "MODE", "PART", "TOPIC", "KICK"};
 
 	int	i;
 	for (i = 0; !cmd_available[i].empty() && command != cmd_available[i]; ++i)
@@ -40,6 +42,9 @@ void Command::execute() {
 
 	switch (i)
 	{
+		case (KILL):
+			killCommand();
+			break ;
 		case (QUIT):
 			quitCommand();
 			break ;
@@ -51,9 +56,13 @@ void Command::execute() {
 			break ;
 		case (PRIVMSG):
 		{
+			std::cout << ("XXX") << std::endl;
 			privmsgCommand();
 			break ;
 		}
+		case (MODE) :
+			modeCommand();
+			break ;
 		case(PART):
 		{
 			firstParamChannelCommand(0);
@@ -67,11 +76,6 @@ void Command::execute() {
 		case(KICK):
 		{
 			firstParamChannelCommand(2);
-			break;
-		}
-		case(MODE):
-		{
-			firstParamChannelCommand(3);
 			break;
 		}
 
@@ -117,7 +121,7 @@ void Command::passCommand() {
 		return;
 	}
 
-	client.Authen();
+	client.Authen(CONNECT);
 
 	send(socketFd, "You're now connected\n", 22, 0);
 	std::cout << socketFd << " is now connected to the server" << std::endl;

@@ -20,11 +20,12 @@ class Channel
         size_t user_limit;
         bool topic_editable;
         std::string name;
+		bool invite_only;
     public:
 		Channel();
         Channel(int fd, std::string nameChannel);
         virtual ~Channel();
-        void setMdfTopic();
+        void setMdfTopic(bool mdf);
         bool getMdfTopic()const;
         // //Determiner le topic(si bool mdfTopic)
         // void setTopic(std::string const& newTopic)

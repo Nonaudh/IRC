@@ -30,12 +30,37 @@ int	unskipped_b_s(char c)
 
 int	skipped_space(char c)
 {
-	return (c == ' ' || c == '	');
+	return (c == ' ' || c == '	' || c == ',');
 }
 
 int	unskipped_space(char c)
 {
-	return (!(c == ' ' || c == '	'));
+	return (!(c == ' ' || c == '	' || c == ','));
+}
+
+std::vector<std::string> split_exec(std::string buff, int (*skip)(char), int (*unskip)(char))
+{
+	std::vector<std::string>	v;
+
+	std::string::iterator first = buff.begin();
+	std::string::iterator last;
+
+	while (first != buff.end())
+	{
+		first = std::find_if(first, buff.end(), unskip);
+		if (*first == ':')
+			last = buff.end();
+		else
+			last = std::find_if(first, buff.end(), skip);
+
+		std::string tmp(first, last);
+
+		if (first != last)
+			v.push_back(tmp);
+		tmp.erase();
+		first = last;
+	}
+	return (v);
 }
 
 void	new_execCmd(Server& server, Client& cli, std::vector<std::string> v)
@@ -45,7 +70,7 @@ void	new_execCmd(Server& server, Client& cli, std::vector<std::string> v)
 
 	for (std::vector<std::string>::iterator it = v.begin(); it != v.end(); ++it)
 	{
-		splitted = split(*it, skipped_space, unskipped_space);
+		splitted = split_exec(*it, skipped_space, unskipped_space);
 		command_name = *splitted.begin();
 		splitted.erase(splitted.begin());
 		Command(server, cli, command_name, splitted).execute();
@@ -123,7 +148,6 @@ void	Server::readData(Client& cli)
 		}
 		std::vector<std::string> v = split(buff, skipped_b_s, unskipped_b_s);
 		print_vector(v);
-		// execCmd(*this, cli, buff);
 		new_execCmd(*this, cli, v);
 	}
 }
@@ -142,6 +166,7 @@ void	Server::NewClient(void)
 	if (fcntl(socketFd, F_SETFL, O_NONBLOCK == -1))
 	{
 		std::cerr << "Error : fcntl()" << std::endl;
+		close (socketFd);
 		return ;
 	}
 	addToPoll(socketFd);

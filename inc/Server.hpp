@@ -6,6 +6,9 @@
 #include "Channel.hpp"
 #include <map>
 #include <sys/poll.h>
+# include <unistd.h>
+# include <sys/types.h>
+# include <sys/socket.h>
 
 class	Server
 {
@@ -45,7 +48,10 @@ class	Server
 		void 	joinChannel(std::string const & nameChannel, int fd);
 		std::map<std::string, Channel>&	getChannels(void);
 		std::vector<Client>&	getClient(void);
-	};
+		void	killFromServer(std::string nickname, std::string reason, int caller);
+};
+
+void	send_message(const char *str, int fd);
 
 std::vector<std::string> split(std::string buff, int (*skip)(char), int (*unskip)(char));
 

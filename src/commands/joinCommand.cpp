@@ -38,7 +38,7 @@ std::vector<std::string> ft_split(size_t begin, std::string arg, int index)
 }
 std::vector<std::string> Command::searchAllChannel(std::vector<std::string> arg, int i)
 {
-	std::size_t bob = arg[i].find(',');
+	std::size_t bob = arg[i].find('#');
 	std::vector <std::string> argtest;
 	std::cout << "Il y a en a plusieurs je suis la place =" << bob  <<std::endl;
 	if(bob !=0)
