@@ -232,11 +232,9 @@ void	Server::irc(char **argv)
 	runServer();
 }
 
-void Server::createChannel(std::string const& name, int fd, std::string mdp, int i)
+void Server::createChannel(std::string const& name, int fd, std::string mdp)
 {
-
-	(void)i;
-	Channel chan(fd, name, mdp,0);
+	Channel chan(fd, name, mdp);
 	channels[name]= chan;
 }
 
@@ -249,10 +247,9 @@ Channel* Server::findChannel(std::string const& findChannel)
 }
 void 	Server::joinChannel(std::string const & nameChannel, int fd)
 {
-	std::cout <<"WW"<< std::endl;
 	Channel *chan = findChannel(nameChannel);
 	if(chan)
-		chan->joinChannel(fd, USER, "Default", 1);
+		chan->joinChannel(fd, USER, "");
 	//Verifier si il faut le creer ici
 }
 

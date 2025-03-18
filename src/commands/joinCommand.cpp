@@ -20,13 +20,27 @@ int searchMdpJoin(std::vector<std::string> Params, size_t j, int i)
 		return(countChannel);
 }
 
+int	searchMdpJoincplus(std::vector<std::string>& params)
+{
+	int	countMdp = 0;
+	std::string	c = "#&";
+
+	for (std::vector<std::string>::iterator it = params.begin(); it != params.end(); ++it)
+	{
+		if (c.find(*it->begin()) != std::string::npos)
+			countMdp++;
+	}
+	return (countMdp);
+}
+
 void Command::joinCommand()
 {
 	//Ce qui permet d'obternir l'adresse du channel
 	std::map<std::string, Channel>& channels = this->getServer().getChannels();
 
 	//Ce qui permet de determiner le nbr de mots de pass
-	int searchMdpChannel = searchMdpJoin(getParams(), getParams().size(), 0) ;
+	int searchMdpChannel = searchMdpJoincplus(this->params);
+	std::cout << "nb of mdp : " << searchMdpChannel << std::endl;
 
 	//Ce qui permet determiner le nombre de channell
 	int searchNbrChannel = searchMdpJoin(getParams(), getParams().size(), 1) ;
@@ -39,16 +53,15 @@ void Command::joinCommand()
 
 			// Le canal n'existe pas, créez-le
 			if((getParams().size() > i + searchMdpChannel && searchMdpChannel != 0) && (getParams().size() > i + searchNbrChannel) )//Creation du canal avec mdp
-				channels.insert(std::pair<std::string, Channel>(getParams()[i], Channel(client.getFd(), getParams()[i],  getParams()[i + searchNbrChannel  ], 1)));
+				channels.insert(std::pair<std::string, Channel>(getParams()[i], Channel(client.getFd(), getParams()[i],  getParams()[i + searchNbrChannel  ])));
 			else//Creation du canal sans mdp
-				channels.insert(std::pair<std::string, Channel>(getParams()[i], Channel(client.getFd(), getParams()[i], "Default", 0)));
+				channels.insert(std::pair<std::string, Channel>(getParams()[i], Channel(client.getFd(), getParams()[i], "")));
 		} else {
 			// Le canal existe, vous pouvez le rejoindre
 			if((getParams().size() > i + searchMdpChannel && searchMdpChannel != 0) && (getParams().size() > i + searchNbrChannel))//Rejoindre avec un mdp
-				it->second.joinChannel(client.getFd(), USER,  getParams()[i + searchMdpChannel ], 1);
+				it->second.joinChannel(client.getFd(), USER,  getParams()[i + searchMdpChannel ]);
 			else//Rejoindre sans mdp
-				it->second.joinChannel(client.getFd(), USER,  "default", 0);
+				it->second.joinChannel(client.getFd(), USER,  "");
 		}
 	}
 }
-

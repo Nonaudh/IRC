@@ -44,7 +44,7 @@ class	Server
 		void	eraseClient(int socketFd);
 		void	handleBuffer(Client& cli, char *buff);
 		//Modifier pour la class channel
-		void createChannel(std::string const& name, int fd, std::string mdp, int i);
+		void createChannel(std::string const& name, int fd, std::string mdp);
 		Channel* findChannel(std::string const& findChannel);
 		void 	joinChannel(std::string const & nameChannel, int fd);
 		std::map<std::string, Channel>&	getChannels(void);

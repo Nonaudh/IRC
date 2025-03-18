@@ -24,7 +24,7 @@ class Channel
 		bool invite_only;
     public:
 		Channel();
-        Channel(int fd, std::string nameChannel, std::string password, int i);
+        Channel(int fd, std::string nameChannel, std::string password);
         virtual ~Channel();
 
         void setMdfTopic(bool mdf);
@@ -60,5 +60,5 @@ class Channel
         std::map <int , e_privilege>& getClients(void);
 
         size_t nbrPeople();
-        void joinChannel(int socketFd, e_privilege privilege, std::string passwort, int i);
+        void joinChannel(int socketFd, e_privilege privilege, std::string passwort);
 };
