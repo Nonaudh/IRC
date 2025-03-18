@@ -1,5 +1,5 @@
 #include "Command.hpp"
-#include "regex.h"
+#include <sstream>
 
 // MODE - Change the channel’s mode:
 
@@ -18,22 +18,17 @@
 // RPL_BANLIST                     RPL_ENDOFBANLIST
 // ERR_UNKNOWNMODE                 ERR_NOSUCHCHANNEL
 
-int	unknowMode(std::string param)
-{
-	int	err;
-	regex_t	preg;
-	const char	*str_regex =  "^[+-](o|p|s|i|t|n|b|v).*$";
+// RPL_CHANNELMODEIS
+// "<channel> <mode> <mode params>"  TO DO !
 
-	err = regcomp (&preg, str_regex, REG_NOSUB | REG_EXTENDED);
-	if (err == 0)
-	{
-		int match;
-		match = regexec(&preg, param.c_str(), 0, NULL, 0);
-		regfree(&preg);
-		if (match == 0)
-			return (0);
-	}
-	return (1);
+int	int_to_string(std::string& str)
+{
+	std::istringstream	stream(str);
+	int	nb;
+
+	stream >> nb;
+	std::cout << "new_limit : " << nb << std::endl;
+	return (nb < 0 ? -nb : nb);
 }
 
 int	checkModeCommand(Server& server, Client& cli, std::vector<std::string>& params)
@@ -60,7 +55,7 @@ int	checkModeCommand(Server& server, Client& cli, std::vector<std::string>& para
 		return (1);
 	}
 
-	if (it->second.getMdfTopic() && it2->second != ADMIN)
+	if (it2->second != ADMIN) // except for MODE +t if mdf = false
 	{
 		send_message(ERR_CHANOPRIVSNEEDED(params[0]), cli.getFd());
 		return (1);
@@ -68,10 +63,154 @@ int	checkModeCommand(Server& server, Client& cli, std::vector<std::string>& para
 	return (0);
 }
 
-void	handle_mode(std::string& s1, std::string& s2)
+int	not_a_mode(std::string& s1)
 {
-	(void)s1;
-	(void)s2;
+	std::string	mode = "itkol";
+
+	if (s1[0] != '+' && s1[0] != '-')
+		return (1);
+	if (mode.find(s1[1]) == std::string::npos)
+		return (1);
+	return (0);
+}
+
+int	handle_mode_i(std::string& s1, Channel& chan)
+{
+	switch (s1[0])
+	{
+		case '+':
+			chan.set_invite_only(true);
+			break ;
+		case '-':
+			chan.set_invite_only(false);
+			break ;
+	}
+	return (1);
+}
+
+int	handle_mode_t(std::string& s1, Channel& chan)
+{
+	switch (s1[0])
+	{
+		case '+':
+			chan.set_topic_editable(true);
+			break ;
+		case '-':
+			chan.set_topic_editable(false);
+			break ;
+	}
+	return (1);
+}
+
+int	handle_mode_k(std::string& s1, std::string& s2, Channel& chan, int fd)
+{
+	switch (s1[0])
+	{
+		case '+':
+			if (s2.empty())
+			{
+				send_message(ERR_NEEDMOREPARAMS("MODE +k"), fd);
+				return (1);
+			}
+			chan.set_password(s2);
+			return (2);
+		case '-':
+			chan.set_password("");
+			return (1);
+	}
+	return (1);
+}
+
+int	handle_mode_o(std::string& s1, std::string& s2, Channel& chan, int fd, Server& server)
+{
+	std::map<int, e_privilege>& clients = chan.getClients();
+	int	clientfd;
+
+	switch (s1[0])
+	{
+		case '+':
+			if (s2.empty())
+			{
+				send_message(ERR_NEEDMOREPARAMS("MODE +o"), fd);
+				return (1);
+			}
+			clientfd = server.findClientFd(s2);
+			if (clientfd == fd)
+				return (2);
+			if (clients.find(clientfd) == clients.end())
+			{
+				send_message(ERR_NOSUCHNICK(s2), fd);
+				return (2);
+			}
+			clients.find(clientfd)->second = ADMIN;
+			return (2);
+		
+		case '-':
+			if (s2.empty())
+			{
+				send_message(ERR_NEEDMOREPARAMS("MODE -o"), fd);
+				return (1);
+			}
+			clientfd = server.findClientFd(s2);
+			if (clients.find(clientfd) == clients.end())
+			{
+				send_message(ERR_NOSUCHNICK(s2), fd);
+				return (2);
+			}
+			clients.find(clientfd)->second = USER;
+			return (2);
+	}
+	return (1);
+}
+
+int	handle_mode_l(std::string& s1, std::string& s2, Channel& chan, int fd)
+{
+	switch (s1[0])
+	{
+		case '+':
+			if (s2.empty())
+			{
+				send_message(ERR_NEEDMOREPARAMS("MODE +l"), fd);
+				return (1);
+			}
+			chan.set_user_limit(int_to_string(s2));
+			return (2);
+
+		case '-':
+			chan.set_user_limit(0);
+			return (1);
+	}
+	return (1);
+}
+
+size_t	handle_mode(std::string& s1, std::string& s2, Channel& chan, int fd, Server& server)
+{
+	if (s1.size() != 2)
+	{
+		send_message(ERR_UNKNOWNMODE(s1), fd);
+		return (1);
+	}
+
+	if (not_a_mode(s1))
+	{
+		send_message(ERR_UNKNOWNMODE(s1), fd);
+		return (1);
+	}
+
+	switch (s1[1])
+	{
+		case 'i':
+			return (handle_mode_i(s1, chan));
+		case 't':
+			return (handle_mode_t(s1, chan));
+		case 'k':
+			return (handle_mode_k(s1, s2, chan, fd));
+		case 'o':
+			return (handle_mode_o(s1, s2, chan, fd, server));
+		case 'l':
+			return (handle_mode_l(s1, s2, chan, fd));
+	}
+	return (1);
 }
 
 void	Command::modeCommand(void)
@@ -79,13 +218,14 @@ void	Command::modeCommand(void)
 	if (checkModeCommand(server, client, params))
 		return ;
 
+	size_t	i = 0;
 	Channel& chan = server.getChannels().find(params[0])->second;
 	(void)chan;
 
 	std::vector<std::string>::iterator	it;
-	for (it = params.begin() + 1; it != params.end(); ++it)
+	for (it = params.begin() + 1; it != params.end(); it += i)
 	{
-		handle_mode(*it, *(it + 1));
+		i = handle_mode(*it, *(it + 1), chan, client.getFd(), server);
 	}
-	
+	chan.info();
 }

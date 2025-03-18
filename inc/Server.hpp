@@ -39,6 +39,7 @@ class	Server
 		void	addToPoll(int socketFd);
 		void	erasePoll(int socketFd);
 		Client&	findClient(int socketFd);
+		int		findClientFd(std::string nickname);
 		void	addToClient(int socketFd);
 		void	eraseClient(int socketFd);
 		void	handleBuffer(Client& cli, char *buff);
