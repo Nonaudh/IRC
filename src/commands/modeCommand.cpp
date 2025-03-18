@@ -1,5 +1,5 @@
 #include "Command.hpp"
-#include "regex.h"
+#include <sstream>
 
 // MODE - Change the channel’s mode:
 
@@ -17,6 +17,19 @@
 // ERR_NOTONCHANNEL                ERR_KEYSET
 // RPL_BANLIST                     RPL_ENDOFBANLIST
 // ERR_UNKNOWNMODE                 ERR_NOSUCHCHANNEL
+
+// RPL_CHANNELMODEIS
+// "<channel> <mode> <mode params>"  TO DO !
+
+int	int_to_string(std::string& str)
+{
+	std::istringstream	stream(str);
+	int	nb;
+
+	stream >> nb;
+	std::cout << "new_limit : " << nb << std::endl;
+	return (nb < 0 ? -nb : nb);
+}
 
 int	checkModeCommand(Server& server, Client& cli, std::vector<std::string>& params)
 {
@@ -61,7 +74,7 @@ int	not_a_mode(std::string& s1)
 	return (0);
 }
 
-int	handle_mode_i(std::string s1, Channel& chan)
+int	handle_mode_i(std::string& s1, Channel& chan)
 {
 	switch (s1[0])
 	{
@@ -75,7 +88,7 @@ int	handle_mode_i(std::string s1, Channel& chan)
 	return (1);
 }
 
-int	handle_mode_t(std::string s1, Channel& chan)
+int	handle_mode_t(std::string& s1, Channel& chan)
 {
 	switch (s1[0])
 	{
@@ -89,13 +102,16 @@ int	handle_mode_t(std::string s1, Channel& chan)
 	return (1);
 }
 
-int	handle_mode_k(std::string s1, std::string s2, Channel& chan)
+int	handle_mode_k(std::string& s1, std::string& s2, Channel& chan, int fd)
 {
 	switch (s1[0])
 	{
 		case '+':
 			if (s2.empty())
+			{
+				send_message(ERR_NEEDMOREPARAMS("MODE +k"), fd);
 				return (1);
+			}
 			chan.set_password(s2);
 			return (2);
 		case '-':
@@ -105,7 +121,7 @@ int	handle_mode_k(std::string s1, std::string s2, Channel& chan)
 	return (1);
 }
 
-int	handle_mode_o(std::string s1, std::string s2, Channel& chan, int fd, Server& server)
+int	handle_mode_o(std::string& s1, std::string& s2, Channel& chan, int fd, Server& server)
 {
 	std::map<int, e_privilege>& clients = chan.getClients();
 	int	clientfd;
@@ -119,6 +135,8 @@ int	handle_mode_o(std::string s1, std::string s2, Channel& chan, int fd, Server&
 				return (1);
 			}
 			clientfd = server.findClientFd(s2);
+			if (clientfd == fd)
+				return (2);
 			if (clients.find(clientfd) == clients.end())
 			{
 				send_message(ERR_NOSUCHNICK(s2), fd);
@@ -145,10 +163,28 @@ int	handle_mode_o(std::string s1, std::string s2, Channel& chan, int fd, Server&
 	return (1);
 }
 
+int	handle_mode_l(std::string& s1, std::string& s2, Channel& chan, int fd)
+{
+	switch (s1[0])
+	{
+		case '+':
+			if (s2.empty())
+			{
+				send_message(ERR_NEEDMOREPARAMS("MODE +l"), fd);
+				return (1);
+			}
+			chan.set_user_limit(int_to_string(s2));
+			return (2);
+
+		case '-':
+			chan.set_user_limit(0);
+			return (1);
+	}
+	return (1);
+}
+
 size_t	handle_mode(std::string& s1, std::string& s2, Channel& chan, int fd, Server& server)
 {
-	(void)s2;
-
 	if (s1.size() != 2)
 	{
 		send_message(ERR_UNKNOWNMODE(s1), fd);
@@ -168,9 +204,11 @@ size_t	handle_mode(std::string& s1, std::string& s2, Channel& chan, int fd, Serv
 		case 't':
 			return (handle_mode_t(s1, chan));
 		case 'k':
-			return (handle_mode_k(s1, s2, chan));
+			return (handle_mode_k(s1, s2, chan, fd));
 		case 'o':
 			return (handle_mode_o(s1, s2, chan, fd, server));
+		case 'l':
+			return (handle_mode_l(s1, s2, chan, fd));
 	}
 	return (1);
 }
