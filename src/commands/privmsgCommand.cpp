@@ -8,7 +8,7 @@ void sendMessageAllPeople(std::vector<std::string> params, int clientFd, std::ma
 
     for (std::map <int, e_privilege> ::iterator it = clients.begin();it != clients.end();++it)
     {
-        if(it ->first != clientFd && it ->second != INVITE)
+        if(it ->first != clientFd && it ->second != INVITED)
         {
             send(it->first, message.c_str(), message.size(), 0);
         }
@@ -18,7 +18,7 @@ void sendMessageAllPeople(std::vector<std::string> params, int clientFd, std::ma
 bool clientInChannel(int clientFd,std::map<int, e_privilege> channel)
 {
     std::map<int, e_privilege>::iterator    it = channel.find(clientFd);
-    if (it != channel.end() && it->second != INVITE)
+    if (it != channel.end() && it->second != INVITED)
             return (1);
     return (0);
 }

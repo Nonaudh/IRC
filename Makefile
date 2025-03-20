@@ -14,6 +14,7 @@ SRCS    :=	main.cpp Channel.cpp \
 			server/killServer.cpp server/utils_server.cpp \
 			commands/Command.cpp commands/joinCommand.cpp \
 			commands/modeCommand.cpp commands/privmsgCommand.cpp \
+			commands/inviteCommand.cpp \
 			server/Server.cpp
 
 OBJS    := $(addprefix $(OBJS_D)/, $(SRCS:.cpp=.o))

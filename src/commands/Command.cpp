@@ -34,7 +34,7 @@ void Command::execute() {
 		return;
 	}
 
-	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG", "MODE", "PART", "TOPIC", "KICK"};
+	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG", "MODE", "PART", "TOPIC", "KICK", "INVITE"};
 
 	int	i;
 	for (i = 0; !cmd_available[i].empty() && command != cmd_available[i]; ++i)
@@ -65,20 +65,24 @@ void Command::execute() {
 			break ;
 		case(PART):
 		{
-			firstParamChannelCommand(0);
+			// firstParamChannelCommand(0);
 			break;
 		}
 		case(TOPIC):
 		{
-			firstParamChannelCommand(1);
+			// firstParamChannelCommand(1);
 			break;
 		}
 		case(KICK):
 		{
-			firstParamChannelCommand(2);
+			// firstParamChannelCommand(2);
 			break;
 		}
-
+		case(INVITE):
+		{
+			inviteCommand();
+			break;
+		}
 		default:
 			std::cout << "Unknow cmd : " << command << std::endl;
 			break ;

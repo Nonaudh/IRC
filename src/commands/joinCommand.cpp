@@ -1,6 +1,8 @@
 #include "Command.hpp"
 
 //MIse au propre de la command
+#include <iterator>  // Pour std::distance
+
 #include <stdio.h>
 
 int searchMdpJoin(std::vector<std::string> Params, size_t j, int i)
@@ -20,7 +22,7 @@ int searchMdpJoin(std::vector<std::string> Params, size_t j, int i)
 		return(countChannel);
 }
 
-int	searchMdpJoincplus(std::vector<std::string>& params)
+int	searchNbrChannels(std::vector<std::string>& params)
 {
 	int	countMdp = 0;
 	std::string	c = "#&";
@@ -33,35 +35,49 @@ int	searchMdpJoincplus(std::vector<std::string>& params)
 	return (countMdp);
 }
 
+std::vector<std::string> ::const_iterator searchMdp(int i, std::string search, std::vector <std::string> params)//Je ne suis pas sur de celle mais cpp
+{
+	std::vector<std::string> :: const_iterator const_it = std::find(params.begin(), params.end(), search);
+	for(int t = 0; t != i; ++t)
+		const_it++;
+	return(const_it);
+}
+
 void Command::joinCommand()
 {
 	//Ce qui permet d'obternir l'adresse du channel
 	std::map<std::string, Channel>& channels = this->getServer().getChannels();
 
+	//Ce qui permet d'obtenir l'iterateur sur le vecteur
+	std::vector <std::string> params = getParams();
+
 	//Ce qui permet de determiner le nbr de mots de pass
-	int searchMdpChannel = searchMdpJoincplus(this->params);
-	std::cout << "nb of mdp : " << searchMdpChannel << std::endl;
+	int searchNbrChannel= searchNbrChannels(this->params);
 
 	//Ce qui permet determiner le nombre de channell
-	int searchNbrChannel = searchMdpJoin(getParams(), getParams().size(), 1) ;
+	int  searchMdpChannel =getParams().size()- searchNbrChannel;
 
+	std::vector <std::string> ::const_iterator const_it;
 	//Creation d'une boucle permettant de vois si le canal existe
-	for(unsigned long i = 0; i != getParams().size()-searchMdpChannel ; ++i)
+	for( const_it= params.begin(); const_it != params.end() - searchMdpChannel;++const_it)
 	{
-		std::map<std::string, Channel>::iterator it = channels.find(getParams()[i]);
-		if (it == channels.end()) {
-
-			// Le canal n'existe pas, créez-le
-			if((getParams().size() > i + searchMdpChannel && searchMdpChannel != 0) && (getParams().size() > i + searchNbrChannel) )//Creation du canal avec mdp
-				channels.insert(std::pair<std::string, Channel>(getParams()[i], Channel(client.getFd(), getParams()[i],  getParams()[i + searchNbrChannel  ])));
+		//Creation d'une copie de l'iterateur
+		std::vector <std::string>::const_iterator copie = const_it;
+		std::map<std::string,Channel>::iterator it = channels.find(*const_it);
+		if (it == channels.end())
+		{
+			if (std::distance(static_cast<std::vector<std::string>::const_iterator>(params.begin()), const_it)+ searchNbrChannel < (int)params.size()&& searchMdpChannel != 0)
+				channels.insert(std::pair<std::string, Channel>(*const_it, Channel(client.getFd(), *const_it,  *(searchMdp((searchNbrChannel), *copie, params)))));
 			else//Creation du canal sans mdp
-				channels.insert(std::pair<std::string, Channel>(getParams()[i], Channel(client.getFd(), getParams()[i], "")));
-		} else {
-			// Le canal existe, vous pouvez le rejoindre
-			if((getParams().size() > i + searchMdpChannel && searchMdpChannel != 0) && (getParams().size() > i + searchNbrChannel))//Rejoindre avec un mdp
-				it->second.joinChannel(client.getFd(), USER,  getParams()[i + searchMdpChannel ]);
-			else//Rejoindre sans mdp
-				it->second.joinChannel(client.getFd(), USER,  "");
-		}
+				channels.insert(std::pair<std::string, Channel>(*const_it, Channel(client.getFd(), *const_it, "")));
+		} 
+		 else 
+		 {
+		 	// Le canal existe, vous pouvez le rejoindre
+			if (std::distance(static_cast<std::vector<std::string>::const_iterator>(params.begin()), const_it)+ searchNbrChannel < (int)params.size()&& searchMdpChannel != 0)
+				 it->second.joinChannel(client.getFd(), USER,  *(searchMdp((searchNbrChannel - searchMdpChannel), *copie, params)));
+		 	else //Rejoindre sans mdp
+		 		it->second.joinChannel(client.getFd(), USER,  "");
+		 }
 	}
 }

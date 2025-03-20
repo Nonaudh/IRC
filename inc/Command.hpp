@@ -25,6 +25,7 @@ enum	e_cmd
 	PART,
 	TOPIC, 
 	KICK,
+	INVITE,
 };
 
 class Command {
@@ -53,6 +54,9 @@ private:
 	void	firstParamChannelCommand(int i);
 	void	killCommand(void);
 	void	modeCommand(void);
+	void	inviteCommand(void);
+	int		not_a_user(std::string str);
+	int		not_a_channel(std::string str);
 	void	executePartCommand(std::map<std::string, Channel>& channels, std::vector<std::string> params, int clientFd);
 	std::vector<std::string>  searchAllChannel(std::vector<std::string> arg, int index);
 

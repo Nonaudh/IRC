@@ -1,5 +1,5 @@
 #include "Channel.hpp"
-
+#include "error.hpp"
 Channel::Channel()
 {}
 
@@ -30,9 +30,25 @@ std::map <int , e_privilege> & Channel::getClients(void)
     return(this->clients);
 }
 
+// ERR_NEEDMOREPARAMS                        
+// ERR_CHANNELISFULL 
+// RPL_TOPIC  
+// ERR_BADCHANNELKEY
+
+
 void Channel::joinChannel(int fd, e_privilege privilege, std::string passwords)
 {
-    if (clients.size() >= user_limit)
+
+	//Verifier si ou non dans le channel
+	//Verifier si on demande un password
+	std::map <int, e_privilege > :: iterator it = this->clients.find(fd);
+	if(it != this->clients.end() && it->second != INVITED)
+	{
+		//Il faut verifier la commande
+		return;//Il est deja dans channel user ou admin;
+	}
+	
+    if (clients.size() >= user_limit) // clients.size() sauf INVITED !!
 	{
 		std::cout << "Le nombre de limits de personna a ete atteintes" << std::endl;
 		return;
@@ -40,13 +56,18 @@ void Channel::joinChannel(int fd, e_privilege privilege, std::string passwords)
 	if(!this->password.empty())
 	{
 		if(this->password != passwords)//Pour le mdp qui ne corresponds pas 
-			return;
+		return;
 	}
-	else
+	if(this->invite_only == true)
 	{
-		std::cout << "Que doit ton faire channel mdp desactiver e essaye de mettre un mots de passe" << std::endl;
+		std::map <int, e_privilege > :: iterator it = this->clients.find(fd);//Frocement invite test avec avant si deja dans channel
+		if(it == this->clients.end())
+		{
+			send_message(ERR_INVITEONLYCHAN(this->name), fd);
+			return ;
+		}
 	}
-
+	//Message si reussite
 	std::cout << "Channel sans mdp" << std::endl;
 	this->user_limit++;
 	clients.insert(std::pair<int, e_privilege>(fd, privilege));
@@ -57,6 +78,8 @@ void Channel::joinChannel(int fd, e_privilege privilege, std::string passwords)
     std::cout << "Invite only : " << (this->invite_only ? "Oui" : "Non") << std::endl;
     std::cout << "JoinChannel(admin) : " << fd << std::endl;
     std::cout << "============================" << std::endl;
+
+	send_message(RPL_TOPIC(this->name, this->topic), fd);
 }
 
 void Channel::setMdfTopic(bool mdf)

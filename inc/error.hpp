@@ -17,8 +17,24 @@
 
 #define ERR_NEEDMOREPARAMS(cmd) (std::string(cmd) + " :Not enough parameters\r\n").c_str()
 
-#define ERR_UNKNOWNMODE(char) (std::string(char) + " :is unknown mode to me\r\n").c_str()
+#define ERR_UNKNOWNMODE(mode) (std::string(mode) + " :is unknown mode to me\r\n").c_str()
 
+//POur join
+
+#define ERR_INVITEONLYCHAN(channel) (std::string(channel) + " :Cannot join channel (+i)\r\n").c_str()
+
+#define ERR_NOTONCHANNEL(channel) (std::string(channel) + " :You're not on that channel\r\n").c_str()
+
+#define ERR_USERONCHANNEL(user, channel) (std::string(user) + " " + std::string(channel) + " :is already on channel\r\n").c_str()
+
+#define RPL_TOPIC(channel, topic) (std::string(channel) + " :" + std::string(topic) + "\r\n").c_str()
+
+#define RPL_INVITING(channel, nick) (std::string(channel) + " " + std::string(nick) + "\r\n").c_str()
+
+// ERR_INVITEONLYCHAN            
+// ERR_CHANNELISFULL 
+// RPL_TOPIC  
+// ERR_BADCHANNELKEY
                         
 // ERR_NONICKNAMEGIVEN
 // ":No nickname given"

@@ -6,7 +6,7 @@
 
 enum	e_privilege
 {
-	INVITE,
+	INVITED,
 	USER,
 	ADMIN,
 };
@@ -46,19 +46,11 @@ class Channel
 		bool get_invite_only(void)const;
 
 		void	info(void);
-        // //Determiner le topic(si bool mdfTopic)
-        // void setTopic(std::string const& newTopic)
-        // std::string const& getTopic(void)const;
-        // //Determiner le mots de pass dans le Channel
-        // void setPassword(std::string const& newPassword);
-        // std::string const& getPassword(void)const;
-        // //Determiner le nombre dans le Channel
-        // void getLimitPeople(int newLimitPeople);
-        // int setLimitPeople(void)const;
-        // //Retirer les droits admin
-        // void changePrivil(int id)const;
+
         std::map <int , e_privilege>& getClients(void);
 
         size_t nbrPeople();
-        void joinChannel(int socketFd, e_privilege privilege, std::string passwort);
+        void joinChannel(int socketFd, e_privilege privilege, std::string password);
 };
+
+void	send_message(const char *str, int fd);
