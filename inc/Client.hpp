@@ -30,6 +30,8 @@ class	Client
 		e_level		getAuthen(void) const;
 		std::string	getNick(void) const;
 		void		setNick(std::string str);
+		std::string	getUser(void) const;
+		void		setUser(std::string str);
 };
 
 # endif

@@ -245,13 +245,13 @@ Channel* Server::findChannel(std::string const& findChannel)
         return &(it->second);
     return NULL;
 }
-void 	Server::joinChannel(std::string const & nameChannel, int fd)
-{
-	Channel *chan = findChannel(nameChannel);
-	if(chan)
-		chan->joinChannel(fd, USER, "");
-	//Verifier si il faut le creer ici
-}
+// void 	Server::joinChannel(std::string const & nameChannel, int fd)
+// {
+// 	Channel *chan = findChannel(nameChannel);
+// 	if(chan)
+// 		chan->joinChannel(fd, USER, "");
+// 	//Verifier si il faut le creer ici
+// }
 
 bool Server::checkPassword(const std::string &password) {
 	std::cout << "Checking password: " << password << " size: " << password.size() << std::endl;

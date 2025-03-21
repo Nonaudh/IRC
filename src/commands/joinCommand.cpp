@@ -70,14 +70,15 @@ void Command::joinCommand()
 				channels.insert(std::pair<std::string, Channel>(*const_it, Channel(client.getFd(), *const_it,  *(searchMdp((searchNbrChannel), *copie, params)))));
 			else//Creation du canal sans mdp
 				channels.insert(std::pair<std::string, Channel>(*const_it, Channel(client.getFd(), *const_it, "")));
+			send_message(RPL_JOIN(CLIENT(client.getNick(), client.getUser()), *const_it), client.getFd());
 		} 
-		 else 
+		 else
 		 {
 		 	// Le canal existe, vous pouvez le rejoindre
 			if (std::distance(static_cast<std::vector<std::string>::const_iterator>(params.begin()), const_it)+ searchNbrChannel < (int)params.size()&& searchMdpChannel != 0)
-				 it->second.joinChannel(client.getFd(), USER,  *(searchMdp((searchNbrChannel - searchMdpChannel), *copie, params)));
+				 it->second.joinChannel(client, USER,  *(searchMdp((searchNbrChannel - searchMdpChannel), *copie, params)));
 		 	else //Rejoindre sans mdp
-		 		it->second.joinChannel(client.getFd(), USER,  "");
+		 		it->second.joinChannel(client, USER,  "");
 		 }
 	}
 }

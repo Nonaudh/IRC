@@ -17,7 +17,7 @@ void	Server::killFromServer(std::string nickname, std::string reason, int caller
 	int	fd = find_clientFd_nickname(this->getClient(), nickname);
 	if (fd == -1)
 	{
-		send_message(ERR_NOSUCHNICK(nickname), caller);
+		send_message(ERR_NOSUCHNICK(std::string("client"), nickname), caller);
 		return ;
 	}
 	if (!reason.empty())

@@ -62,6 +62,6 @@ private:
 
 };
 
-void	send_message(const char *str, int fd);
+void	send_message(std::string str, int fd);
 
 #endif

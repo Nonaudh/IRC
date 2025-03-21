@@ -52,7 +52,7 @@ class	Server
 		void	killFromServer(std::string nickname, std::string reason, int caller);
 };
 
-void	send_message(const char *str, int fd);
+void	send_message(std::string str, int fd);
 
 std::vector<std::string> split(std::string buff, int (*skip)(char), int (*unskip)(char));
 

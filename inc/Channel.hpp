@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "Client.hpp"
 
 enum	e_privilege
 {
@@ -49,8 +50,8 @@ class Channel
 
         std::map <int , e_privilege>& getClients(void);
 
-        size_t nbrPeople();
-        void joinChannel(int socketFd, e_privilege privilege, std::string password);
+		size_t	size(void);
+        void joinChannel(Client& client, e_privilege privilege, std::string password);
 };
 
-void	send_message(const char *str, int fd);
+void	send_message(std::string str, int fd);

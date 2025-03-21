@@ -2,15 +2,15 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-void sendMessageAllPeople(std::vector<std::string> params, int clientFd, std::map<int, e_privilege> clients)
+void sendMessageAllPeople(std::vector<std::string> params, Client& client, std::map<int, e_privilege> clients)
 {
-    std::string message = params[1];
-
-    for (std::map <int, e_privilege> ::iterator it = clients.begin();it != clients.end();++it)
+    std::string message;
+    for (std::map <int, e_privilege> ::iterator it = clients.begin(); it != clients.end(); ++it)
     {
-        if(it ->first != clientFd && it ->second != INVITED)
+        if (it->first != client.getFd() && it->second != INVITED)
         {
-            send(it->first, message.c_str(), message.size(), 0);
+			message = PRIVMSG(CLIENT(client.getNick(), client.getUser()), params[0], params[1]);
+			send(it->first, message.c_str(), message.size(), 0);
         }
     }
 }
@@ -23,28 +23,54 @@ bool clientInChannel(int clientFd,std::map<int, e_privilege> channel)
     return (0);
 }
 
-void sendMessageToChannel(std::map<std::string, Channel>& channels, std::vector<std::string> params, int clientFd)
+void sendMessageToChannel(std::map<std::string, Channel>& channels, std::vector<std::string> params, Client& client)
 {
-    params[0].erase (params[0].begin());
+    params[1].erase (params[1].begin());
 
     std::map <std::string, Channel> :: iterator it = channels.find(params[0]);
-    if(it != channels.end() && clientInChannel(clientFd,it->second.getClients()))
+    if(it != channels.end() && clientInChannel(client.getFd(),it->second.getClients()))
     {
-        sendMessageAllPeople(params, clientFd, it->second.getClients());
-    }//Si pas trouve mettre une protection
+        sendMessageAllPeople(params, client, it->second.getClients());
+		return;
+    }
+	if (it == channels.end())
+		send_message(ERR_NOSUCHCHANNEL(params[0]), client.getFd());
+	else
+		send_message(ERR_USERNOTINCHANNEL(CLIENT(client.getNick(), client.getUser()), client.getNick(), params[0]), client.getFd());
 }
+
+void	sendMessageToNickname(Server& server, std::vector<std::string> params, Client& client)
+{
+	std::vector<Client>::iterator	it;
+
+	for (it = server.getClient().begin(); it != server.getClient().end() && it->getNick() != params[0]; ++it)
+		;
+	if (it == server.getClient().end())
+		send_message(ERR_NOSUCHNICK(CLIENT(client.getNick(), client.getUser()), params[0]), client.getFd());
+	else
+	{
+		std::string message = PRIVMSG(CLIENT(client.getNick(), client.getUser()), params[0], params[1]);
+		send(it->getFd(), message.c_str(), message.size(), 0);
+	}
+}
+
 
 void Command::privmsgCommand()
 {
-
-    //Verifier que le channel existe
-
-    for (unsigned long i = 0; i < getParams().size(); ++i) {
-        std::cout << getParams()[i];
-        // if(getParams()[i] == )//Chercher channel
+	if (params.size() < 2)
+	{
+		send_message(ERR_NEEDMOREPARAMS(CLIENT(client.getNick(), client.getUser()), "PRIVMSG"), client.getFd());
+		return ;
 	}
-    if(getParams()[0][0]== '#')
-        sendMessageToChannel(this->server.getChannels(), this->getParams(), this->client.getFd());
-    //else le channel nn'existe pas mettre une protection
+	if (params[1][0] != ':')
+	{
+		send_message(ERR_NOTEXTTOSEND(CLIENT(client.getNick(), client.getUser())), client.getFd());
+		return ;
+	}
+	params[1].erase(params[1].begin());
+	if(params[0][0] == '#' || params[0][0] == '&')
+		sendMessageToChannel(this->server.getChannels(), this->getParams(), this->client);
+	else 
+		sendMessageToNickname(this->server, this->getParams(), this->client);
 
 }

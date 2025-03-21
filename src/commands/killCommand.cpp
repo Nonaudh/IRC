@@ -4,13 +4,13 @@ void	Command::killCommand(void)
 {
 	if (this->client.getAuthen() != OP)
 	{
-		send_message(ERR_NOPRIVILEGES, this->client.getFd());
+		send_message(ERR_CHANOPRIVSNEEDED(std::string("client"), std::string("channel")), this->client.getFd());
 		return ;
 	}
 	switch (this->params.size())
 	{
 		case 0:
-			send_message(ERR_NEEDMOREPARAMS("KILL"), this->client.getFd());
+			send_message(ERR_NEEDMOREPARAMS(this->client.getNick(), std::string("KILL")), this->client.getFd());
 			break;
 		
 		case 1:

@@ -51,3 +51,13 @@ void	Client::setNick(std::string str)
 {
 	this->nickname = str;
 }
+
+std::string	Client::getUser(void) const
+{
+	return (this->username);
+}
+
+void	Client::setUser(std::string str)
+{
+	this->username = str;
+}

@@ -7,12 +7,13 @@ Channel::~Channel()
 {}
 
 Channel::Channel(int fd, std::string nameChannel, std::string password)
-    : user_limit(3), topic_editable(true), name(nameChannel) 
+    : user_limit(3), topic_editable(true), name(nameChannel)
 {
-        this->password = password;
-        std::cout << "Le password est "<< this->password << std::endl;\
+	this->password = password;
+	std::cout << "Le password est "<< this->password << std::endl;
     this->invite_only = false;
-    this->topic = "";
+	nameChannel.erase(nameChannel.begin());
+    this->topic = nameChannel;
     
     std::cout << "======== CHANNEL CRÉÉ ========" << std::endl;
     std::cout << "Nom du channel : " << this->name << std::endl;
@@ -30,56 +31,43 @@ std::map <int , e_privilege> & Channel::getClients(void)
     return(this->clients);
 }
 
-// ERR_NEEDMOREPARAMS                        
-// ERR_CHANNELISFULL 
-// RPL_TOPIC  
-// ERR_BADCHANNELKEY
-
-
-void Channel::joinChannel(int fd, e_privilege privilege, std::string passwords)
+void Channel::joinChannel(Client& client, e_privilege privilege, std::string passwords)
 {
+	std::map <int, e_privilege > :: iterator it = this->clients.find(client.getFd());
 
-	//Verifier si ou non dans le channel
-	//Verifier si on demande un password
-	std::map <int, e_privilege > :: iterator it = this->clients.find(fd);
-	if(it != this->clients.end() && it->second != INVITED)
+	if (it != this->clients.end() && it->second != INVITED)
 	{
-		//Il faut verifier la commande
-		return;//Il est deja dans channel user ou admin;
+		send_message(ERR_USERONCHANNEL(client.getNick(), this->name), client.getFd());
+		return;
 	}
 	
-    if (clients.size() >= user_limit) // clients.size() sauf INVITED !!
+    if (size() >= user_limit)
 	{
-		std::cout << "Le nombre de limits de personna a ete atteintes" << std::endl;
-		return;
+		send_message(ERR_CHANNELISFULL(CLIENT(client.getNick(), client.getUser()), this->name), client.getFd());
+		return ;
 	}
-	if(!this->password.empty())
+	if (!this->password.empty())
 	{
-		if(this->password != passwords)//Pour le mdp qui ne corresponds pas 
-		return;
-	}
-	if(this->invite_only == true)
-	{
-		std::map <int, e_privilege > :: iterator it = this->clients.find(fd);//Frocement invite test avec avant si deja dans channel
-		if(it == this->clients.end())
+		if(this->password != passwords)
 		{
-			send_message(ERR_INVITEONLYCHAN(this->name), fd);
+			send_message(ERR_BADCHANNELKEY(CLIENT(client.getNick(), client.getUser()), this->name), client.getFd());
 			return ;
 		}
 	}
-	//Message si reussite
-	std::cout << "Channel sans mdp" << std::endl;
-	this->user_limit++;
-	clients.insert(std::pair<int, e_privilege>(fd, privilege));
-	std::cout << "======== CHANNEL existant ========" << std::endl;
-    std::cout << "Nom du channel : " << this->name << std::endl;
-    std::cout << "User limit : " << this->user_limit << std::endl;
-    std::cout << "Topic éditable : " << (this->topic_editable ? "Oui" : "Non") << std::endl;
-    std::cout << "Invite only : " << (this->invite_only ? "Oui" : "Non") << std::endl;
-    std::cout << "JoinChannel(admin) : " << fd << std::endl;
-    std::cout << "============================" << std::endl;
-
-	send_message(RPL_TOPIC(this->name, this->topic), fd);
+	if (this->invite_only == true)
+	{
+		std::map <int, e_privilege > :: iterator it = this->clients.find(client.getFd());
+		if(it == this->clients.end())
+		{
+			send_message(ERR_INVITEONLYCHAN(CLIENT(client.getNick(), client.getUser()), this->name), client.getFd());
+			return ;
+		}
+	}
+	if(it != clients.end())
+		it->second = USER;
+	else
+		clients.insert(std::pair<int, e_privilege>(client.getFd(), privilege));
+	send_message(RPL_JOIN(CLIENT(client.getNick(), client.getUser()), this->name), client.getFd());
 }
 
 void Channel::setMdfTopic(bool mdf)
@@ -150,4 +138,17 @@ void	Channel::info(void)
 	std::cout << "password : " << password << std::endl;
 	std::cout << "topic : " << topic << std::endl;
 	std::cout << "invite_only : " << invite_only << std::endl;
+}
+
+size_t	Channel::size(void)
+{
+	size_t	size = 0;
+	std::map<int, e_privilege>::iterator	it;
+
+	for (it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (it->second != INVITED)
+			++size;
+	}
+	return (size);
 }
