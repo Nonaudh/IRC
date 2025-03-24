@@ -27,15 +27,13 @@ int	int_to_string(std::string& str)
 	int	nb;
 
 	stream >> nb;
-	std::cout << "new_limit : " << nb << std::endl;
+	std::cout << "new_limit : " << nb << std::endl; // to check
 	return (nb < 0 ? -nb : nb);
 }
 
 int	checkModeCommand(Server& server, Client& cli, std::vector<std::string>& params)
 {
 	std::map<std::string, Channel >& chs = server.getChannels();
-
-	std::cout << "params.size() " << params.size() << std::endl;
 
 	if (params.size() < 2)
 	{
@@ -223,12 +221,11 @@ void	Command::modeCommand(void)
 
 	size_t	i = 0;
 	Channel& chan = server.getChannels().find(params[0])->second;
-	(void)chan;
 
 	std::vector<std::string>::iterator	it;
 	for (it = params.begin() + 1; it != params.end(); it += i)
 	{
 		i = handle_mode(*it, *(it + 1), chan, client, server);
 	}
-	chan.info();
+	chan.info(); //to erase
 }

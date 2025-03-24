@@ -56,7 +56,6 @@ void Command::execute() {
 			break ;
 		case (PRIVMSG):
 		{
-			std::cout << ("XXX") << std::endl;
 			privmsgCommand();
 			break ;
 		}
@@ -70,12 +69,11 @@ void Command::execute() {
 		}
 		case(TOPIC):
 		{
-			// firstParamChannelCommand(1);
 			break;
 		}
 		case(KICK):
 		{
-			// firstParamChannelCommand(2);
+			kickCommand();
 			break;
 		}
 		case(INVITE):

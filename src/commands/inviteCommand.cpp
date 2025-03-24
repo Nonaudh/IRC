@@ -85,4 +85,8 @@ void Command::inviteCommand()
     this->server.getChannels().find(params[1])->second.getClients().insert(std::pair<int, e_privilege>(this->server.findClientFd(params[0]), INVITED));
 
     send_message(RPL_INVITESNDR(CLIENT(client.getNick(), client.getUser()), params[0], params[1]), this->client.getFd());
+    //send_message(RPL_INVITESNDR(CLIENT(client.getNick(), client.getUser()), params[0], params[1]), this->server.findClientFd(params[0]));
+   send_message(RPL_INVITERCVR(CLIENT(client.getNick(), client.getUser()), params[0], params[1]), this->server.findClientFd(params[0]));
+
+
 }

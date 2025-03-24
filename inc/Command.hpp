@@ -50,6 +50,7 @@ private:
 	void	quitCommand(void);
 	void	joinCommand(void);
 	void	nickCommand(void);
+	void	kickCommand(void);
 	void	privmsgCommand(void);
 	void	firstParamChannelCommand(int i);
 	void	killCommand(void);
