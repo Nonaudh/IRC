@@ -13,7 +13,7 @@ Channel::Channel(int fd, std::string nameChannel, std::string password)
 	std::cout << "Le password est "<< this->password << std::endl;
     this->invite_only = false;
 	nameChannel.erase(nameChannel.begin());
-    this->topic = nameChannel;
+    this->topic ="";
     
     std::cout << "======== CHANNEL CRÉÉ ========" << std::endl;
     std::cout << "Nom du channel : " << this->name << std::endl;

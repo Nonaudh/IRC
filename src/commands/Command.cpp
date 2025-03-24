@@ -34,7 +34,7 @@ void Command::execute() {
 		return;
 	}
 
-	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG", "MODE", "PART", "TOPIC", "KICK", "INVITE"};
+	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG", "MODE", "TOPIC", "KICK", "INVITE"};
 
 	int	i;
 	for (i = 0; i < 10 && command != cmd_available[i]; ++i)
@@ -62,13 +62,10 @@ void Command::execute() {
 		case (MODE) :
 			modeCommand();
 			break ;
-		case(PART):
-		{
-			// firstParamChannelCommand(0);
-			break;
-		}
+
 		case(TOPIC):
 		{
+			topicCommand();
 			break;
 		}
 		case(KICK):

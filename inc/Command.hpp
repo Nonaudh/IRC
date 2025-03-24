@@ -22,7 +22,6 @@ enum	e_cmd
 	NICK,
 	PRIVMSG,
 	MODE,
-	PART,
 	TOPIC, 
 	KICK,
 	INVITE,
@@ -56,6 +55,7 @@ private:
 	void	killCommand(void);
 	void	modeCommand(void);
 	void	inviteCommand(void);
+	void	topicCommand(void);
 	int		not_a_user(std::string str);
 	int		not_a_channel(std::string str);
 	void	executePartCommand(std::map<std::string, Channel>& channels, std::vector<std::string> params, int clientFd);
