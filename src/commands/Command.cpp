@@ -37,7 +37,7 @@ void Command::execute() {
 	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG", "MODE", "PART", "TOPIC", "KICK", "INVITE"};
 
 	int	i;
-	for (i = 0; !cmd_available[i].empty() && command != cmd_available[i]; ++i)
+	for (i = 0; i < 10 && command != cmd_available[i]; ++i)
 		;
 
 	switch (i)
