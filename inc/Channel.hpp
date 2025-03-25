@@ -5,6 +5,8 @@
 #include <map>
 #include "Client.hpp"
 
+class	Server;
+
 enum	e_privilege
 {
 	INVITED,
@@ -46,12 +48,14 @@ class Channel
 		void set_invite_only(bool invit);
 		bool get_invite_only(void)const;
 
+		std::string	get_name(void);
+
 		void	info(void);
 
         std::map <int , e_privilege>& getClients(void);
 
 		size_t	size(void);
-        void joinChannel(Client& client, e_privilege privilege, std::string password);
+        void joinChannel(Client& client, e_privilege privilege, std::string password, Server& serv);
 };
 
 void	send_message(std::string str, int fd);

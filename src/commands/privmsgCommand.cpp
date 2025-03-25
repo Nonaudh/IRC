@@ -4,15 +4,15 @@
 
 void sendMessageAllPeople(std::vector<std::string> params, Client& client, std::map<int, e_privilege> clients)
 {
-    std::string message;
-    for (std::map <int, e_privilege> ::iterator it = clients.begin(); it != clients.end(); ++it)
-    {
-        if (it->first != client.getFd() && it->second != INVITED)
-        {
+	std::string message;
+	for (std::map <int, e_privilege> ::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (it->first != client.getFd() && it->second != INVITED)
+		{
 			message = PRIVMSG(CLIENT(client.getNick(), client.getUser()), params[0], params[1]);
 			send(it->first, message.c_str(), message.size(), 0);
-        }
-    }
+		}
+	}
 }
 
 bool clientInChannel(int clientFd,std::map<int, e_privilege> channel)
@@ -25,13 +25,13 @@ bool clientInChannel(int clientFd,std::map<int, e_privilege> channel)
 
 void sendMessageToChannel(std::map<std::string, Channel>& channels, std::vector<std::string> params, Client& client)
 {
-    params[1].erase (params[1].begin());
+    // params[1].erase (params[1].begin());
 
     std::map <std::string, Channel> :: iterator it = channels.find(params[0]);
     if(it != channels.end() && clientInChannel(client.getFd(),it->second.getClients()))
     {
         sendMessageAllPeople(params, client, it->second.getClients());
-		return;
+			return;
     }
 	if (it == channels.end())
 		send_message(ERR_NOSUCHCHANNEL(params[0]), client.getFd());

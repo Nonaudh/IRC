@@ -76,9 +76,9 @@ void Command::joinCommand()
 		 {
 		 	// Le canal existe, vous pouvez le rejoindre
 			if (std::distance(static_cast<std::vector<std::string>::const_iterator>(params.begin()), const_it)+ searchNbrChannel < (int)params.size()&& searchMdpChannel != 0)
-				 it->second.joinChannel(client, USER,  *(searchMdp((searchNbrChannel - searchMdpChannel), *copie, params)));
+				 it->second.joinChannel(client, USER,  *(searchMdp((searchNbrChannel - searchMdpChannel), *copie, params)), this->getServer());
 		 	else //Rejoindre sans mdp
-		 		it->second.joinChannel(client, USER,  "");
+		 		it->second.joinChannel(client, USER,  "", this->getServer());
 		 }
 	}
 }

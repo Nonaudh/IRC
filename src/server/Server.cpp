@@ -115,6 +115,30 @@ bool	no_endl(std::string	buff)
 	return (0);
 }
 
+void	Server::eraseInAllChannel(int socketFd)
+{
+	std::map<std::string, Channel>&	all_channel = this->getChannels();
+	std::map<std::string, Channel>::iterator	it;
+
+	for (it = all_channel.begin(); it != all_channel.end(); ++it)
+	{
+		std::map<int, e_privilege>::iterator it3 = it->second.getClients().find(socketFd);
+		if (it3 != it->second.getClients().end())
+			continue ; // c bon
+		for (std::map<int, e_privilege>::iterator it2 = it->second.getClients().begin(); it2 != it->second.getClients().end(); ++it)
+			send_message(RPL_PART(CLIENT(this->findClient(socketFd).getNick(), this->findClient(socketFd).getUser()), it->second.get_name()), it2->first);
+		it->second.getClients().erase(socketFd);
+	}
+}
+
+void	Server::eraseInServer(Client& cli)
+{
+	eraseInAllChannel(cli.getFd());
+	eraseClient(cli.getFd());
+	erasePoll(cli.getFd());
+	close(cli.getFd());
+}
+
 void	Server::readData(Client& cli)
 {
 	char	bufftmp[1024];
@@ -126,9 +150,7 @@ void	Server::readData(Client& cli)
 	if (bytes <= 0)
 	{
 		std::cout << "Client " << cli.getFd() << " disconnected\n";
-		close(cli.getFd());
-		erasePoll(cli.getFd());
-		eraseClient(cli.getFd());
+		eraseInServer(cli);
 	}
 	else
 	{
