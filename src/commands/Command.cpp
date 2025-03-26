@@ -46,7 +46,7 @@ void Command::executeNotAuth() {
 			passCommand();
 			break ;
 		default:
-			send_message(ERR_NOTREGISTERED(command), this->client.getFd());
+			send_message(ERR_NOTREGISTERED(), this->client.getFd());
 			break;
 	}
 }
