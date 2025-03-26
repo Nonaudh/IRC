@@ -115,25 +115,24 @@ bool	no_endl(std::string	buff)
 	return (0);
 }
 
-void	Server::eraseInAllChannel(int socketFd)
+void	Server::eraseInAllChannel(Client& cli)
 {
-	std::map<std::string, Channel>&	all_channel = this->getChannels();
 	std::map<std::string, Channel>::iterator	it;
 
-	for (it = all_channel.begin(); it != all_channel.end(); ++it)
+	for (it = channels.begin(); it != channels.end(); ++it)
 	{
-		std::map<int, e_privilege>::iterator it3 = it->second.getClients().find(socketFd);
-		if (it3 != it->second.getClients().end())
-			continue ; // c bon
-		for (std::map<int, e_privilege>::iterator it2 = it->second.getClients().begin(); it2 != it->second.getClients().end(); ++it)
-			send_message(RPL_PART(CLIENT(this->findClient(socketFd).getNick(), this->findClient(socketFd).getUser()), it->second.get_name()), it2->first);
-		it->second.getClients().erase(socketFd);
+		std::map<int, e_privilege>& chan_cli = it->second.getClients();
+		if (chan_cli.find(cli.getFd()) != chan_cli.end())
+		{
+			send_part_rply_to_channel(it->second, cli);
+			chan_cli.erase(cli.getFd());
+		}
 	}
 }
 
 void	Server::eraseInServer(Client& cli)
 {
-	eraseInAllChannel(cli.getFd());
+	eraseInAllChannel(cli);
 	eraseClient(cli.getFd());
 	erasePoll(cli.getFd());
 	close(cli.getFd());

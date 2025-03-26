@@ -28,7 +28,7 @@ void sendMessageToChannel(std::map<std::string, Channel>& channels, std::vector<
     // params[1].erase (params[1].begin());
 
     std::map <std::string, Channel> :: iterator it = channels.find(params[0]);
-    if(it != channels.end() && clientInChannel(client.getFd(),it->second.getClients()))
+    if (it != channels.end() && clientInChannel(client.getFd(),it->second.getClients()))
     {
         sendMessageAllPeople(params, client, it->second.getClients());
 			return;
@@ -36,8 +36,8 @@ void sendMessageToChannel(std::map<std::string, Channel>& channels, std::vector<
 	if (it == channels.end())
 		send_message(ERR_NOSUCHCHANNEL(params[0]), client.getFd());
 	else
-		send_message(ERR_USERNOTINCHANNEL(CLIENT(client.getNick(), client.getUser()), client.getNick(), params[0]), client.getFd());
-}
+		send_message(ERR_NOTONCHANNEL(CLIENT(client.getNick(), client.getUser()), params[0]), client.getFd());
+	}
 
 void	sendMessageToNickname(Server& server, std::vector<std::string> params, Client& client)
 {

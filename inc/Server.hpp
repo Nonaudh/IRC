@@ -43,7 +43,7 @@ class	Server
 		void	addToClient(int socketFd);
 		void	eraseClient(int socketFd);
 		void	eraseInServer(Client& cli);
-		void	eraseInAllChannel(int socketFd);
+		void	eraseInAllChannel(Client& cli);
 		void	handleBuffer(Client& cli, char *buff);
 		//Modifier pour la class channel
 		void createChannel(std::string const& name, int fd, std::string mdp);
