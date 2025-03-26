@@ -38,6 +38,7 @@ public:
 	std::vector<std::string> getParams();
 
 	void execute();
+	void executeNotAuth();
 
 private:
 	Server& server;
@@ -45,6 +46,7 @@ private:
 	std::string command;
 	std::vector<std::string> params;
 
+	void	userCommand(void);
 	void	passCommand(void);
 	void	quitCommand(void);
 	void	joinCommand(void);

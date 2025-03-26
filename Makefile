@@ -14,8 +14,8 @@ SRCS    :=	main.cpp Channel.cpp \
 			server/killServer.cpp server/utils_server.cpp \
 			commands/Command.cpp commands/joinCommand.cpp \
 			commands/modeCommand.cpp commands/privmsgCommand.cpp \
-			commands/inviteCommand.cpp \
-			commands/kickCommand.cpp \
+			commands/inviteCommand.cpp commands/userCommand.cpp \
+			commands/kickCommand.cpp commands/passCommand.cpp \
 			commands/topicCommand.cpp \
 			server/Server.cpp
 

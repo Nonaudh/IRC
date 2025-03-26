@@ -1,5 +1,4 @@
 #include "Command.hpp"
-# include "Server.hpp"
 
 #include <sys/socket.h>
 
@@ -27,13 +26,32 @@ std::vector <std::string> Command::getParams() {
 	return this->params;
 }
 
-void Command::execute() {
-	if (!client.getAuthen()) {
-		if (this->command == "PASS")
-			this->passCommand();
-		return;
-	}
+void Command::executeNotAuth() {
+	std::string	cmd_bef_pass[] = {"CAP","NICK","USER","PASS"};
 
+	int	i;
+	for (i = 0; i < 4 && command != cmd_bef_pass[i]; ++i)
+		;
+
+	switch (i) {
+		case (0):
+			break ;
+		case (1):
+			nickCommand();
+			break ;
+		case (2):
+			userCommand();
+			break ;
+		case (3):
+			passCommand();
+			break ;
+		default:
+			send_message(ERR_NOTREGISTERED(command), this->client.getFd());
+			break;
+	}
+}
+
+void Command::execute() {
 	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG", "MODE", "TOPIC", "KICK", "INVITE"};
 
 	int	i;
@@ -55,29 +73,20 @@ void Command::execute() {
 			nickCommand();
 			break ;
 		case (PRIVMSG):
-		{
 			privmsgCommand();
 			break ;
-		}
 		case (MODE) :
 			modeCommand();
 			break ;
-
 		case(TOPIC):
-		{
 			topicCommand();
 			break;
-		}
 		case(KICK):
-		{
 			kickCommand();
 			break;
-		}
 		case(INVITE):
-		{
 			inviteCommand();
 			break;
-		}
 		default:
 			std::cout << "Unknow cmd : " << command << std::endl;
 			break ;
@@ -97,31 +106,3 @@ void Command::quitCommand() {
 	std::cout << std::endl;
 }
 
-void Command::passCommand() {
-	std::cout << "PassCommand" << std::endl;
-
-	std::cout << "SocketFd: " << getClient().getFd() << std::endl;
-	std::cout << "Command: " << getName() << std::endl;
-	std::cout << "Args: ";
-	for (unsigned long i = 0; i < getParams().size(); ++i) {
-		std::cout << getParams()[i];
-	}
-	std::cout << std::endl;
-
-	int socketFd = client.getFd();
-
-	if (params.size() != 1) {
-		send(socketFd, "Usage: PASS <password>\n", 23, 0);
-		return;
-	}
-
-	if (!getServer().checkPassword(params[0])) {
-		send(socketFd, "Wrong password, try again\n", 26, 0);
-		return;
-	}
-
-	client.Authen(CONNECT);
-
-	send(socketFd, "You're now connected\n", 22, 0);
-	std::cout << socketFd << " is now connected to the server" << std::endl;
-}

@@ -21,7 +21,7 @@ void	Command::nickCommand(void)
 {
 	if (this->params.empty())
 	{
-		send_message(ERR_NONICKNAMEGIVEN(this->client.getNick(), this->params[0]), this->client.getFd());
+		send_message(ERR_NONICKNAMEGIVEN(this->client.getNick(), ""), this->client.getFd());
 		return ;
 	}
 
