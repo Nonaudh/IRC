@@ -5,7 +5,8 @@
 
 enum	e_level
 {
-	AUTHEN,
+	NONE,
+	PASSWORD,
 	CONNECT,
 	OP,
 };

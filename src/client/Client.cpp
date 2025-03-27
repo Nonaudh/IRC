@@ -13,9 +13,7 @@ std::string	int_to_string(int nb)
 Client::Client(int socketFd)
 {
 	std::string	id = int_to_string(socketFd);
-	username = "Client" + id;
-	nickname = username + "_";
-	level = CONNECT; // to switch to AUTHEN
+	level = NONE;
 	SocketFd = socketFd;
 }
 

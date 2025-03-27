@@ -20,11 +20,12 @@ enum	e_cmd
 	QUIT,
 	JOIN,
 	NICK,
-	PRIVMSG,
+	PRIVMSG_CMD,
 	MODE,
 	TOPIC, 
 	KICK,
 	INVITE,
+	NOTICE_CMD,
 };
 
 class Command {
@@ -38,6 +39,7 @@ public:
 	std::vector<std::string> getParams();
 
 	void execute();
+	void executeNotAuth();
 
 private:
 	Server& server;
@@ -45,12 +47,14 @@ private:
 	std::string command;
 	std::vector<std::string> params;
 
+	void	userCommand(void);
 	void	passCommand(void);
 	void	quitCommand(void);
 	void	joinCommand(void);
 	void	nickCommand(void);
 	void	kickCommand(void);
 	void	privmsgCommand(void);
+	void	noticeCommand(void);
 	void	firstParamChannelCommand(int i);
 	void	killCommand(void);
 	void	modeCommand(void);
