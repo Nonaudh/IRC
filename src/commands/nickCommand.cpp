@@ -41,7 +41,6 @@ void	Command::nickCommand(void)
 			{
 				send_message(RPL_NICK(this->client.getNick(), this->params[0]), it2->first);
 			}
-			it->second.getClients().erase(this->client.getFd());
 		}
 	}
 
