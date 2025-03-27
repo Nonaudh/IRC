@@ -38,6 +38,7 @@
 
 #define CLIENT(nick, user)(nick + "!" + user + "@localhost")
 #define PRIVMSG(client, target, message)(":" + client + " PRIVMSG " + target + " :" + message + "\r\n")
+#define NOTICE(client, target, message)(":" + client + " NOTICE " + target + " :" + message + "\r\n")
 
 #define RPL_JOIN(client, channel)(":" + client + " JOIN " + channel + "\r\n")
 #define RPL_PART(client, channel)(":" + client + " PART " + channel + "\r\n")

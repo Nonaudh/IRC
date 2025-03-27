@@ -20,11 +20,12 @@ enum	e_cmd
 	QUIT,
 	JOIN,
 	NICK,
-	PRIVMSG,
+	PRIVMSG_CMD,
 	MODE,
 	TOPIC, 
 	KICK,
 	INVITE,
+	NOTICE_CMD,
 };
 
 class Command {
@@ -53,6 +54,7 @@ private:
 	void	nickCommand(void);
 	void	kickCommand(void);
 	void	privmsgCommand(void);
+	void	noticeCommand(void);
 	void	firstParamChannelCommand(int i);
 	void	killCommand(void);
 	void	modeCommand(void);

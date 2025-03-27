@@ -52,7 +52,7 @@ void Command::executeNotAuth() {
 }
 
 void Command::execute() {
-	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG", "MODE", "TOPIC", "KICK", "INVITE"};
+	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG", "MODE", "TOPIC", "KICK", "INVITE", "NOTICE"};
 
 	int	i;
 	for (i = 0; i < 10 && command != cmd_available[i]; ++i)
@@ -72,7 +72,7 @@ void Command::execute() {
 		case (NICK) :
 			nickCommand();
 			break ;
-		case (PRIVMSG):
+		case (PRIVMSG_CMD):
 			privmsgCommand();
 			break ;
 		case (MODE) :
@@ -87,11 +87,14 @@ void Command::execute() {
 		case(INVITE):
 			inviteCommand();
 			break;
+		case (NOTICE_CMD):
+			noticeCommand();
+			break;
 		default:
 			std::cout << "Unknow cmd : " << command << std::endl;
 			break ;
 	}
-}//PRIVMSG #channelname :Hello, everyone! 
+}
 
 void Command::quitCommand() {
 	std::cout << "QuitCommand" << std::endl;
