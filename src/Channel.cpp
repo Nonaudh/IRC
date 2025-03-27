@@ -50,6 +50,7 @@ void Channel::joinChannel(Client& client, e_privilege privilege, std::string pas
 	{
 		if(this->password != passwords)
 		{
+			std::cout << "chan; " << this->password << "  cli; " << passwords << std::endl;
 			send_message(ERR_BADCHANNELKEY(CLIENT(client.getNick(), client.getUser()), this->name), client.getFd());
 			return ;
 		}

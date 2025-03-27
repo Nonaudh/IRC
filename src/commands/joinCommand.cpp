@@ -5,22 +5,22 @@
 
 #include <stdio.h>
 
-int searchMdpJoin(std::vector<std::string> Params, size_t j, int i)
-{
-	int countMdp = 0;
-	int countChannel=0;
-	for(size_t i = 0; i != j; ++i)
-	{
-		if(Params[i][0] != '#' && Params[i][0] != '&')
-			countMdp++;
-		else
-			countChannel++;
-	}
-	if(i == 0)
-		return(countMdp);
-	else 
-		return(countChannel);
-}
+// int searchMdpJoin(std::vector<std::string> Params, size_t j, int i)
+// {
+// 	int countMdp = 0;
+// 	int countChannel=0;
+// 	for(size_t i = 0; i != j; ++i)
+// 	{
+// 		if(Params[i][0] != '#' && Params[i][0] != '&')
+// 			countMdp++;
+// 		else
+// 			countChannel++;
+// 	}
+// 	if(i == 0)
+// 		return(countMdp);
+// 	else 
+// 		return(countChannel);
+// }
 
 int	searchNbrChannels(std::vector<std::string>& params)
 {
@@ -45,11 +45,10 @@ std::vector<std::string> ::const_iterator searchMdp(int i, std::string search, s
 
 void Command::joinCommand()
 {
-
 	//Mise en place erreur arg==1 
-	if(params.size() == 1)
+	if(params.empty())
 	{
-		send_message(ERR_TOOMUCHPARAMS(CLIENT(client.getNick(), client.getUser()), params[0]), client.getFd());
+		send_message(ERR_NEEDMOREPARAMS(CLIENT(client.getNick(), client.getUser()), "JOIN"), client.getFd());
 		return;
 	}
 	//Ce qui permet d'obternir l'adresse du channel

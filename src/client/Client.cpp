@@ -13,7 +13,7 @@ std::string	int_to_string(int nb)
 Client::Client(int socketFd)
 {
 	std::string	id = int_to_string(socketFd);
-	level = NONE;
+	level = CONNECT; //to switch to NONE
 	SocketFd = socketFd;
 }
 
