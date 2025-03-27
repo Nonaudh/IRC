@@ -46,13 +46,13 @@ void	Server::eraseClient(int socketFd)
 	clients.erase(it);
 }
 
-Client&	Server::findClient(int socketFd)
+std::vector<Client>::iterator	Server::findClient(int socketFd)
 {
 	std::vector<Client>::iterator	it;
 
 	for (it = clients.begin(); it != clients.end() && socketFd != it->getFd(); ++it)
 		;
-	return (*it);
+	return (it);
 }
 
 int		Server::findClientFd(std::string nickname)

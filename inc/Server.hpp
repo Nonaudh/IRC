@@ -48,7 +48,7 @@ class	Server
 		void	readData(Client& cli);
 		void	addToPoll(int socketFd);
 		void	erasePoll(int socketFd);
-		Client&	findClient(int socketFd);
+		std::vector<Client>::iterator	findClient(int socketFd);
 		int		findClientFd(std::string nickname);
 		void	addToClient(int socketFd);
 		void	eraseClient(int socketFd);

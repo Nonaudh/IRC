@@ -71,5 +71,5 @@ void Command::kickCommand()
     chan.getClients().erase(it);
     // send_message(RPL_KICK(CLIENT(client.getNick(), client.getUser()), params[0], params[1]), client.getFd());
     send_message(RPL_KICK(CLIENT(client.getNick(), client.getUser()), params[0], params[1]), fd_to_kick);
-	send_part_rply_to_channel(chan, this->server.findClient(fd_to_kick));
+	send_part_rply_to_channel(chan, *this->server.findClient(fd_to_kick));
 }
