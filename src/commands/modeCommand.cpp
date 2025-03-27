@@ -28,7 +28,7 @@ int	int_to_string(std::string& str)
 
 	stream >> nb;
 	std::cout << "new_limit : " << nb << std::endl; // to check
-	return (nb < 0 ? -nb : nb);
+	return (nb); // what ?
 }
 
 int	checkModeCommand(Server& server, Client& cli, std::vector<std::string>& params)
@@ -178,7 +178,7 @@ int	handle_mode_l(std::string& s1, std::string& s2, Channel& chan, Client& cli)
 			return (2);
 
 		case '-':
-			chan.set_user_limit(0);
+			chan.set_user_limit(-1);
 			return (1);
 	}
 	return (1);
@@ -225,7 +225,13 @@ void	Command::modeCommand(void)
 	std::vector<std::string>::iterator	it;
 	for (it = params.begin() + 1; it != params.end(); it += i)
 	{
-		i = handle_mode(*it, *(it + 1), chan, client, server);
+		if (it + 1 != params.end())
+			i = handle_mode(*it, *(it + 1), chan, client, server);
+		else
+		{
+			std::string	empty = "";
+			i = handle_mode(*it, empty, chan, client, server);
+		}
 	}
 	chan.info(); //to erase
 }
