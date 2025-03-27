@@ -119,6 +119,29 @@ bool	no_endl(std::string	buff)
 	return (0);
 }
 
+void	Server::eraseInAllChannel(Client& cli)
+{
+	std::map<std::string, Channel>::iterator	it;
+
+	for (it = channels.begin(); it != channels.end(); ++it)
+	{
+		std::map<int, e_privilege>& chan_cli = it->second.getClients();
+		if (chan_cli.find(cli.getFd()) != chan_cli.end())
+		{
+			send_part_rply_to_channel(it->second, cli);
+			chan_cli.erase(cli.getFd());
+		}
+	}
+}
+
+void	Server::eraseInServer(Client& cli)
+{
+	eraseInAllChannel(cli);
+	eraseClient(cli.getFd());
+	erasePoll(cli.getFd());
+	close(cli.getFd());
+}
+
 void	Server::readData(Client& cli)
 {
 	char	bufftmp[1024];
@@ -130,9 +153,7 @@ void	Server::readData(Client& cli)
 	if (bytes <= 0)
 	{
 		std::cout << "Client " << cli.getFd() << " disconnected\n";
-		close(cli.getFd());
-		erasePoll(cli.getFd());
-		eraseClient(cli.getFd());
+		eraseInServer(cli);
 	}
 	else
 	{

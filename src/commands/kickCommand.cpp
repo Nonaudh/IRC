@@ -42,8 +42,15 @@ int	checkKickCommand(Server& server, Client& cli, std::vector<std::string>& para
 		send_message(ERR_CHANOPRIVSNEEDED(CLIENT(cli.getNick(), cli.getUser()),  params[0]), cli.getFd());
 		return (1);
 	}
-
 	return (0);
+}
+
+void	send_part_rply_to_channel(Channel& chan, Client& cli)
+{
+	std::map<int, e_privilege>::iterator it;
+
+	for (it = chan.getClients().begin(); it != chan.getClients().end(); ++it)
+		send_message(RPL_PART(CLIENT(cli.getNick(), cli.getUser()), chan.get_name()), it->first);
 }
 
 void Command::kickCommand()
@@ -64,4 +71,5 @@ void Command::kickCommand()
     chan.getClients().erase(it);
     // send_message(RPL_KICK(CLIENT(client.getNick(), client.getUser()), params[0], params[1]), client.getFd());
     send_message(RPL_KICK(CLIENT(client.getNick(), client.getUser()), params[0], params[1]), fd_to_kick);
+	send_part_rply_to_channel(chan, this->server.findClient(fd_to_kick));
 }

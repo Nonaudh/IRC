@@ -52,6 +52,8 @@ class	Server
 		int		findClientFd(std::string nickname);
 		void	addToClient(int socketFd);
 		void	eraseClient(int socketFd);
+		void	eraseInServer(Client& cli);
+		void	eraseInAllChannel(Client& cli);
 		void	handleBuffer(Client& cli, char *buff);
 		//Modifier pour la class channel
 		void createChannel(std::string const& name, int fd, std::string mdp);
@@ -63,6 +65,7 @@ class	Server
 };
 
 void	send_message(std::string str, int fd);
+void	actualise_name_reply(Channel& chan, Server& serv, Client& cli);
 
 std::vector<std::string> split(std::string buff, int (*skip)(char), int (*unskip)(char));
 

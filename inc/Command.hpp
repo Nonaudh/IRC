@@ -67,6 +67,7 @@ private:
 
 };
 
+void	send_part_rply_to_channel(Channel& chan, Client& cli);
 void	send_message(std::string str, int fd);
 
 #endif

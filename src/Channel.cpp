@@ -1,5 +1,7 @@
 #include "Channel.hpp"
 #include "error.hpp"
+#include "Server.hpp"
+
 Channel::Channel()
 {}
 
@@ -31,7 +33,30 @@ std::map <int , e_privilege> & Channel::getClients(void)
     return(this->clients);
 }
 
-void Channel::joinChannel(Client& client, e_privilege privilege, std::string passwords)
+std::string	list_nick_channel(Channel& chan, Server& serv)
+{
+	std::string	nicknames;
+	std::map<int, e_privilege>&	clis = chan.getClients();
+
+	for (std::map<int, e_privilege>::iterator it = clis.begin(); it != clis.end(); ++it)
+	{
+		nicknames = nicknames + serv.findClient(it->first).getNick() + " ";
+	}
+	return (nicknames);
+}
+
+void	actualise_name_reply(Channel& chan, Server& serv, Client& cli)
+{
+	std::map<int, e_privilege>&	clients = chan.getClients();
+
+	for (std::map<int, e_privilege>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (it->second != INVITED)
+			send_message(RPL_NAMEREPLY(cli.getNick(), chan.get_name(), list_nick_channel(chan, serv).c_str()), it->first);
+	}
+}
+
+void Channel::joinChannel(Client& client, e_privilege privilege, std::string passwords, Server& serv)
 {
 	std::map <int, e_privilege > :: iterator it = this->clients.find(client.getFd());
 
@@ -68,7 +93,9 @@ void Channel::joinChannel(Client& client, e_privilege privilege, std::string pas
 		it->second = USER;
 	else
 		clients.insert(std::pair<int, e_privilege>(client.getFd(), privilege));
+
 	send_message(RPL_JOIN(CLIENT(client.getNick(), client.getUser()), this->name), client.getFd());
+	actualise_name_reply(*this, serv, client);
 }
 
 void Channel::setMdfTopic(bool mdf)
@@ -129,6 +156,11 @@ void Channel::set_invite_only(bool invit)
 bool Channel::get_invite_only(void)const
 {
 	return (this->invite_only);
+}
+
+std::string	Channel::get_name(void)
+{
+	return (this->name);
 }
 
 void	Channel::info(void)
