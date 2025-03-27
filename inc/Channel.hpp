@@ -49,7 +49,7 @@ class Channel
 		void	info(void);
 
         std::map <int , e_privilege>& getClients(void);
-
+        
 		size_t	size(void);
         void joinChannel(Client& client, e_privilege privilege, std::string password);
 };

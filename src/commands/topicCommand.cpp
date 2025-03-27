@@ -1,20 +1,5 @@
 #include "Command.hpp"
 
-// Command: TOPIC
-// Parameters: <channel> [<topic>]
-// 
-// The TOPIC message is used to change or view the topic of a channel.
-// The topic for channel <channel> is returned if there is no <topic>
-// given.  If the <topic> parameter is present, the topic for that
-// channel will be changed, if the channel modes permit this action.
-// 
-// Numeric Replies:
-// 
-        // RPL_NOTOPIC                     RPL_TOPIC
-        // ERR_CHANOPRIVSNEEDED
-// 
-
-
 int	checkTopicCommand(Server& server, Client& cli, std::vector<std::string>& params)
 {
 	if (params.size() < 1 )
@@ -36,9 +21,7 @@ int	checkTopicCommand(Server& server, Client& cli, std::vector<std::string>& par
 	{
 		send_message(ERR_NOTONCHANNEL(CLIENT(cli.getNick(), cli.getUser()),  params[0]), cli.getFd());
 		return (1);
-	}
-    
-    
+	}    
 	return (0);
 }
 

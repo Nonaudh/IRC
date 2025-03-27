@@ -45,6 +45,13 @@ std::vector<std::string> ::const_iterator searchMdp(int i, std::string search, s
 
 void Command::joinCommand()
 {
+
+	//Mise en place erreur arg==1 
+	if(params.size() == 1)
+	{
+		send_message(ERR_TOOMUCHPARAMS((CLIENT(client.getNick(), client.getUser()), params[0]), client.getFd() );
+		return;
+	}
 	//Ce qui permet d'obternir l'adresse du channel
 	std::map<std::string, Channel>& channels = this->getServer().getChannels();
 
