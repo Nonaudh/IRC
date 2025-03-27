@@ -212,7 +212,11 @@ void	Server::runServer(void)
 				if (pollfds[i].fd == serSocketFd)
 					NewClient();
 				else
-					readData(findClient(pollfds[i].fd));
+				{
+					std::vector<Client>::iterator it = findClient(pollfds[i].fd);
+					if (it != clients.end())
+						readData(*it);
+				}
 			}
 		}
 	}

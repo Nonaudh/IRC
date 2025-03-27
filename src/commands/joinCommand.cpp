@@ -5,23 +5,6 @@
 
 #include <stdio.h>
 
-// int searchMdpJoin(std::vector<std::string> Params, size_t j, int i)
-// {
-// 	int countMdp = 0;
-// 	int countChannel=0;
-// 	for(size_t i = 0; i != j; ++i)
-// 	{
-// 		if(Params[i][0] != '#' && Params[i][0] != '&')
-// 			countMdp++;
-// 		else
-// 			countChannel++;
-// 	}
-// 	if(i == 0)
-// 		return(countMdp);
-// 	else 
-// 		return(countChannel);
-// }
-
 int	searchNbrChannels(std::vector<std::string>& params)
 {
 	int	countMdp = 0;
@@ -58,10 +41,10 @@ void Command::joinCommand()
 	std::vector <std::string> params = getParams();
 
 	//Ce qui permet de determiner le nbr de mots de pass
-	int searchNbrChannel= searchNbrChannels(this->params);
+	int searchNbrChannel = searchNbrChannels(this->params);
 
 	//Ce qui permet determiner le nombre de channell
-	int  searchMdpChannel =getParams().size()- searchNbrChannel;
+	int  searchMdpChannel = getParams().size()- searchNbrChannel;
 
 	std::vector <std::string> ::const_iterator const_it;
 	//Creation d'une boucle permettant de vois si le canal existe
@@ -77,6 +60,7 @@ void Command::joinCommand()
 			else//Creation du canal sans mdp
 				channels.insert(std::pair<std::string, Channel>(*const_it, Channel(client.getFd(), *const_it, "")));
 			send_message(RPL_JOIN(CLIENT(client.getNick(), client.getUser()), *const_it), client.getFd());
+			send_message(RPL_NAMEREPLY(client.getNick(), *const_it, client.getNick()), client.getFd());
 		}
 		else
 		{
