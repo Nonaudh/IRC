@@ -49,7 +49,7 @@ void Command::joinCommand()
 	//Mise en place erreur arg==1 
 	if(params.size() == 1)
 	{
-		send_message(ERR_TOOMUCHPARAMS((CLIENT(client.getNick(), client.getUser()), params[0]), client.getFd() );
+		send_message(ERR_TOOMUCHPARAMS(CLIENT(client.getNick(), client.getUser()), params[0]), client.getFd());
 		return;
 	}
 	//Ce qui permet d'obternir l'adresse du channel
