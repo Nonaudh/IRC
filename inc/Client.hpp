@@ -13,7 +13,7 @@ enum	e_level
 
 class	Client
 {
-	private :
+	protected :
 		e_level		level;
 		std::string	username;
 		std::string	nickname;
@@ -24,7 +24,7 @@ class	Client
 
 	Client();
 
-	~Client(void);
+	virtual	~Client(void);
 		void	setFd(int fd);
 		int		getFd(void) const;
 		void	Authen(e_level level);
@@ -33,6 +33,13 @@ class	Client
 		void		setNick(std::string str);
 		std::string	getUser(void) const;
 		void		setUser(std::string str);
+};
+
+class	Bot : public Client
+{
+	public :
+		Bot(int socketFd);
+		~Bot();
 };
 
 # endif

@@ -113,7 +113,6 @@ void	print_vector(std::vector<std::string>& v)
 
 bool	no_endl(std::string	buff)
 {
-
 	if (std::find(buff.begin(), buff.end(), '\n') == buff.end())
 		return (1);
 	return (0);
@@ -198,8 +197,72 @@ void	Server::NewClient(void)
 	addToClient(socketFd);
 }
 
+void	Server::addBotToClient(int socketFd)
+{
+	Bot	bot(socketFd);
+
+	bot.setNick("GigBot");
+	bot.Authen(CONNECT);
+
+	clients.push_back(bot);
+
+	
+}
+
+void	Server::NewBot(void)
+{
+	sockaddr_in	cliadd;
+	socklen_t	len = sizeof(cliadd);
+
+	// int	socketFd = accept(serSocketFd, (sockaddr *)&(cliadd), &len);
+	// if (socketFd == -1)
+	// {
+	// 	std::cerr << "Error : accept()" << std::endl;
+	// 	return ;
+	// }
+	// if (fcntl(socketFd, F_SETFL, O_NONBLOCK == -1))
+	// {
+	// 	std::cerr << "Error : fcntl()" << std::endl;
+	// 	close (socketFd);
+	// 	return ;
+	// }
+	int socketFd = socket(AF_INET, SOCK_STREAM, 0);
+	if (socketFd == -1)
+		throw(std::runtime_error("Error : socket()"));
+
+	if (setsockopt(socketFd, SOL_SOCKET, SO_REUSEADDR, &len, sizeof(len)) == -1)
+		throw(std::runtime_error("Error : setsockopt()"));
+
+	if (fcntl(socketFd, F_SETFL, O_NONBLOCK) == -1)
+		throw(std::runtime_error("Error : fcntl()"));
+
+	addToPoll(socketFd);
+	addBotToClient(socketFd);
+}
+
+int	is_a_bot(Client& cli)
+{
+	try
+	{
+		Bot& a = dynamic_cast<Bot&>(cli);
+		(void)a;
+		std::cout << "This is a Bot" << std::endl;
+		return (1);
+	}
+	catch(const std::exception& e)
+	{}
+	return (0);
+}
+
+void	readDataBot(Bot& bot)
+{
+	(void)bot;
+}
+
 void	Server::runServer(void)
 {
+	NewBot();
+
 	while (!Server::Signal)
 	{
 		if ((poll(&pollfds[0], pollfds.size(), -1) == -1) && Signal == false)
@@ -215,7 +278,12 @@ void	Server::runServer(void)
 				{
 					std::vector<Client>::iterator it = findClient(pollfds[i].fd);
 					if (it != clients.end())
-						readData(*it);
+					{
+						if (is_a_bot(*it))
+							readDataBot(dynamic_cast<Bot&>(*it));
+						else
+							readData(*it);
+					}
 				}
 			}
 		}
