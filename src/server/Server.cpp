@@ -246,6 +246,8 @@ void	Server::createServer(void)
 	if (listen(this->serSocketFd, SOMAXCONN) == -1)
 		throw(std::runtime_error("Error : listen()"));
 
+	// this->add = (struct sockaddr*)&add;
+	// this->add = &add;
 	addToPoll(serSocketFd);
 }
 

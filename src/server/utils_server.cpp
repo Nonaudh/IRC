@@ -89,3 +89,13 @@ void	Server::signalHandler(int sig)
 	std::cout << std::endl;
 	Server::Signal = true;
 }
+
+// sockaddr_in	Server::get_add(void)
+// {
+// 	return (*this->add);
+// }
+
+int	Server::getPort(void)
+{
+	return (this->port);
+}

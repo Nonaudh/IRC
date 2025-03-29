@@ -13,6 +13,8 @@
 # include <sys/socket.h>
 # include <cstring>
 # include <unistd.h>
+# include <fcntl.h>
+# include <arpa/inet.h>
 
 enum	e_cmd
 {

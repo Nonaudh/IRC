@@ -3,12 +3,13 @@
 
 # include <vector>
 # include "Client.hpp"
-#include "Channel.hpp"
-#include <map>
-#include <sys/poll.h>
+# include "Channel.hpp"
+# include <map>
+# include <sys/poll.h>
 # include <unistd.h>
 # include <sys/types.h>
 # include <sys/socket.h>
+# include <netinet/in.h>
 
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"
@@ -24,6 +25,9 @@ class	Server
 {
 	private :
 		int	port;
+		// sockaddr	*add;
+		// sockaddr_in *add;
+		// sockaddr_in&	add;
 		std::string password;
 		int	serSocketFd;
 		static bool Signal;
@@ -41,29 +45,29 @@ class	Server
 		static void	signalHandler(int sig);
 		void	closeAllFd(void);
 		int		setPortPassword(char **argv);
-		int		enterPassword(int socketFd, char *buff);
+		// int		enterPassword(int socketFd, char *buff);
 		void	createServer(void);
 		void	runServer(void);
 		void	NewClient(void);
-		void	NewBot(void);
 		void	readData(Client& cli);
 		void	addToPoll(int socketFd);
 		void	erasePoll(int socketFd);
 		std::vector<Client>::iterator	findClient(int socketFd);
 		int		findClientFd(std::string nickname);
 		void	addToClient(int socketFd);
-		void	addBotToClient(int socketFd);
 		void	eraseClient(int socketFd);
 		void	eraseInServer(Client& cli);
 		void	eraseInAllChannel(Client& cli);
-		void	handleBuffer(Client& cli, char *buff);
+		// void	handleBuffer(Client& cli, char *buff);
 		//Modifier pour la class channel
 		void createChannel(std::string const& name, int fd, std::string mdp);
 		Channel* findChannel(std::string const& findChannel);
-		void 	joinChannel(std::string const & nameChannel, int fd);
+		// void 	joinChannel(std::string const & nameChannel, int fd);
 		std::map<std::string, Channel>&	getChannels(void);
 		std::vector<Client>&	getClient(void);
 		void	killFromServer(std::string nickname, std::string reason, int caller);
+		int	getPort(void);
+		// sockaddr_in& get_add(void);
 };
 
 void	send_message(std::string str, int fd);
