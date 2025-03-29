@@ -52,10 +52,10 @@ void Command::executeNotAuth() {
 }
 
 void Command::execute() {
-	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG", "MODE", "TOPIC", "KICK", "INVITE", "NOTICE"};
+	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN", "NICK", "PRIVMSG", "MODE", "TOPIC", "KICK", "INVITE", "NOTICE", "BOT"};
 
 	int	i;
-	for (i = 0; i < 10 && command != cmd_available[i]; ++i)
+	for (i = 0; i < 11 && command != cmd_available[i]; ++i)
 		;
 
 	switch (i)
@@ -80,16 +80,19 @@ void Command::execute() {
 			break ;
 		case(TOPIC):
 			topicCommand();
-			break;
+			break ;
 		case(KICK):
 			kickCommand();
-			break;
+			break ;
 		case(INVITE):
 			inviteCommand();
-			break;
+			break ;
 		case (NOTICE_CMD):
 			noticeCommand();
-			break;
+			break ;
+		case (BOT):
+			botCommand();
+			break ;
 		default:
 			std::cout << "Unknow cmd : " << command << std::endl;
 			break ;
