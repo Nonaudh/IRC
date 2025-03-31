@@ -6,7 +6,7 @@
 #include <iostream>
 #include "Client.hpp"
 #include "Server.hpp"
-#include <algorithm>    // std::find
+#include <algorithm>
 # include <map>
 # include "error.hpp"
 # include <sys/types.h>
@@ -19,7 +19,7 @@ enum	e_cmd
 	KILL,
 	QUIT,
 	JOIN,
-	NICK,
+	NICK_CMD,
 	PRIVMSG_CMD,
 	MODE,
 	TOPIC, 
@@ -55,15 +55,12 @@ private:
 	void	kickCommand(void);
 	void	privmsgCommand(void);
 	void	noticeCommand(void);
-	void	firstParamChannelCommand(int i);
 	void	killCommand(void);
 	void	modeCommand(void);
 	void	inviteCommand(void);
 	void	topicCommand(void);
 	int		not_a_user(std::string str);
 	int		not_a_channel(std::string str);
-	void	executePartCommand(std::map<std::string, Channel>& channels, std::vector<std::string> params, int clientFd);
-	std::vector<std::string>  searchAllChannel(std::vector<std::string> arg, int index);
 
 };
 

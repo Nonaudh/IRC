@@ -69,7 +69,7 @@ void Command::execute() {
 		case (JOIN):
 			joinCommand();
 			break ;
-		case (NICK) :
+		case (NICK_CMD) :
 			nickCommand();
 			break ;
 		case (PRIVMSG_CMD):

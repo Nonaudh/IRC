@@ -19,6 +19,9 @@ void	send_message(std::string str, int fd)
 
 void	Command::nickCommand(void)
 {
+	if (this->client.getAuthen() < PASSWORD)
+		return ;
+
 	if (this->params.empty())
 	{
 		send_message(ERR_NONICKNAMEGIVEN(this->client.getNick(), ""), this->client.getFd());
@@ -43,6 +46,9 @@ void	Command::nickCommand(void)
 			}
 		}
 	}
+
+	if (this->client.getAuthen() == PASSWORD)
+		this->client.Authen(NICK);
 
 	this->client.setNick(this->params[0]);
 }
