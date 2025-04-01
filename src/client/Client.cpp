@@ -1,5 +1,6 @@
 #include "Client.hpp"
 #include <sstream>
+#include <iostream>
 
 std::string	int_to_string(int nb)
 {
@@ -14,7 +15,8 @@ Client::Client(int socketFd)
 {
 	std::string	id = int_to_string(socketFd);
 	level = CONNECT; //to switch to NONE
-	SocketFd = socketFd;
+	this->SocketFd = socketFd;
+	this->nickname = "CLI_" + id;
 }
 
 Client::~Client(void)

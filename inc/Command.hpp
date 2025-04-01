@@ -55,15 +55,15 @@ private:
 	void	kickCommand(void);
 	void	privmsgCommand(void);
 	void	noticeCommand(void);
-	void	firstParamChannelCommand(int i);
 	void	killCommand(void);
 	void	modeCommand(void);
 	void	inviteCommand(void);
 	void	topicCommand(void);
+	void	botCommand(void);
 	int		not_a_user(std::string str);
 	int		not_a_channel(std::string str);
-	void	executePartCommand(std::map<std::string, Channel>& channels, std::vector<std::string> params, int clientFd);
-	std::vector<std::string>  searchAllChannel(std::vector<std::string> arg, int index);
+	// void	executePartCommand(std::map<std::string, Channel>& channels, std::vector<std::string> params, int clientFd);
+	// std::vector<std::string>  searchAllChannel(std::vector<std::string> arg, int index);
 
 };
 

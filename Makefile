@@ -8,7 +8,7 @@ CFLAGS  := -Wall -Wextra -Werror -std=c++98 -g
 
 HEADERS := -I ./inc
 
-SRCS    :=	main.cpp Channel.cpp \
+SRCS    :=	main.cpp channel/Channel.cpp \
 			client/Client.cpp commands/firstParamChannelCommand.cpp \
 			commands/killCommand.cpp commands/nickCommand.cpp \
 			server/killServer.cpp server/utils_server.cpp \
@@ -17,7 +17,7 @@ SRCS    :=	main.cpp Channel.cpp \
 			commands/inviteCommand.cpp commands/userCommand.cpp \
 			commands/kickCommand.cpp commands/passCommand.cpp \
 			commands/topicCommand.cpp commands/noticeCommand.cpp \
-			server/Server.cpp
+			server/Server.cpp channel/joinchannel.cpp \
 
 OBJS    := $(addprefix $(OBJS_D)/, $(SRCS:.cpp=.o))
 

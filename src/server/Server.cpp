@@ -113,7 +113,6 @@ void	print_vector(std::vector<std::string>& v)
 
 bool	no_endl(std::string	buff)
 {
-
 	if (std::find(buff.begin(), buff.end(), '\n') == buff.end())
 		return (1);
 	return (0);
@@ -212,7 +211,11 @@ void	Server::runServer(void)
 				if (pollfds[i].fd == serSocketFd)
 					NewClient();
 				else
-					readData(findClient(pollfds[i].fd));
+				{
+					std::vector<Client>::iterator it = findClient(pollfds[i].fd);
+					if (it != clients.end())
+						readData(*it);
+				}
 			}
 		}
 	}

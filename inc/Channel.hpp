@@ -19,7 +19,7 @@ class Channel
 {
     private:
         std::map<int, e_privilege> clients;
-        size_t user_limit;
+        int	user_limit;
         bool topic_editable;
         std::string name;
         std::string password;
@@ -54,7 +54,7 @@ class Channel
 
         std::map <int , e_privilege>& getClients(void);
         
-		size_t	size(void);
+		int	size(void);
         void joinChannel(Client& client, e_privilege privilege, std::string password, Server& serv);
 };
 

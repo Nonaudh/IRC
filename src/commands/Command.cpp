@@ -80,16 +80,16 @@ void Command::execute() {
 			break ;
 		case(TOPIC):
 			topicCommand();
-			break;
+			break ;
 		case(KICK):
 			kickCommand();
-			break;
+			break ;
 		case(INVITE):
 			inviteCommand();
-			break;
+			break ;
 		case (NOTICE_CMD):
 			noticeCommand();
-			break;
+			break ;
 		default:
 			std::cout << "Unknow cmd : " << command << std::endl;
 			break ;
