@@ -9,7 +9,7 @@ Channel::~Channel()
 {}
 
 Channel::Channel(int fd, std::string nameChannel, std::string password)
-    : user_limit(3), topic_editable(true), name(nameChannel)
+    : user_limit(2), topic_editable(true), name(nameChannel)
 {
 	this->password = password;
 	std::cout << "Le password est "<< this->password << std::endl;
@@ -66,7 +66,8 @@ void Channel::joinChannel(Client& client, e_privilege privilege, std::string pas
 		return;
 	}
 	
-    if (size() >= user_limit)
+	std::cout << "size = " << size() <<" user_limit = " << user_limit << std ::endl;
+    if (size() >= user_limit || user_limit)
 	{
 		send_message(ERR_CHANNELISFULL(CLIENT(client.getNick(), client.getUser()), this->name), client.getFd());
 		return ;
@@ -75,7 +76,6 @@ void Channel::joinChannel(Client& client, e_privilege privilege, std::string pas
 	{
 		if(this->password != passwords)
 		{
-			std::cout << "chan; " << this->password << "  cli; " << passwords << std::endl;
 			send_message(ERR_BADCHANNELKEY(CLIENT(client.getNick(), client.getUser()), this->name), client.getFd());
 			return ;
 		}

@@ -43,6 +43,7 @@ std::vector<std::string> ::const_iterator searchMdp(int i, std::string search, s
 	return(const_it);
 }
 
+
 void Command::joinCommand()
 {
 	//Mise en place erreur arg==1 
@@ -74,7 +75,7 @@ void Command::joinCommand()
 		{
 			if (std::distance(static_cast<std::vector<std::string>::const_iterator>(params.begin()), const_it)+ searchNbrChannel < (int)params.size()&& searchMdpChannel != 0)
 				channels.insert(std::pair<std::string, Channel>(*const_it, Channel(client.getFd(), *const_it,  *(searchMdp((searchNbrChannel), *copie, params)))));
-			else//Creation du canal sans mdp
+			else//Creation du canal sans mdp			
 				channels.insert(std::pair<std::string, Channel>(*const_it, Channel(client.getFd(), *const_it, "")));
 			send_message(RPL_JOIN(CLIENT(client.getNick(), client.getUser()), *const_it), client.getFd());
 		} 
