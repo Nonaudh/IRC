@@ -34,13 +34,6 @@ class	Client
 		void		setUser(std::string str);
 };
 
-class	Bot : public Client
-{
-	public :
-		Bot(int socketFd);
-		~Bot();
-};
-
 std::string	int_to_string(int nb);
 
 # endif
