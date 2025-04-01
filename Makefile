@@ -1,12 +1,16 @@
 NAME    := ircserv
 
+NAMEBOT := MarineLePenInegible
+
 SRCS_D  := ./src
 OBJS_D  := ./build
+OBJS_DBOT  := ./bot/build
 
 CC      := c++
 CFLAGS  := -Wall -Wextra -Werror -std=c++98 -g
 
-HEADERS := -I ./inc
+HEADERS := -I ./inc -I bot/inc
+
 
 SRCS    :=	main.cpp channel/Channel.cpp \
 			client/Client.cpp commands/firstParamChannelCommand.cpp \
@@ -18,8 +22,12 @@ SRCS    :=	main.cpp channel/Channel.cpp \
 			commands/kickCommand.cpp commands/passCommand.cpp \
 			commands/topicCommand.cpp commands/noticeCommand.cpp \
 			server/Server.cpp channel/joinchannel.cpp \
+			
+SRCSBOT :=  bot/src/mainbot.cpp bot/src/bot.cpp
 
 OBJS    := $(addprefix $(OBJS_D)/, $(SRCS:.cpp=.o))
+
+OBJSBOT := $(patsubst bot/src/%.cpp,$(OBJS_DBOT)/%.o,$(SRCSBOT))
 
 ARGS	:= 6667 pass
 
@@ -31,6 +39,16 @@ $(OBJS_D)/%.o: $(SRCS_D)/%.cpp
 
 $(NAME): $(OBJS)
 		@$(CC) $(OBJS) $(HEADERS) -o $(NAME)
+		
+bot: $(NAMEBOT)
+
+
+$(OBJS_DBOT)/%.o: bot/src/%.cpp
+		@mkdir -p $(dir $@)
+		$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
+
+$(NAMEBOT): $(OBJSBOT)
+		@$(CC) $(OBJSBOT) $(HEADERS) -o $(NAMEBOT)
 
 gdb: all
 		@gdb -tui $(NAME) -ex 'start 6667 pass'
@@ -50,3 +68,9 @@ fclean: clean
 re: fclean all
 
 .PHONY: all, clean, fclean, re, gdb, valgrind, run
+
+botclean:
+		rm -rf $(OBJS_DBOT)
+
+botfclean: botclean
+		rm -rf $(NAMEBOT)
