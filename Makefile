@@ -23,7 +23,7 @@ SRCS    :=	main.cpp channel/Channel.cpp \
 			commands/topicCommand.cpp commands/noticeCommand.cpp \
 			server/Server.cpp channel/joinchannel.cpp \
 			
-SRCSBOT :=  bot/src/mainbot.cpp bot/src/bot.cpp
+SRCSBOT :=  bot/src/mainbot.cpp bot/src/Bot.cpp
 
 OBJS    := $(addprefix $(OBJS_D)/, $(SRCS:.cpp=.o))
 
