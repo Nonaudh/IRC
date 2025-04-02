@@ -3,21 +3,6 @@
 //MIse au propre de la command
 #include <iterator>  // Pour std::distance
 
-#include <stdio.h>
-
-int	searchNbrChannels(std::vector<std::string>& params)
-{
-	int	countMdp = 0;
-	std::string	c = "#&";
-
-	for (std::vector<std::string>::iterator it = params.begin(); it != params.end(); ++it)
-	{
-		if (c.find(*it->begin()) != std::string::npos)
-			countMdp++;
-	}
-	return (countMdp);
-}
-
 std::vector<std::string> ::const_iterator searchMdp(int i, std::string search, std::vector <std::string> params)//Je ne suis pas sur de celle mais cpp
 {
 	std::vector<std::string> :: const_iterator const_it = std::find(params.begin(), params.end(), search);

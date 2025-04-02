@@ -26,6 +26,7 @@ enum	e_cmd
 	KICK,
 	INVITE,
 	NOTICE_CMD,
+	PART
 };
 
 class Command {
@@ -61,6 +62,7 @@ private:
 	void	topicCommand(void);
 	int		not_a_user(std::string str);
 	int		not_a_channel(std::string str);
+	void	partCommand(void);
 
 };
 
