@@ -23,7 +23,7 @@ bool isAuthorizedCharacter(char c) {
            (c >= '0' && c <= '9') ||
            c == '_' || c == '-';
 }
-//Creation d'une fonction permettant de determiner si les caracteres sont ok
+
 int isValidParams(std::string str)
 {
 	if(str[0] == 35  && str[1] == 0)
@@ -32,14 +32,10 @@ int isValidParams(std::string str)
 		return(1);
 	}
 	std::string :: iterator i;
-	//En mode cpp 
 	for(i = str.begin(); i != str.end(); ++i)
 	{
-		if(!isAuthorizedCharacter(str[*i]))
-		{
-			return(1);
-			
-		}
+		if(!isAuthorizedCharacter(*i))
+			return(1);	
 	}
 	return(0);
 }
@@ -55,7 +51,13 @@ void	Command::nickCommand(void)
 		return ;
 	}
 
-	if (nickname_not_free(this->params[0], this->server.getClient()) )//|| isValidParams(params[0]))
+	if(isValidParams(params[0]))
+	{
+		send_message(ERR_ERRONEUSNICKNAME(this->client.getNick(), this->params[0]), this->client.getFd());
+		return;
+	}
+
+	if (nickname_not_free(this->params[0], this->server.getClient()) )
 	{
 		send_message(ERR_NICKNAMEINUSE(this->client.getNick(), this->params[0]), this->client.getFd());
 		return ;
