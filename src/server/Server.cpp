@@ -115,8 +115,8 @@ bool	no_endl(std::string	buff)
 {
 
 	if (std::find(buff.begin(), buff.end(), '\n') == buff.end())
-		return (1);
-	return (0);
+		return (true);
+	return (false);
 }
 
 void	Server::eraseInAllChannel(Client& cli)
@@ -274,22 +274,7 @@ Channel* Server::findChannel(std::string const& findChannel)
         return &(it->second);
     return NULL;
 }
-// void 	Server::joinChannel(std::string const & nameChannel, int fd)
-// {
-// 	Channel *chan = findChannel(nameChannel);
-// 	if(chan)
-// 		chan->joinChannel(fd, USER, "");
-// 	//Verifier si il faut le creer ici
-// }
 
 bool Server::checkPassword(const std::string &password) {
-	/*std::cout << "Checking password: " << password << " size: " << password.size() << std::endl;
-	std::cout << "Server password: " << this->password << " size: " << this->password.size() << std::endl;
-
-	for (size_t i = 0; i < password.size(); i++) {
-		std::cout << (int)password[i] << " ";
-	}
-
-	std::cout << std::endl;*/
 	return password == this->password;
 }

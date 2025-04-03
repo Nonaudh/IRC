@@ -78,8 +78,9 @@ std::vector<Client>&	Server::getClient(void)
 
 void	Server::closeAllFd(void)
 {
-	for (std::vector<Client>::iterator it = this->clients.begin(); it != this->clients.begin(); ++it)
+	for (std::vector<Client>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
 		close (it->getFd());
+	close(this->serSocketFd);
 }
 
 void	Server::signalHandler(int sig)
