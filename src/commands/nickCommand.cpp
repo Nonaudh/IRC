@@ -55,7 +55,7 @@ void	Command::nickCommand(void)
 		return ;
 	}
 
-	if (nickname_not_free(this->params[0], this->server.getClient()) || isValidParams(params[0]))
+	if (nickname_not_free(this->params[0], this->server.getClient()) )//|| isValidParams(params[0]))
 	{
 		send_message(ERR_NICKNAMEINUSE(this->client.getNick(), this->params[0]), this->client.getFd());
 		return ;

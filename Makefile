@@ -11,9 +11,7 @@ CFLAGS  := -Wall -Wextra -Werror -std=c++98 -g
 
 HEADERS := -I ./inc -I bot/inc
 
-
-SRCS    :=	main.cpp channel/Channel.cpp \
-			client/Client.cpp commands/firstParamChannelCommand.cpp \
+SRCS    :=	main.cpp channel/Channel.cpp client/Client.cpp \
 			commands/killCommand.cpp commands/nickCommand.cpp \
 			server/killServer.cpp server/utils_server.cpp \
 			commands/Command.cpp commands/joinCommand.cpp \
@@ -23,7 +21,6 @@ SRCS    :=	main.cpp channel/Channel.cpp \
 			commands/topicCommand.cpp commands/noticeCommand.cpp \
 			commands/partCommand.cpp \
 			server/Server.cpp channel/joinchannel.cpp
-			server/Server.cpp channel/joinchannel.cpp \
 			
 SRCSBOT :=  bot/src/mainbot.cpp bot/src/Bot.cpp
 
