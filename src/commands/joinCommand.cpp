@@ -3,21 +3,6 @@
 //MIse au propre de la command
 #include <iterator>  // Pour std::distance
 
-#include <stdio.h>
-
-int	searchNbrChannels(std::vector<std::string>& params)
-{
-	int	countMdp = 0;
-	std::string	c = "#&";
-
-	for (std::vector<std::string>::iterator it = params.begin(); it != params.end(); ++it)
-	{
-		if (c.find(*it->begin()) != std::string::npos)
-			countMdp++;
-	}
-	return (countMdp);
-}
-
 std::vector<std::string> ::const_iterator searchMdp(int i, std::string search, std::vector <std::string> params)//Je ne suis pas sur de celle mais cpp
 {
 	std::vector<std::string> :: const_iterator const_it = std::find(params.begin(), params.end(), search);
@@ -62,14 +47,14 @@ void Command::joinCommand()
 				channels.insert(std::pair<std::string, Channel>(*const_it, Channel(client.getFd(), *const_it, "")));
 			send_message(RPL_JOIN(CLIENT(client.getNick(), client.getUser()), *const_it), client.getFd());
 			send_message(RPL_NAMEREPLY(client.getNick(), *const_it, client.getNick()), client.getFd());
-		} 
-		 else
-		 {
-		 	// Le canal existe, vous pouvez le rejoindre
+		}
+		else
+		{
+			// Le canal existe, vous pouvez le rejoindre
 			if (std::distance(static_cast<std::vector<std::string>::const_iterator>(params.begin()), const_it)+ searchNbrChannel < (int)params.size()&& searchMdpChannel != 0)
 				 it->second.joinChannel(client, USER,  *(searchMdp(searchNbrChannel, *copie, params)), this->getServer());
-		 	else //Rejoindre sans mdp
-		 		it->second.joinChannel(client, USER,  "", this->getServer());
-		 }
+			else //Rejoindre sans mdp
+				it->second.joinChannel(client, USER,  "", this->getServer());
+		}
 	}
 }

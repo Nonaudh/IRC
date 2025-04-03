@@ -46,6 +46,9 @@ int isValidParams(std::string str)
 
 void	Command::nickCommand(void)
 {
+	if (this->client.getAuthen() < PASSWORD)
+		return ;
+
 	if (this->params.empty())
 	{
 		send_message(ERR_NONICKNAMEGIVEN(this->client.getNick(), ""), this->client.getFd());
@@ -57,6 +60,22 @@ void	Command::nickCommand(void)
 		send_message(ERR_NICKNAMEINUSE(this->client.getNick(), this->params[0]), this->client.getFd());
 		return ;
 	}
-	send_message(RPL_NICK(this->client.getNick(), params[0]), this->getClient().getFd());
+
+	std::map<std::string, Channel>& channels = this->getServer().getChannels();
+
+	for (std::map<std::string, Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+	{
+		if (it->second.getClients().find(this->client.getFd()) != it->second.getClients().end())
+		{
+			for (std::map<int, e_privilege>::iterator it2 = it->second.getClients().begin(); it2 != it->second.getClients().end(); ++it2)
+			{
+				send_message(RPL_NICK(this->client.getNick(), this->params[0]), it2->first);
+			}
+		}
+	}
+
+	if (this->client.getAuthen() == PASSWORD)
+		this->client.Authen(NICK);
+
 	this->client.setNick(this->params[0]);
 }

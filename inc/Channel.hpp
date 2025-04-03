@@ -59,3 +59,5 @@ class Channel
 };
 
 void	send_message(std::string str, int fd);
+
+int		searchNbrChannels(std::vector<std::string>& params);

@@ -1,9 +1,5 @@
 #include "Command.hpp"
-#include <stdio.h>
 
-
-// ERR_USERONCHANNEL
-// RPL_INVITING
 
 int Command::not_a_user(std::string str)
 {
@@ -26,7 +22,7 @@ int Command::not_a_channel(std::string str)
 
     if (it == this->server.getChannels().end())
     {
-        send_message(ERR_NOSUCHNICK(CLIENT(client.getNick(), client.getUser()), str), this->client.getFd());
+        send_message(ERR_NOSUCHCHANNEL(str), this->client.getFd());
         return (1);
     }
     return (0);
@@ -85,8 +81,5 @@ void Command::inviteCommand()
     this->server.getChannels().find(params[1])->second.getClients().insert(std::pair<int, e_privilege>(this->server.findClientFd(params[0]), INVITED));
 
     send_message(RPL_INVITESNDR(CLIENT(client.getNick(), client.getUser()), params[0], params[1]), this->client.getFd());
-    //send_message(RPL_INVITESNDR(CLIENT(client.getNick(), client.getUser()), params[0], params[1]), this->server.findClientFd(params[0]));
-   send_message(RPL_INVITERCVR(CLIENT(client.getNick(), client.getUser()), params[0], params[1]), this->server.findClientFd(params[0]));
-
-
+	send_message(RPL_INVITERCVR(CLIENT(client.getNick(), client.getUser()), params[0], params[1]), this->server.findClientFd(params[0]));
 }

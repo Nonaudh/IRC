@@ -8,7 +8,7 @@ void	Command::userCommand(void)
 		return ;
 	}
 
-	if (client.getAuthen() != PASSWORD)
+	if (client.getAuthen() < NICK)
 		return;
 
 	if (!client.getUser().empty())

@@ -122,3 +122,16 @@ int	Channel::size(void)
 	}
 	return (size);
 }
+
+int	searchNbrChannels(std::vector<std::string>& params)
+{
+	int	countMdp = 0;
+	std::string	c = "#&";
+
+	for (std::vector<std::string>::iterator it = params.begin(); it != params.end(); ++it)
+	{
+		if (c.find(*it->begin()) != std::string::npos)
+			countMdp++;
+	}
+	return (countMdp);
+}

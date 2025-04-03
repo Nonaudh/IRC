@@ -21,6 +21,8 @@ SRCS    :=	main.cpp channel/Channel.cpp \
 			commands/inviteCommand.cpp commands/userCommand.cpp \
 			commands/kickCommand.cpp commands/passCommand.cpp \
 			commands/topicCommand.cpp commands/noticeCommand.cpp \
+			commands/partCommand.cpp \
+			server/Server.cpp channel/joinchannel.cpp
 			server/Server.cpp channel/joinchannel.cpp \
 			
 SRCSBOT :=  bot/src/mainbot.cpp bot/src/Bot.cpp

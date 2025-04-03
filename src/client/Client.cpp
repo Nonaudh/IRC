@@ -17,7 +17,6 @@ Client::Client(int socketFd)
 	// level = CONNECT;
 	level = NONE;
 	this->SocketFd = socketFd;
-	this->nickname = "CLI_" + id;
 }
 
 Client::~Client(void)

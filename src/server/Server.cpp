@@ -74,10 +74,10 @@ void	new_execCmd(Server& server, Client& cli, std::vector<std::string> v)
 		command_name = *splitted.begin();
 		std::transform(command_name.begin(), command_name.end(), command_name.begin(), ::toupper);
 		splitted.erase(splitted.begin());
-		if (cli.getAuthen() < CONNECT)
-			Command(server, cli, command_name, splitted).executeNotAuth();
-		else
+		if (cli.getAuthen() >= CONNECT)
 			Command(server, cli, command_name, splitted).execute();
+		else
+			Command(server, cli, command_name, splitted).executeNotAuth();
 		splitted.clear();
 		command_name.clear();
 	}
@@ -114,8 +114,8 @@ void	print_vector(std::vector<std::string>& v)
 bool	no_endl(std::string	buff)
 {
 	if (std::find(buff.begin(), buff.end(), '\n') == buff.end())
-		return (1);
-	return (0);
+		return (true);
+	return (false);
 }
 
 void	Server::eraseInAllChannel(Client& cli)
@@ -273,22 +273,7 @@ Channel* Server::findChannel(std::string const& findChannel)
         return &(it->second);
     return NULL;
 }
-// void 	Server::joinChannel(std::string const & nameChannel, int fd)
-// {
-// 	Channel *chan = findChannel(nameChannel);
-// 	if(chan)
-// 		chan->joinChannel(fd, USER, "");
-// 	//Verifier si il faut le creer ici
-// }
 
 bool Server::checkPassword(const std::string &password) {
-	/*std::cout << "Checking password: " << password << " size: " << password.size() << std::endl;
-	std::cout << "Server password: " << this->password << " size: " << this->password.size() << std::endl;
-
-	for (size_t i = 0; i < password.size(); i++) {
-		std::cout << (int)password[i] << " ";
-	}
-
-	std::cout << std::endl;*/
 	return password == this->password;
 }

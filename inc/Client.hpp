@@ -8,6 +8,7 @@ enum	e_level
 {
 	NONE,
 	PASSWORD,
+	NICK,
 	CONNECT,
 	OP,
 };

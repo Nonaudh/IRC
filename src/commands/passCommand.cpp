@@ -12,12 +12,13 @@ void Command::passCommand() {
 		return;
 	}
 
-	if (client.getAuthen() != NONE) {
+	if (client.getAuthen() >= PASSWORD) {
 		send_message(ERR_ALREADYREGISTRED(CLIENT(client.getNick(), client.getUser())), this->client.getFd());
 		return;
 	}
 
-	client.Authen(PASSWORD);
+	if (client.getAuthen() == NONE)
+		client.Authen(PASSWORD);
 
 	send_message("Password accepted\r\n", this->client.getFd());
 	std::cout << this->client.getFd() << " has entered the correct password" << std::endl;
