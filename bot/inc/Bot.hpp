@@ -27,6 +27,8 @@ class	Bot
 		std::string	password;
 		int	SocketFd;
 		static bool Signal;
+		// bool	connected;
+		pollfd	pollFd;
 		// std::string	nickname;
 
 	public :
