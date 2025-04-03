@@ -19,25 +19,23 @@ bool clientInChannel(int clientFd,std::map<int, e_privilege> channel)
 {
     std::map<int, e_privilege>::iterator    it = channel.find(clientFd);
     if (it != channel.end() && it->second != INVITED)
-            return (1);
-    return (0);
+            return (true);
+    return (false);
 }
 
 void sendMessageToChannel(std::map<std::string, Channel>& channels, std::vector<std::string> params, Client& client)
 {
-    // params[1].erase (params[1].begin());
-
     std::map <std::string, Channel> :: iterator it = channels.find(params[0]);
     if (it != channels.end() && clientInChannel(client.getFd(),it->second.getClients()))
     {
         sendMessageAllPeople(params, client, it->second.getClients());
-			return;
+		return;
     }
 	if (it == channels.end())
 		send_message(ERR_NOSUCHCHANNEL(params[0]), client.getFd());
 	else
 		send_message(ERR_NOTONCHANNEL(CLIENT(client.getNick(), client.getUser()), params[0]), client.getFd());
-	}
+}
 
 void	sendMessageToNickname(Server& server, std::vector<std::string> params, Client& client)
 {
@@ -67,10 +65,11 @@ void Command::privmsgCommand()
 		send_message(ERR_NOTEXTTOSEND(CLIENT(client.getNick(), client.getUser())), client.getFd());
 		return ;
 	}
+
 	params[1].erase(params[1].begin());
+
 	if(params[0][0] == '#' || params[0][0] == '&')
 		sendMessageToChannel(this->server.getChannels(), this->getParams(), this->client);
 	else 
 		sendMessageToNickname(this->server, this->getParams(), this->client);
-
 }

@@ -10,9 +10,7 @@ void leave(Client& client, Channel& chan)
 		return ;
 	}
 	for (std::map<int, e_privilege>::iterator it = chan.getClients().begin(); it != chan.getClients().end(); ++it)
-	{
 		send_message(RPL_PART(CLIENT(client.getNick(), client.getUser()), chan.get_name()), it->first);
-	}
 
 	chan.getClients().erase(it);
 }

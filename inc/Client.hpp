@@ -22,11 +22,8 @@ class	Client
 
 	public :
 		Client(int socketFd);
-
-	Client();
-
-	~Client(void);
-		void	setFd(int fd);
+		Client();
+		~Client(void);
 		int		getFd(void) const;
 		void	Authen(e_level level);
 		e_level		getAuthen(void) const;
