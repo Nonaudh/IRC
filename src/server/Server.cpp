@@ -135,10 +135,12 @@ void	Server::eraseInAllChannel(Client& cli)
 
 void	Server::eraseInServer(Client& cli)
 {
+	int fd = cli.getFd();
+
 	eraseInAllChannel(cli);
-	erasePoll(cli.getFd());
-	close(cli.getFd());
-	eraseClient(cli.getFd());
+	eraseClient(fd);
+	erasePoll(fd);
+	close(fd);
 }
 
 void	Server::readData(Client& cli)

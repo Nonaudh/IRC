@@ -57,8 +57,6 @@ void		Bot::authentificateToServ(void)
 
 void	Bot::check_connection(std::string buff)
 {
-	std::cout << "check_connection" << std::endl;
-	usleep(10);
 	if (buff.find(": 001") != std::string::npos)
 	{
 		this->connected = true;
