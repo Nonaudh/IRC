@@ -27,6 +27,8 @@ class	Bot
 		std::string	password;
 		int	SocketFd;
 		static bool Signal;
+		bool	connected;
+		pollfd	pollFd;
 		// std::string	nickname;
 
 	public :
@@ -38,7 +40,9 @@ class	Bot
 		int			initializeBot(char **argv);
 		void		connectToServ(void);
 		void		authentificateToServ(void);
-		void		handleServerResponse(void);
+		void		handleServerResponse(std::string buff);
+		void		check_connection(std::string buff);
+		void		bot_response(std::string buff);
 		void		runBot(void);
 
 };

@@ -71,7 +71,8 @@ void	Command::nickCommand(void)
 		{
 			for (std::map<int, e_privilege>::iterator it2 = it->second.getClients().begin(); it2 != it->second.getClients().end(); ++it2)
 			{
-				send_message(RPL_NICK(this->client.getNick(), this->params[0]), it2->first);
+				if (it2->first != this->client.getFd())
+					send_message(RPL_NICK(this->client.getNick(), this->params[0]), it2->first);
 			}
 		}
 	}
@@ -79,5 +80,6 @@ void	Command::nickCommand(void)
 	if (this->client.getAuthen() == PASSWORD)
 		this->client.Authen(NICK);
 
+	send_message(RPL_NICK(this->client.getNick(), this->params[0]), this->client.getFd());
 	this->client.setNick(this->params[0]);
 }

@@ -1,7 +1,5 @@
 #include "../inc/Bot.hpp"
 
-bool Bot::Signal = false;
-
 std::string	int_to_string(int nb)
 {
 	std::ostringstream	str;
@@ -39,71 +37,63 @@ void	Bot::connectToServ(void)
 
 	if (connect(this->SocketFd, (sockaddr *)&add, sizeof(add)) == -1)
 		throw(std::runtime_error("Error : connect()"));
+		
+	this->pollFd.fd = this->SocketFd;
+	this->pollFd.events = POLLIN;
+	this->pollFd.revents = 0;
 }
 
 void		Bot::authentificateToServ(void)
 {
-	std::string msg = "PASS " + this->password + "\r\nNICK BOT_" + int_to_string(this->SocketFd) + "\r\nUSER BOT 0 * :realname\r\n";
+	std::string msg = "PASS " + this->password + 
+	"\r\nNICK BOT_" + int_to_string(this->SocketFd) + 
+	"\r\nUSER BOT 0 * :realname\r\n";
+
 	send(this->SocketFd, msg.c_str(), msg.length(), 0);
-
-	// msg = "NICK BOT_" + int_to_string(this->SocketFd) + "\r\n";
-	// send(this->SocketFd, msg.c_str(), msg.length(), 0);
-
-	// msg = "USER BOT 0 * :realname\r\n";
-	// send(this->SocketFd, msg.c_str(), msg.length(), 0);
 }
 
-void	Bot::handleServerResponse(void)
+void	Bot::check_connection(std::string buff)
 {
-	char	buff[2048];
-	bzero(buff, sizeof(buff));
+	if (buff.find(": 001") != std::string::npos)
+		this->connected = true;
+	return ;
+}
 
-	ssize_t bytes = recv(this->SocketFd, buff, sizeof(buff) - 1, 0);
-	if (bytes <= 0)
-	{
-		std::cout << "Bot " << this->SocketFd << " disconnected\n";
-	}
+void	Bot::bot_response(std::string buff)
+{
+	std::cout << "BOT : " << buff << std::endl;
+}
+
+void		Bot::handleServerResponse(std::string buff)
+{
+	if (this->connected == false)
+		check_connection(buff);
 	else
-	{
-		buff[bytes] = 0;
-	};
-	std::cout << "Received : " << buff << std::endl;
-
-	// // char	buff[1024];
-	// bzero(buff, sizeof(buff));
-
-	// bytes = recv(this->SocketFd, buff, sizeof(buff) - 1, 0);
-	// if (bytes <= 0)
-	// {
-	// 	std::cout << "Bot " << this->SocketFd << " disconnected\n";
-	// }
-	// else
-	// {
-	// 	buff[bytes] = 0;
-	// };
-	// std::cout << "Received : " << buff << std::endl;
-
-	// // char	buff[1024];
-	// bzero(buff, sizeof(buff));
-
-	// bytes = recv(this->SocketFd, buff, sizeof(buff) - 1, 0);
-	// if (bytes <= 0)
-	// {
-	// 	std::cout << "Bot " << this->SocketFd << " disconnected\n";
-	// }
-	// else
-	// {
-	// 	buff[bytes] = 0;
-	// };
-	// std::cout << "Received : " << buff << std::endl;
+		bot_response(buff);
 }
 
 void	Bot::runBot(void)
 {
+	char	buff[1024] = {0};
+
 	while (Bot::Signal == false)
 	{
-		std::cout << "yo" << std::endl;
-		sleep(5);
+		bzero(buff, sizeof(buff));
+		if ((poll(&pollFd, 1, -1) == -1) && Bot::Signal == false)
+			throw(std::runtime_error("Error poll()"));
+
+		ssize_t bytes = recv(this->SocketFd, buff, sizeof(buff) - 1, 0);
+		if (bytes <= 0)
+		{
+			std::cout << "Bot " << this->SocketFd << " disconnected\n";
+			return ;
+		}
+		else
+		{
+			buff[bytes] = 0;
+			std::cout << "Received : " << buff << std::endl;
+			handleServerResponse(buff);
+		}
 	}
 }
 
@@ -112,6 +102,5 @@ void	Bot::MBot(char **argv)
 	initializeBot(argv);
 	connectToServ();
 	authentificateToServ();
-	handleServerResponse();
 	runBot();
 }
