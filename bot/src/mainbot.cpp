@@ -8,7 +8,6 @@ void	Bot::signalHandler(int sig)
 
 	std::cout << std::endl;
 	Bot::Signal = true;
-	std::cout << "Signal totrue\n";
 }
 
 int main(int argc, char **argv)
