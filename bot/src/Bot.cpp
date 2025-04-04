@@ -81,18 +81,21 @@ void	Bot::runBot(void)
 		bzero(buff, sizeof(buff));
 		if ((poll(&pollFd, 1, -1) == -1) && Bot::Signal == false)
 			throw(std::runtime_error("Error poll()"));
-
-		ssize_t bytes = recv(this->SocketFd, buff, sizeof(buff) - 1, 0);
-		if (bytes <= 0)
+			
+		if (pollFd.revents & POLLIN)
 		{
-			std::cout << "Bot " << this->SocketFd << " disconnected\n";
-			return ;
-		}
-		else
-		{
-			buff[bytes] = 0;
-			std::cout << "Received : " << buff << std::endl;
-			handleServerResponse(buff);
+			ssize_t bytes = recv(this->SocketFd, buff, sizeof(buff) - 1, 0);
+			if (bytes <= 0)
+			{
+				std::cout << "Bot " << this->SocketFd << " disconnected\n";
+				return ;
+			}
+			else
+			{
+				buff[bytes] = 0;
+				std::cout << "Received : " << buff << std::endl;
+				handleServerResponse(buff);
+			}
 		}
 	}
 }
