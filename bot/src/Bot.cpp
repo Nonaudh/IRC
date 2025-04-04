@@ -10,7 +10,9 @@ std::string	int_to_string(int nb)
 }
 
 Bot::Bot(void)
-{}
+{
+	this->connected = false;
+}
 
 Bot::~Bot(void)
 {}
@@ -55,7 +57,11 @@ void		Bot::authentificateToServ(void)
 void	Bot::check_connection(std::string buff)
 {
 	if (buff.find(": 001") != std::string::npos)
+	{
 		this->connected = true;
+		std::string msg = "JOIN #QUOIFEUR\r\n";
+		send(this->SocketFd, msg.c_str(), msg.length(), 0);
+	}
 	return ;
 }
 
