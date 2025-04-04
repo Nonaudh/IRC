@@ -86,13 +86,13 @@ void Command::execute() {
 			break ;
 		case(TOPIC):
 			topicCommand();
-			break;
+			break ;
 		case(KICK):
 			kickCommand();
-			break;
+			break ;
 		case(INVITE):
 			inviteCommand();
-			break;
+			break ;
 		case (NOTICE_CMD):
 			noticeCommand();
 			break;

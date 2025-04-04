@@ -1,7 +1,8 @@
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
-#include <string>
+# include <string>
+# include <iostream>
 
 enum	e_level
 {
@@ -14,7 +15,7 @@ enum	e_level
 
 class	Client
 {
-	private :
+	protected :
 		e_level		level;
 		std::string	username;
 		std::string	nickname;
@@ -22,8 +23,8 @@ class	Client
 
 	public :
 		Client(int socketFd);
-		Client();
-		~Client(void);
+		virtual	~Client(void);
+
 		int		getFd(void) const;
 		void	Authen(e_level level);
 		e_level		getAuthen(void) const;
@@ -32,5 +33,7 @@ class	Client
 		std::string	getUser(void) const;
 		void		setUser(std::string str);
 };
+
+std::string	int_to_string(int nb);
 
 # endif

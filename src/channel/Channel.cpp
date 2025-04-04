@@ -9,7 +9,7 @@ Channel::~Channel()
 {}
 
 Channel::Channel(int fd, std::string nameChannel, std::string password)
-    : user_limit(3), topic_editable(true), name(nameChannel)
+    : user_limit(-1), topic_editable(true), name(nameChannel)
 {
 	this->password = password;
 	std::cout << "Le password est "<< this->password << std::endl;
@@ -83,9 +83,9 @@ void	Channel::info(void)
 	std::cout << "invite_only : " << invite_only << std::endl;
 }
 
-size_t	Channel::size(void)
+int	Channel::size(void)
 {
-	size_t	size = 0;
+	int	size = 0;
 	std::map<int, e_privilege>::iterator	it;
 
 	for (it = clients.begin(); it != clients.end(); ++it)

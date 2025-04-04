@@ -17,6 +17,33 @@ void	send_message(std::string str, int fd)
 	send(fd, str.c_str(), str.length(), 0);
 }
 
+bool isAuthorizedCharacter(char c) {
+    return (c >= 'a' && c <= 'z') ||
+           (c >= 'A' && c <= 'Z') ||
+           (c >= '0' && c <= '9') ||
+           c == '_' || c == '-';
+}
+//Creation d'une fonction permettant de determiner si les caracteres sont ok
+int isValidParams(std::string str)
+{
+	if(str[0] == 35  && str[1] == 0)
+	{
+		std::cout << "Error with params " << std::endl;
+		return(1);
+	}
+	std::string :: iterator i;
+	//En mode cpp 
+	for(i = str.begin(); i != str.end(); ++i)
+	{
+		if(!isAuthorizedCharacter(str[*i]))
+		{
+			return(1);
+			
+		}
+	}
+	return(0);
+}
+
 void	Command::nickCommand(void)
 {
 	if (this->client.getAuthen() < PASSWORD)
@@ -28,7 +55,7 @@ void	Command::nickCommand(void)
 		return ;
 	}
 
-	if (nickname_not_free(this->params[0], this->server.getClient()))
+	if (nickname_not_free(this->params[0], this->server.getClient()) )//|| isValidParams(params[0]))
 	{
 		send_message(ERR_NICKNAMEINUSE(this->client.getNick(), this->params[0]), this->client.getFd());
 		return ;
@@ -42,7 +69,8 @@ void	Command::nickCommand(void)
 		{
 			for (std::map<int, e_privilege>::iterator it2 = it->second.getClients().begin(); it2 != it->second.getClients().end(); ++it2)
 			{
-				send_message(RPL_NICK(this->client.getNick(), this->params[0]), it2->first);
+				if (it2->first != this->client.getFd())
+					send_message(RPL_NICK(this->client.getNick(), this->params[0]), it2->first);
 			}
 		}
 	}
@@ -50,5 +78,6 @@ void	Command::nickCommand(void)
 	if (this->client.getAuthen() == PASSWORD)
 		this->client.Authen(NICK);
 
+	send_message(RPL_NICK(this->client.getNick(), this->params[0]), this->client.getFd());
 	this->client.setNick(this->params[0]);
 }

@@ -23,4 +23,3 @@ void Command::passCommand() {
 	send_message("Password accepted\r\n", this->client.getFd());
 	std::cout << this->client.getFd() << " has entered the correct password" << std::endl;
 }
-

@@ -113,7 +113,6 @@ void	print_vector(std::vector<std::string>& v)
 
 bool	no_endl(std::string	buff)
 {
-
 	if (std::find(buff.begin(), buff.end(), '\n') == buff.end())
 		return (true);
 	return (false);

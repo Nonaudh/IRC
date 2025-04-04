@@ -35,11 +35,12 @@ void Channel::joinChannel(Client& client, e_privilege privilege, std::string pas
 		return;
 	}
 	
-    if (size() >= user_limit)
+    if (size() >= user_limit && user_limit != -1)
 	{
 		send_message(ERR_CHANNELISFULL(CLIENT(client.getNick(), client.getUser()), this->name), client.getFd());
 		return ;
 	}
+
 	if (!this->password.empty())
 	{
 		if(this->password != passwords)

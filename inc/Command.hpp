@@ -60,6 +60,7 @@ private:
 	void	modeCommand(void);
 	void	inviteCommand(void);
 	void	topicCommand(void);
+	void	botCommand(void);
 	int		not_a_user(std::string str);
 	int		not_a_channel(std::string str);
 	void	partCommand(void);
