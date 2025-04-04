@@ -33,36 +33,14 @@ std::map <int , e_privilege> & Channel::getClients(void)
     return(this->clients);
 }
 
-
-
-void Channel::setMdfTopic(bool mdf)
-{
-	this->topic_editable = mdf;
-}
-
-bool Channel::getMdfTopic()const
-{
-	return (topic_editable);
-}
-
 void Channel::set_password(std::string pass)
 {
 	this->password = pass;
 }
 
-std::string Channel::get_password(void)const
-{
-	return (this->password);
-}
-
 void Channel::set_user_limit(size_t limit)
 {
 	this->user_limit = limit;
-}
-
-size_t Channel::get_user_limit(void)const
-{
-	return (this->user_limit);
 }
 
 void Channel::set_topic_editable(bool edit)
@@ -88,11 +66,6 @@ std::string	Channel::get_topic(void)const
 void Channel::set_invite_only(bool invit)
 {
 	this->invite_only = invit;
-}
-
-bool Channel::get_invite_only(void)const
-{
-	return (this->invite_only);
 }
 
 std::string	Channel::get_name(void)

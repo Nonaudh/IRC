@@ -21,12 +21,8 @@ SRCS    :=	main.cpp channel/Channel.cpp client/Client.cpp \
 			commands/topicCommand.cpp commands/noticeCommand.cpp \
 			commands/partCommand.cpp \
 			server/Server.cpp channel/joinchannel.cpp
-			
-SRCSBOT :=  bot/src/mainbot.cpp bot/src/Bot.cpp
 
 OBJS    := $(addprefix $(OBJS_D)/, $(SRCS:.cpp=.o))
-
-OBJSBOT := $(patsubst bot/src/%.cpp,$(OBJS_DBOT)/%.o,$(SRCSBOT))
 
 ARGS	:= 6667 pass
 
@@ -38,16 +34,6 @@ $(OBJS_D)/%.o: $(SRCS_D)/%.cpp
 
 $(NAME): $(OBJS)
 		@$(CC) $(OBJS) $(HEADERS) -o $(NAME)
-		
-bot: $(NAMEBOT)
-
-
-$(OBJS_DBOT)/%.o: bot/src/%.cpp
-		@mkdir -p $(dir $@)
-		$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
-
-$(NAMEBOT): $(OBJSBOT)
-		@$(CC) $(OBJSBOT) $(HEADERS) -o $(NAMEBOT)
 
 gdb: all
 		@gdb -tui $(NAME) -ex 'start 6667 pass'
@@ -66,10 +52,25 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all, clean, fclean, re, gdb, valgrind, run
+SRCSBOT :=  bot/src/mainbot.cpp bot/src/Bot.cpp
+
+OBJSBOT := $(patsubst bot/src/%.cpp,$(OBJS_DBOT)/%.o,$(SRCSBOT))
+
+bot: $(NAMEBOT)
+
+$(OBJS_DBOT)/%.o: bot/src/%.cpp
+		@mkdir -p $(dir $@)
+		$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
+
+$(NAMEBOT): $(OBJSBOT)
+		@$(CC) $(OBJSBOT) $(HEADERS) -o $(NAMEBOT)
 
 botclean:
 		rm -rf $(OBJS_DBOT)
 
 botfclean: botclean
 		rm -rf $(NAMEBOT)
+
+botre: botfclean bot
+
+.PHONY: all, clean, fclean, re, gdb, valgrind, run, bot, botclean, botfclean, botre

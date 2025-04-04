@@ -22,11 +22,6 @@ Client::Client(int socketFd)
 Client::~Client(void)
 {}
 
-void	Client::setFd(int fd)
-{
-	this->SocketFd = fd;
-}
-
 int	Client::getFd(void) const
 {
 	return (this->SocketFd);

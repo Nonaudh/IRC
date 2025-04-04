@@ -12,6 +12,8 @@ std::string	int_to_string(int nb)
 Bot::Bot(void)
 {
 	this->connected = false;
+
+	this->connected = false;
 }
 
 Bot::~Bot(void)

@@ -260,12 +260,6 @@ void	Server::irc(char **argv)
 	runServer();
 }
 
-void Server::createChannel(std::string const& name, int fd, std::string mdp)
-{
-	Channel chan(fd, name, mdp);
-	channels[name]= chan;
-}
-
 Channel* Server::findChannel(std::string const& findChannel)
 {
 	std::map<std::string, Channel>:: iterator it = channels.find(findChannel);

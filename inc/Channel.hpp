@@ -30,14 +30,9 @@ class Channel
         Channel(int fd, std::string nameChannel, std::string password);
         virtual ~Channel();
 
-        void setMdfTopic(bool mdf);
-        bool getMdfTopic(void)const;
-
 		void set_password(std::string pass);
-		std::string get_password(void)const;
 
         void set_user_limit(size_t limit);
-        size_t get_user_limit(void)const;
 
         void set_topic_editable(bool edit);
         bool get_topic_editable(void)const;
@@ -46,7 +41,6 @@ class Channel
 		std::string	get_topic(void)const;
 
 		void set_invite_only(bool invit);
-		bool get_invite_only(void)const;
 
 		std::string	get_name(void);
 
