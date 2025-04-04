@@ -25,7 +25,6 @@ class	Client
 		Client(int socketFd);
 		virtual	~Client(void);
 
-		void	setFd(int fd);
 		int		getFd(void) const;
 		void	Authen(e_level level);
 		e_level		getAuthen(void) const;

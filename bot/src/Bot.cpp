@@ -61,7 +61,6 @@ void	Bot::check_connection(std::string buff)
 	usleep(10);
 	if (buff.find(": 001") != std::string::npos)
 	{
-		std::cout << "heck_connection" << std::endl;
 		this->connected = true;
 		std::string msg = "JOIN #QUOIFEUR\r\n";
 		send(this->SocketFd, msg.c_str(), msg.length(), 0);

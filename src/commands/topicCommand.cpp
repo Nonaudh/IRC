@@ -28,9 +28,11 @@ int	checkTopicCommand(Server& server, Client& cli, std::vector<std::string>& par
 void    Command::topicCommand(void)
 {
     if (checkTopicCommand(this->server, this->client, this->params))
-    return ;
+    	return ;
+
     std::map<std::string, Channel >& chs = server.getChannels();
     std::map<std::string, Channel >::iterator	it = chs.find(params[0]);
+
     if(params.size() == 1)
     {
         if(it->second.get_topic().empty())
