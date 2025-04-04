@@ -87,5 +87,6 @@ void	Server::signalHandler(int sig)
 {
 	(void)sig;
 
+	std::cout << std::endl;
 	Server::Signal = true;
 }
