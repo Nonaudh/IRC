@@ -29,7 +29,7 @@ class	Bot
 		static bool Signal;
 		bool	connected;
 		pollfd	pollFd;
-		// std::string	nickname;
+		std::string	nickname;
 
 	public :
 		Bot(void);
