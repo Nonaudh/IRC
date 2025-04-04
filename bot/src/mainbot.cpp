@@ -1,11 +1,14 @@
 #include "../inc/Bot.hpp"
 
+bool Bot::Signal = false;
+
 void	Bot::signalHandler(int sig)
 {
 	(void)sig;
 
 	std::cout << std::endl;
 	Bot::Signal = true;
+	std::cout << "Signal totrue\n";
 }
 
 int main(int argc, char **argv)

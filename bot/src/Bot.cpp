@@ -1,7 +1,5 @@
 #include "../inc/Bot.hpp"
 
-bool Bot::Signal = false;
-
 std::string	int_to_string(int nb)
 {
 	std::ostringstream	str;
@@ -47,43 +45,40 @@ void	Bot::connectToServ(void)
 
 void		Bot::authentificateToServ(void)
 {
-	char	buff[1024] = {0};
-
 	std::string msg = "PASS " + this->password + 
 	"\r\nNICK BOT_" + int_to_string(this->SocketFd) + 
 	"\r\nUSER BOT 0 * :realname\r\n";
+
 	send(this->SocketFd, msg.c_str(), msg.length(), 0);
-
-	while (Bot::Signal == false)
-	{		
-		if ((poll(&pollFd, 1, -1) == -1) && Bot::Signal == false)
-			throw(std::runtime_error("Error poll()"));
-
-		ssize_t bytes = recv(this->SocketFd, buff, sizeof(buff) - 1, 0);
-		if (bytes <= 0)
-		{
-			std::cout << "Bot " << this->SocketFd << " disconnected\n";
-			Bot::Signal = true;
-			return ;
-		}
-		else
-		{
-			buff[bytes] = 0;
-			std::cout << "Received : " << buff << std::endl;
-			std::string	stringBuff (buff);
-			if (stringBuff.find(": 001") != std::string::npos)
-				return ;
-		}
-	}
 }
 
+void	Bot::check_connection(std::string buff)
+{
+	if (buff.find(": 001") != std::string::npos)
+		this->connected = true;
+	return ;
+}
+
+void	Bot::bot_response(std::string buff)
+{
+	std::cout << "BOT : " << buff << std::endl;
+}
+
+void		Bot::handleServerResponse(std::string buff)
+{
+	if (this->connected == false)
+		check_connection(buff);
+	else
+		bot_response(buff);
+}
 
 void	Bot::runBot(void)
 {
 	char	buff[1024] = {0};
 
 	while (Bot::Signal == false)
-	{		
+	{
+		bzero(buff, sizeof(buff));
 		if ((poll(&pollFd, 1, -1) == -1) && Bot::Signal == false)
 			throw(std::runtime_error("Error poll()"));
 
@@ -91,15 +86,13 @@ void	Bot::runBot(void)
 		if (bytes <= 0)
 		{
 			std::cout << "Bot " << this->SocketFd << " disconnected\n";
-			Bot::Signal = true;
 			return ;
 		}
 		else
 		{
 			buff[bytes] = 0;
 			std::cout << "Received : " << buff << std::endl;
-			std::string	stringBuff (buff);
-			// bot_response
+			handleServerResponse(buff);
 		}
 	}
 }
