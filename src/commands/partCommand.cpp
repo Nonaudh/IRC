@@ -13,6 +13,7 @@ void leave(Client& client, Channel& chan)
 		send_message(RPL_PART(CLIENT(client.getNick(), client.getUser()), chan.get_name()), it->first);
 
 	chan.getClients().erase(it);
+	chan.getClients().begin()->second = ADMIN;
 }
 
 void Command::partCommand() {

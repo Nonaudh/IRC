@@ -83,6 +83,32 @@ void	Channel::info(void)
 	std::cout << "invite_only : " << invite_only << std::endl;
 }
 
+std::string Channel::getChannelModeReply() {
+	std::string modes = "+";
+	std::vector<std::string> params;
+
+	if (invite_only) modes += "i";
+	if (topic_editable) modes += "t";
+	if (!password.empty()) {
+		modes += "k";
+		params.push_back(password);
+	}
+	if (user_limit > 0) {
+		modes += "l";
+		params.push_back(int_to_string(user_limit));
+	}
+
+	std::ostringstream reply;
+	reply << modes;
+
+	for (std::vector<std::string>::iterator it = params.begin(); it != params.end(); ++it)
+	{
+		reply << " " << it.base();
+	}
+
+	return reply.str();
+}
+
 int	Channel::size(void)
 {
 	int	size = 0;

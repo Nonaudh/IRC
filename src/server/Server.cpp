@@ -129,6 +129,7 @@ void	Server::eraseInAllChannel(Client& cli)
 		{
 			send_part_rply_to_channel(it->second, cli);
 			chan_cli.erase(cli.getFd());
+			chan_cli.begin()->second = ADMIN;
 		}
 	}
 }
