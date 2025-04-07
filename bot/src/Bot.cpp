@@ -26,6 +26,11 @@ int	Bot::initializeBot(char **argv)
 	return (0);
 }
 
+int 	Bot::getFd()
+{
+	return(this->SocketFd);
+}
+
 void	Bot::connectToServ(void)
 {
 	sockaddr_in	add;

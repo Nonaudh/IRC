@@ -34,7 +34,7 @@ class	Bot
 	public :
 		Bot(void);
 		~Bot(void);
-
+		int getFd();
 		void		MBot(char **argv);
 		static void	signalHandler(int sig);
 		int			initializeBot(char **argv);

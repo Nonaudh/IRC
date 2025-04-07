@@ -1,26 +1,6 @@
 #include "Command.hpp"
 #include <sstream>
 
-// MODE - Change the channel’s mode:
-
-// Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>]
-// [<ban mask>]
-
-// · i: Set/remove Invite-only channel
-// · t: Set/remove the restrictions of the TOPIC command to channel operators
-// · k: Set/remove the channel key (password)
-// · o: Give/take channel operator privilege
-// · l: Set/remove the user limit to channel
-
-// ERR_NEEDMOREPARAMS              RPL_CHANNELMODEIS
-// ERR_CHANOPRIVSNEEDED            ERR_NOSUCHNICK
-// ERR_NOTONCHANNEL                ERR_KEYSET
-// RPL_BANLIST                     RPL_ENDOFBANLIST
-// ERR_UNKNOWNMODE                 ERR_NOSUCHCHANNEL
-
-// RPL_CHANNELMODEIS
-// "<channel> <mode> <mode params>"  TO DO !
-
 int	int_to_string(std::string& str)
 {
 	std::istringstream	stream(str);
