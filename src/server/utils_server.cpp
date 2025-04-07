@@ -24,7 +24,8 @@ void	Server::erasePoll(int socketFd)
 int	Server::setPortPassword(char **argv)
 {
 	port = atoi(argv[1]);
-	//check port range
+	if(port < 1024 || port > 65535)
+		return(1);
 	password = argv[2];
 
 	return (0);
@@ -87,5 +88,6 @@ void	Server::signalHandler(int sig)
 {
 	(void)sig;
 
+	std::cout << std::endl;
 	Server::Signal = true;
 }
