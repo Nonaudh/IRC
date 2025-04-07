@@ -35,7 +35,7 @@ int	checkModeCommand(Server& server, Client& cli, std::vector<std::string>& para
 {
 	std::map<std::string, Channel >& chs = server.getChannels();
 
-	if (params.size() < 2)
+	if (params.empty())
 	{
 		send_message(ERR_NEEDMOREPARAMS(CLIENT(cli.getNick(), cli.getUser()), std::string("MODE")), cli.getFd());
 		return (1);
@@ -53,6 +53,12 @@ int	checkModeCommand(Server& server, Client& cli, std::vector<std::string>& para
 	{
 		send_message(ERR_NOTONCHANNEL(CLIENT(cli.getNick(), cli.getUser()),  params[0]), cli.getFd());
 		return (1);
+	}
+
+	if (params.size() == 1)
+	{
+		send_message(RPL_CHANNELMODEIS(cli.getNick(), it->second.get_name(), " " + it->second.getChannelModeReply()), cli.getFd());
+		return (0);
 	}
 
 	if (it2->second != ADMIN)

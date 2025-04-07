@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include "Client.hpp"
+#include <sstream>
 
 class	Server;
 
@@ -51,6 +52,7 @@ class Channel
         
 		int	size(void);
         void joinChannel(Client& client, e_privilege privilege, std::string password, Server& serv);
+		std::string getChannelModeReply();
 };
 
 void	send_message(std::string str, int fd);
