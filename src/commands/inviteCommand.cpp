@@ -60,6 +60,12 @@ int is_already_in_channel(Client& client, std::map<std::string, Channel>::iterat
 
 void Command::inviteCommand()
 {
+	if (this->client.getAuthen() < CONNECT)
+	{
+		send_message(ERR_NOTREGISTERED(), this->client.getFd());
+		return ;
+	}
+	
     if(this->params.size() != 2)
     {
         send_message(ERR_NEEDMOREPARAMS(CLIENT(client.getNick(), client.getUser()), "INVITE"), this->client.getFd());

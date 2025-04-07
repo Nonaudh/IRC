@@ -55,6 +55,12 @@ void	sendMessageToNickname(Server& server, std::vector<std::string> params, Clie
 
 void Command::privmsgCommand()
 {
+	if (this->client.getAuthen() < CONNECT)
+	{
+		send_message(ERR_NOTREGISTERED(), this->client.getFd());
+		return ;
+	}
+
 	if (params.size() < 2)
 	{
 		send_message(ERR_NEEDMOREPARAMS(CLIENT(client.getNick(), client.getUser()), "PRIVMSG"), client.getFd());

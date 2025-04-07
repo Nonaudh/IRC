@@ -16,6 +16,13 @@ void leave(Client& client, Channel& chan)
 }
 
 void Command::partCommand() {
+
+	if (this->client.getAuthen() < CONNECT)
+	{
+		send_message(ERR_NOTREGISTERED(), this->client.getFd());
+		return ;
+	}
+	
 	if(params.empty())
 	{
 		send_message(ERR_NEEDMOREPARAMS(CLIENT(client.getNick(), client.getUser()), "PART"), client.getFd());
