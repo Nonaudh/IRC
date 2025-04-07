@@ -69,12 +69,9 @@ void Command::execute()
 	  "NICK", "PRIVMSG", "MODE", "TOPIC", "KICK",
 	  "INVITE", "NOTICE", "PART"};
 
-	int	i;
-	int max;
+	int	i ;
+	int max =13;
 
-	
-	for (max = 0; !cmd_available[max].empty(); ++max)
-	;
 	for (i = 0; i < max && command != cmd_available[i]; ++i)
 	;
 	
