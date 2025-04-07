@@ -55,6 +55,12 @@ void	send_part_rply_to_channel(Channel& chan, Client& cli)
 
 void Command::kickCommand()
 {
+	if (this->client.getAuthen() < CONNECT)
+	{
+		send_message(ERR_NOTREGISTERED(), this->client.getFd());
+		return ;
+	}
+
     if (checkKickCommand(this->server, this->client, this->params))
         return ;
 

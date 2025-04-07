@@ -43,13 +43,13 @@ void	Bot::connectToServ(void)
 	this->pollFd.fd = this->SocketFd;
 	this->pollFd.events = POLLIN;
 	this->pollFd.revents = 0;
-	this->nickname = "Bot_Marine" + int_to_string(this->SocketFd);
+	this->nickname = "Bot_Marine_" + int_to_string(this->SocketFd);
 }
 
 void		Bot::authentificateToServ(void)
 {
 	std::string msg = "PASS " + this->password + 
-	"\r\nNICK " + this->nickname + 
+	"\r\nNICK " + this->nickname +
 	"\r\nUSER BOT 0 * :realname\r\n";
 
 	send(this->SocketFd, msg.c_str(), msg.length(), 0);

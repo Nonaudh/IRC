@@ -19,13 +19,14 @@ enum	e_privilege
 class Channel
 {
     private:
-        std::map<int, e_privilege> clients;
-        int	user_limit;
-        bool topic_editable;
-        std::string name;
-        std::string password;
+		std::map<int, e_privilege> clients;
+		int	user_limit;
+		bool topic_editable;
+		std::string name;
+		std::string password;
 		std::string	topic;
 		bool invite_only;
+
     public:
 		Channel();
         Channel(int fd, std::string nameChannel, std::string password);

@@ -42,9 +42,6 @@ int isValidParams(std::string str)
 
 void	Command::nickCommand(void)
 {
-	if (this->client.getAuthen() < PASSWORD)
-		return ;
-
 	if (this->params.empty())
 	{
 		send_message(ERR_NONICKNAMEGIVEN(this->client.getNick(), ""), this->client.getFd());
@@ -76,10 +73,6 @@ void	Command::nickCommand(void)
 			}
 		}
 	}
-
-	if (this->client.getAuthen() == PASSWORD)
-		this->client.Authen(NICK);
-
 	send_message(RPL_NICK(this->client.getNick(), this->params[0]), this->client.getFd());
 	this->client.setNick(this->params[0]);
 }
