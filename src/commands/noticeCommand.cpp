@@ -15,6 +15,12 @@ void	send(Server& server, std::vector<std::string> params, Client& client)
 
 void Command::noticeCommand()
 {
+	if (this->client.getAuthen() < CONNECT)
+	{
+		send_message(ERR_NOTREGISTERED(), this->client.getFd());
+		return ;
+	}
+	
 	if (params.size() < 2)
 		return ;
 

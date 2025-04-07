@@ -27,6 +27,12 @@ int	checkTopicCommand(Server& server, Client& cli, std::vector<std::string>& par
 
 void    Command::topicCommand(void)
 {
+	if (this->client.getAuthen() < CONNECT)
+	{
+		send_message(ERR_NOTREGISTERED(), this->client.getFd());
+		return ;
+	}
+
     if (checkTopicCommand(this->server, this->client, this->params))
     	return ;
 

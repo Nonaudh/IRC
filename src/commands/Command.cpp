@@ -26,51 +26,71 @@ std::vector <std::string> Command::getParams() {
 	return this->params;
 }
 
-void Command::executeNotAuth() {
-	std::string	cmd_bef_pass[] = {"CAP","NICK","USER","PASS"};
+// void Command::executeNotAuth() {
+// 	std::string	cmd_bef_pass[] = {"CAP","NICK","USER","PASS"};
 
-	int	i;
-	for (i = 0; i < 4 && command != cmd_bef_pass[i]; ++i)
-		;
+// 	int	i;
+// 	for (i = 0; i < 4 && command != cmd_bef_pass[i]; ++i)
+// 		;
 
-	switch (i) {
-		case (0):
-			break ;
-		case (1):
-			nickCommand();
-			break ;
-		case (2):
-			userCommand();
-			break ;
-		case (3):
-			passCommand();
-			break ;
-		default:
-			send_message(ERR_NOTREGISTERED(), this->client.getFd());
-			break;
-	}
+// 	switch (i) {
+// 		case (0):
+// 			break ;
+// 		case (1):
+// 			nickCommand();
+// 			break ;
+// 		case (2):
+// 			userCommand();
+// 			break ;
+// 		case (3):
+// 			passCommand();
+// 			break ;
+// 		default:
+// 			send_message(ERR_NOTREGISTERED(), this->client.getFd());
+// 			break;
+// 	}
+// }
+
+void	check_authen(Client& cli)
+{
+	if (cli.getAuthen() == PASSWORD &&
+		!cli.getNick().empty() &&
+		!cli.getUser().empty())
+		{
+			cli.Authen(CONNECT);
+			send_message(RPL_WELCOME(cli.getNick()), cli.getFd());
+			std::cout << cli.getFd() << " is now connected to the server" << std::endl;
+		}
 }
 
-void Command::execute() {
-	std::string	cmd_available[] = {"KILL", "QUIT", "JOIN",
+void Command::execute() 
+{
+	std::string	cmd_available[] = {"PASS", "USER", "KILL", "QUIT", "JOIN",
 	  "NICK", "PRIVMSG", "MODE", "TOPIC", "KICK",
-	  "INVITE", "NOTICE", "PART", ""};
+	  "INVITE", "NOTICE", "PART"};
 
 	int	i;
 	int max;
 
+	
 	for (max = 0; !cmd_available[max].empty(); ++max)
-		;
+	;
 	for (i = 0; i < max && command != cmd_available[i]; ++i)
-		;
-
+	;
+	
 	switch (i)
 	{
+		case (PASS):
+			passCommand();
+			break ;
+		case (USER_CMD):
+			userCommand();
+			break ;
 		case (KILL):
 			killCommand();
 			break ;
 		case (QUIT):
-			quitCommand();
+			quitCommand(); // ?
 			break ;
 		case (JOIN):
 			joinCommand();
@@ -103,9 +123,19 @@ void Command::execute() {
 			std::cout << "Unknow cmd : " << command << std::endl;
 			break ;
 	}
+
+	if (this->client.getAuthen() < CONNECT)
+		check_authen(this->client);
 }
 
 void Command::quitCommand() {
+
+	if (this->client.getAuthen() < CONNECT)
+	{
+		send_message(ERR_NOTREGISTERED(), this->client.getFd());
+		return ;
+	}
+	
 	std::cout << "QuitCommand" << std::endl;
 
 	std::cout << "SocketFd: " << getClient().getFd() << std::endl;

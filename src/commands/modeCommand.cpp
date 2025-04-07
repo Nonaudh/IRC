@@ -216,6 +216,12 @@ size_t	handle_mode(std::string& s1, std::string& s2, Channel& chan, Client& cli,
 
 void	Command::modeCommand(void)
 {
+	if (this->client.getAuthen() < CONNECT)
+	{
+		send_message(ERR_NOTREGISTERED(), this->client.getFd());
+		return ;
+	}
+	
 	if (checkModeCommand(server, client, params))
 		return ;
 

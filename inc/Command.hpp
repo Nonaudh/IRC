@@ -16,6 +16,8 @@
 
 enum	e_cmd
 {
+	PASS,
+	USER_CMD,
 	KILL,
 	QUIT,
 	JOIN,
