@@ -67,13 +67,12 @@ void Command::execute()
 {
 	std::string	cmd_available[] = {"PASS", "USER", "KILL", "QUIT", "JOIN",
 	  "NICK", "PRIVMSG", "MODE", "TOPIC", "KICK",
-	  "INVITE", "NOTICE", "PART"};
+	  "INVITE", "NOTICE", "PART", ""};
 
-	int	i ;
-	int max =13;
+	int	i;
 
-	for (i = 0; i < max && command != cmd_available[i]; ++i)
-	;
+	for (i = 0; !cmd_available[i].empty() && command != cmd_available[i]; ++i)
+		;
 	
 	switch (i)
 	{
@@ -132,7 +131,7 @@ void Command::quitCommand() {
 		send_message(ERR_NOTREGISTERED(), this->client.getFd());
 		return ;
 	}
-	
+
 	std::cout << "QuitCommand" << std::endl;
 
 	std::cout << "SocketFd: " << getClient().getFd() << std::endl;
@@ -144,4 +143,3 @@ void Command::quitCommand() {
 
 	std::cout << std::endl;
 }
-
