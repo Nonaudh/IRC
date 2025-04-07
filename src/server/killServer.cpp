@@ -23,7 +23,7 @@ void	Server::killFromServer(std::string nickname, std::string reason, int caller
 	if (!reason.empty())
 	{
 		send_message("You have been kicked from the server because ", fd);
-		send(fd, reason.c_str(), reason.length(), 0);
+		send_message(reason.c_str(), fd);
 		send_message("\r\n", fd);
 	}
 	close(fd);

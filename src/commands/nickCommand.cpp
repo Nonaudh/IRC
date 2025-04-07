@@ -14,7 +14,7 @@ bool	nickname_not_free(std::string& nick, std::vector<Client>& clients)
 
 void	send_message(std::string str, int fd)
 {
-	send(fd, str.c_str(), str.length(), 0);
+	send(fd, str.c_str(), str.length(), MSG_NOSIGNAL);
 }
 
 bool isAuthorizedCharacter(char c) {
