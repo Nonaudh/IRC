@@ -19,7 +19,6 @@ enum	e_cmd
 	PASS,
 	USER_CMD,
 	KILL,
-	QUIT,
 	JOIN,
 	NICK_CMD,
 	PRIVMSG_CMD,
@@ -52,7 +51,6 @@ private:
 
 	void	userCommand(void);
 	void	passCommand(void);
-	void	quitCommand(void);
 	void	joinCommand(void);
 	void	nickCommand(void);
 	void	kickCommand(void);

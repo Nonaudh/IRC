@@ -74,10 +74,7 @@ void	new_execCmd(Server& server, Client& cli, std::vector<std::string> v)
 		command_name = *splitted.begin();
 		std::transform(command_name.begin(), command_name.end(), command_name.begin(), ::toupper);
 		splitted.erase(splitted.begin());
-		// if (cli.getAuthen() >= CONNECT)
-			Command(server, cli, command_name, splitted).execute();
-		// else
-		// 	Command(server, cli, command_name, splitted).executeNotAuth();
+		Command(server, cli, command_name, splitted).execute();
 		splitted.clear();
 		command_name.clear();
 	}

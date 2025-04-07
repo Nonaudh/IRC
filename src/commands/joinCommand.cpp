@@ -2,7 +2,7 @@
 
 #include <iterator>
 
-std::vector<std::string> ::const_iterator searchMdp(int i, std::string search, std::vector <std::string> params)//Je ne suis pas sur de celle mais cpp
+std::vector<std::string> ::const_iterator searchMdp(int i, std::string search, std::vector <std::string> params)
 {
 	std::vector<std::string> :: const_iterator const_it = std::find(params.begin(), params.end(), search);
 	for(int t = 0; t != i; ++t)

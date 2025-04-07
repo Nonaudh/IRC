@@ -73,16 +73,6 @@ std::string	Channel::get_name(void)
 	return (this->name);
 }
 
-void	Channel::info(void)
-{
-	std::cout << "user_limit : " << user_limit << std::endl;
-	std::cout << "topic_editable : " << topic_editable << std::endl;
-	std::cout << "name : " << name << std::endl;
-	std::cout << "password : " << password << std::endl;
-	std::cout << "topic : " << topic << std::endl;
-	std::cout << "invite_only : " << invite_only << std::endl;
-}
-
 std::string Channel::getChannelModeReply() {
 	std::string modes = "+";
 	std::vector<std::string> params;

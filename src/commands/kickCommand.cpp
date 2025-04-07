@@ -1,19 +1,5 @@
 #include <Command.hpp>
 
-// Command: KICK
-// Parameters: <channel> <user> [<comment>]
-
-// The KICK command can be  used  to  forcibly  remove  a  user  from  a
-// channel.   It  'kicks  them  out'  of the channel (forced PART).
-
-// Only a channel operator may kick another user out of a  channel.
-// Each  server that  receives  a KICK message checks that it is valid
-// (ie the sender is actually a  channel  operator)  before  removing
-// the  victim  from  the channel.
-
-// Numeric Replies:
-
-
 int	checkKickCommand(Server& server, Client& cli, std::vector<std::string>& params)
 {
 	if (params.size() < 2)

@@ -225,5 +225,4 @@ void	Command::modeCommand(void)
 			i = handle_mode(*it, empty, chan, client, server);
 		}
 	}
-	chan.info(); //to erase
 }

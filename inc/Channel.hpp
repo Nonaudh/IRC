@@ -46,7 +46,6 @@ class Channel
 
 		std::string	get_name(void);
 
-		void	info(void);
 
         std::map <int , e_privilege>& getClients(void);
         
