@@ -20,7 +20,8 @@ Bot::~Bot(void)
 int	Bot::initializeBot(char **argv)
 {
 	port = atoi(argv[1]);
-	//check port range
+	if(port < 1024 || port > 65535)
+		return(1);
 	password = argv[2];
 	return (0);
 }
@@ -69,6 +70,11 @@ void	Bot::check_connection(std::string buff)
 void	Bot::bot_response(std::string buff)
 {
 	std::cout << "BOT : " << buff << std::endl;
+	if(buff.find("@localhost PRIVMSG #QUOIFEUR :QUOI") != std::string::npos )
+	{
+		std::string msg = "PRIVMSG #QUOIFEUR :FEUR\r\n";
+		send(this->SocketFd, msg.c_str(), msg.length(), 0);
+	}
 }
 
 void		Bot::handleServerResponse(std::string buff)
@@ -88,7 +94,6 @@ void	Bot::runBot(void)
 		bzero(buff, sizeof(buff));
 		if ((poll(&pollFd, 1, -1) == -1) && Bot::Signal == false)
 			throw(std::runtime_error("Error poll()"));
-			
 		if (pollFd.revents & POLLIN)
 		{
 			ssize_t bytes = recv(this->SocketFd, buff, sizeof(buff) - 1, 0);

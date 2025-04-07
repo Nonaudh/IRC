@@ -27,8 +27,8 @@ int	int_to_string(std::string& str)
 	int	nb;
 
 	stream >> nb;
-	std::cout << "new_limit : " << nb << std::endl; // to check
-	return (nb); // what ?
+	std::cout << "new_limit : " << nb << std::endl; 
+	return (nb); 
 }
 
 int	checkModeCommand(Server& server, Client& cli, std::vector<std::string>& params)

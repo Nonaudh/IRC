@@ -37,15 +37,19 @@ void Command::executeNotAuth() {
 		case (0):
 			break ;
 		case (1):
+			// std::cout << "1" << std::endl;
 			nickCommand();
 			break ;
 		case (2):
+			// std::cout << "2" << std::endl;
 			userCommand();
 			break ;
 		case (3):
+			// std::cout << "3" << std::endl;
 			passCommand();
 			break ;
 		default:
+			std::cout << "4" << std::endl;
 			send_message(ERR_NOTREGISTERED(), this->client.getFd());
 			break;
 	}
