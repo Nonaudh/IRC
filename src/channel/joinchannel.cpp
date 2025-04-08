@@ -64,5 +64,6 @@ void Channel::joinChannel(Client& client, e_privilege privilege, std::string pas
 		clients.insert(std::pair<int, e_privilege>(client.getFd(), privilege));
 
 	send_message(RPL_JOIN(CLIENT(client.getNick(), client.getUser()), this->name), client.getFd());
+	send_message(RPL_TOPIC(CLIENT(client.getNick(), client.getUser()), this->name, this->topic), client.getFd());
 	actualise_name_reply(*this, serv, client);
 }
