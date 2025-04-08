@@ -1,5 +1,4 @@
 #include "Command.hpp"
-#include <errno.h>
 
 bool	nickname_not_free(std::string& nick, std::vector<Client>& clients)
 {
@@ -15,8 +14,7 @@ bool	nickname_not_free(std::string& nick, std::vector<Client>& clients)
 
 void	send_message(std::string str, int fd)
 {
-	if (!(send(fd, 0, 0, MSG_NOSIGNAL) == -1 && errno == EBADF))
-		send(fd, str.c_str(), str.length(), MSG_NOSIGNAL);
+	send(fd, str.c_str(), str.length(), 0);
 }
 
 bool isAuthorizedCharacter(char c) {
