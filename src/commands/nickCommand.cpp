@@ -1,5 +1,4 @@
 #include "Command.hpp"
-#include <fcntl.h>
 #include <errno.h>
 
 bool	nickname_not_free(std::string& nick, std::vector<Client>& clients)
@@ -16,7 +15,7 @@ bool	nickname_not_free(std::string& nick, std::vector<Client>& clients)
 
 void	send_message(std::string str, int fd)
 {
-	if (fcntl(fd, F_GETFL) != -1 || errno != EBADF)
+	if (!(send(fd, 0, 0, MSG_NOSIGNAL) == -1 && errno == EBADF))
 		send(fd, str.c_str(), str.length(), MSG_NOSIGNAL);
 }
 
