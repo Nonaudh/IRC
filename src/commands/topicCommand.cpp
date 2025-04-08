@@ -45,15 +45,24 @@ void    Command::topicCommand(void)
             send_message(RPL_NOTOPIC(CLIENT(this->client.getNick(), this->client.getUser()), params[0]), this->client.getFd());
         else
             send_message(RPL_SEETOPIC(CLIENT(this->client.getNick(), this->client.getUser()), params[0], it->second.get_topic()), this->client.getFd());
-    }
-    else
-    {
-        if (it->second.getClients().find(client.getFd())->second != ADMIN &&  it->second.get_topic_editable() )
-        {
-            send_message(ERR_CHANOPRIVSNEEDED(CLIENT(this->client.getNick(), this->client.getUser()),  params[0]), client.getFd());
-            return ;
-        }
-        it->second.set_topic(params[1]);
-        send_message(RPL_TOPIC(CLIENT(this->client.getNick(), this->client.getUser()), params[0], it->second.get_topic()), this->client.getFd());
-    }
+		return;
+	}
+
+	if (params[1][0] == ':')
+		params[1].erase(params[1].begin());
+
+	if (it->second.getClients().find(client.getFd())->second != ADMIN && !it->second.get_topic_editable() )
+	{
+		send_message(ERR_CHANOPRIVSNEEDED(CLIENT(this->client.getNick(), this->client.getUser()),  params[0]), client.getFd());
+		return ;
+	}
+	it->second.set_topic(params[1]);
+
+	if (it->second.getClients().find(this->client.getFd()) != it->second.getClients().end())
+	{
+		for (std::map<int, e_privilege>::iterator it2 = it->second.getClients().begin(); it2 != it->second.getClients().end(); ++it2)
+			if (it2->first != this->client.getFd())
+				send_message(RPL_TOPIC(CLIENT(this->client.getNick(), this->client.getUser()), params[0], it->second.get_topic()), it2->first);
+	}
+	send_message(RPL_TOPIC(CLIENT(this->client.getNick(), this->client.getUser()), params[0], it->second.get_topic()), this->client.getFd());
 }
