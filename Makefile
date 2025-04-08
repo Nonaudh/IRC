@@ -1,6 +1,6 @@
 NAME    := ircserv
 
-NAMEBOT := MarineLePenInegible
+NAMEBOT := Bot
 
 SRCS_D  := ./src
 OBJS_D  := ./build
