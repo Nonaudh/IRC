@@ -49,7 +49,7 @@ void	Bot::connectToServ(void)
 	this->pollFd.fd = this->SocketFd;
 	this->pollFd.events = POLLIN;
 	this->pollFd.revents = 0;
-	this->nickname = "Bot_" + int_to_string(this->SocketFd);
+	this->nickname = "Bot";
 }
 
 void		Bot::authentificateToServ(void)
@@ -75,7 +75,7 @@ void	Bot::check_connection(std::string buff)
 void	Bot::bot_response(std::string buff)
 {
 	std::cout << "BOT : " << buff << std::endl;
-	if(buff.find("@localhost PRIVMSG #QUOIFEUR :QUOI") != std::string::npos )
+	if(buff.find("@localhost PRIVMSG #QUOIFEUR :QUOI\r\n") != std::string::npos )
 	{
 		std::string msg = "PRIVMSG #QUOIFEUR :FEUR\r\n";
 		send(this->SocketFd, msg.c_str(), msg.length(), MSG_NOSIGNAL);
