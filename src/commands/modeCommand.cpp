@@ -8,7 +8,7 @@ int	int_to_string(std::string& str)
 
 	stream >> nb;
 	std::cout << "new_limit : " << nb << std::endl; 
-	return (nb); 
+	return (nb < 0 ? 0 : nb); 
 }
 
 int	checkModeCommand(Server& server, Client& cli, std::vector<std::string>& params)
