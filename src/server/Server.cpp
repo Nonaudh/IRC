@@ -146,19 +146,22 @@ void	Server::readData(Client& cli)
 	char	bufftmp[1024];
 	std::string	buff;
 	static std::map<int, std::string> save;
+	std::map<int, std::string>::iterator it;
 	bzero(bufftmp, sizeof(bufftmp));
 
 	ssize_t bytes = recv(cli.getFd(), bufftmp, sizeof(bufftmp) - 1, 0);
 	if (bytes <= 0)
 	{
 		std::cout << "Client " << cli.getFd() << " disconnected\n";
+		it = save.find(cli.getFd());
+		if (it != save.end())
+			save.erase(it);
 		eraseInServer(cli);
 	}
 	else
 	{
 		bufftmp[bytes] = 0;
 		buff = bufftmp;
-		std::map<int, std::string>::iterator it;
 		it = save.find(cli.getFd());
 		if (it != save.end())
 		{

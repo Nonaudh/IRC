@@ -58,7 +58,7 @@ void		Bot::authentificateToServ(void)
 	"\r\nNICK " + this->nickname +
 	"\r\nUSER BOT 0 * :realname\r\n";
 
-	send(this->SocketFd, msg.c_str(), msg.length(), 0);
+	send(this->SocketFd, msg.c_str(), msg.length(), MSG_NOSIGNAL);
 }
 
 void	Bot::check_connection(std::string buff)
@@ -67,7 +67,7 @@ void	Bot::check_connection(std::string buff)
 	{
 		this->connected = true;
 		std::string msg = "JOIN #QUOIFEUR\r\n";
-		send(this->SocketFd, msg.c_str(), msg.length(), 0);
+		send(this->SocketFd, msg.c_str(), msg.length(), MSG_NOSIGNAL);
 	}
 	return ;
 }
@@ -78,7 +78,7 @@ void	Bot::bot_response(std::string buff)
 	if(buff.find("@localhost PRIVMSG #QUOIFEUR :QUOI") != std::string::npos )
 	{
 		std::string msg = "PRIVMSG #QUOIFEUR :FEUR\r\n";
-		send(this->SocketFd, msg.c_str(), msg.length(), 0);
+		send(this->SocketFd, msg.c_str(), msg.length(), MSG_NOSIGNAL);
 	}
 }
 
