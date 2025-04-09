@@ -88,7 +88,6 @@ void Command::execute()
 			partCommand();
 			break;
 		default:
-			std::cout << "Unknow cmd : " << command << std::endl;
 			break ;
 	}
 

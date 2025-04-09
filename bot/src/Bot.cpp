@@ -5,7 +5,6 @@ std::string	int_to_string(int nb)
 	std::ostringstream	str;
 
 	str << nb;
-
 	return (str.str());
 }
 
@@ -110,7 +109,6 @@ void	Bot::runBot(void)
 			else
 			{
 				buff[bytes] = 0;
-				std::cout << "Received : " << buff << std::endl;
 				handleServerResponse(buff);
 			}
 		}

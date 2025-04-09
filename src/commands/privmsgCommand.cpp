@@ -10,7 +10,6 @@ void sendMessageAllPeople(std::vector<std::string> params, Client& client, std::
 		if (it->first != client.getFd() && it->second != INVITED)
 		{
 			message = PRIVMSG(CLIENT(client.getNick(), client.getUser()), params[0], params[1]);
-			// send(it->first, message.c_str(), message.size(), 0);
 			send_message(message, it->first);
 		}
 	}
@@ -49,7 +48,6 @@ void	sendMessageToNickname(Server& server, std::vector<std::string> params, Clie
 	else
 	{
 		std::string message = PRIVMSG(CLIENT(client.getNick(), client.getUser()), params[0], params[1]);
-		// send(it->getFd(), message.c_str(), message.size(), 0);
 		send_message(message, it->getFd());
 	}
 }

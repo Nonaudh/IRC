@@ -46,6 +46,6 @@
 #define ERR_BADCHANNELKEY(client, channel)(": 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n")
 #define ERR_NOCHANMODES(channel)(": 477 " + channel + " :Channel doesn't support modes\r\n")
 #define ERR_CHANOPRIVSNEEDED(client, channel)(": 482 " + client + " " + channel + " :You're not channel operator\r\n")
-#define RPL_CHANNELMODEIS(channel, nick, modes)(": 324 " + nick + " " + channel + " " + modes + "\r\n")
+#define RPL_CHANNELMODEIS(nick, channel, modes)(": 324 " + nick + " " + channel + " " + modes + "\r\n")
 
 #endif

@@ -7,7 +7,6 @@ int	int_to_string(std::string& str)
 	int	nb;
 
 	stream >> nb;
-	std::cout << "new_limit : " << nb << std::endl; 
 	return (nb < 0 ? 0 : nb); 
 }
 

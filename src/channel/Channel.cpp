@@ -12,19 +12,9 @@ Channel::Channel(int fd, std::string nameChannel, std::string password)
     : user_limit(-1), topic_editable(true), name(nameChannel)
 {
 	this->password = password;
-	std::cout << "Le password est "<< this->password << std::endl;
     this->invite_only = false;
 	nameChannel.erase(nameChannel.begin());
-    this->topic ="";
-    
-    std::cout << "======== CHANNEL CRÉÉ ========" << std::endl;
-    std::cout << "Nom du channel : " << this->name << std::endl;
-    std::cout << "User limit : " << this->user_limit << std::endl;
-    std::cout << "Topic éditable : " << (this->topic_editable ? "Oui" : "Non") << std::endl;
-    std::cout << "Invite only : " << (this->invite_only ? "Oui" : "Non") << std::endl;
-    std::cout << "Premier client (admin) : " << fd << std::endl;
-    std::cout << "============================" << std::endl;
-    
+    this->topic = "";
     clients.insert(std::pair<int, e_privilege>(fd, ADMIN));
 }
 
